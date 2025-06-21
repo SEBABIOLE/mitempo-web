@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>miTempo - Tu asistente personal por WhatsApp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Página principal -->
+    <div id="main-page" class="min-h-screen">
+        <!-- Navegación -->
+        <nav class="bg-white shadow-sm sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 flex items-center">
+                            <svg class="h-8 w-auto text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span class="ml-2 text-xl font-bold text-gray-800">miTempo</span>
+                        </div>
+                    </div>
+                    <div class="hidden md:flex items-center">
+                        <a href="#" class="px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-600" onclick="showSection('main-page')">Inicio</a>
+                        <a href="#features" class="px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-600">Características</a>
+                        <a href="#pricing" class="px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-600">Precios</a>
+                        <a href="#" class="px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-600" onclick="showSection('privacy-page')">Privacidad</a>
+                        <a href="#" class="ml-4 px-4 py-2 text-sm font-medium text-primary-600 border border-primary-600 rounded-md hover:bg-primary-50">Iniciar sesión</a>
+                    </div>
+                    <div class="flex items-center md:hidden">
+                        <button id="mobile-menu-button" class="p-2 rounded-md text-gray-700 hover:text-primary-600 focus:outline-none">
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Mobile menu -->
+            <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg absolute w-full">
+                <div class="px-2 pt-2 pb-3 space-y-1">
+                    <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50" onclick="showSection('main-page')">Inicio</a>
+                    <a href="#features" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50">Características</a>
+                    <a href="#pricing" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50">Precios</a>
+                    <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50" onclick="showSection('privacy-page')">Privacidad</a>
+                    <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-primary-50">Iniciar sesión</a>
+                </div>
+            </div>
+        </nav>
+        <!-- El resto de tu landing page sigue aquí, puedes copiar y pegar TODO el contenido de tu landing anterior... -->
+        <!-- ... -->
+        <!-- Aquí termina el contenido principal -->
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
