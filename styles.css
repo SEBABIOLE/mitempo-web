@@ -144,3 +144,238 @@ body {
 }
 /* Fin Hero */
 
+/* ------------------ */
+/* SECCIÓN PLANES     */
+/* ------------------ */
+
+#planes {
+  background-color: #2A1B3D; /* mismo morado oscuro */
+  color: #EEEEEE;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+#planes h2 {
+  font-size: 2rem; /* 32px */
+  margin-bottom: 40px;
+  letter-spacing: 0.1em;
+}
+
+.plan-cards {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1fr;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.plan-card {
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  padding: 24px;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.plan-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1),
+              0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.plan-card img {
+  width: 60px;
+  margin-bottom: 16px;
+}
+
+.plan-card h3 {
+  font-size: 1.25rem; /* 20px */
+  margin-bottom: 8px;
+  color: #2A1B3D;
+}
+
+.plan-card p {
+  margin-bottom: 16px;
+  color: #444444;
+}
+
+.plan-card ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 16px;
+}
+
+.plan-card ul li {
+  margin-bottom: 8px;
+  position: relative;
+  padding-left: 1.2em;
+}
+
+.plan-card ul li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #0068C6; /* color acento azul */
+}
+
+.plan-card .price {
+  font-size: 1.5rem; /* 24px */
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.plan-card .plan-button {
+  display: inline-block;
+  background: #FFA500;
+  color: #2A1B3D;
+  font-weight: bold;
+  padding: 10px 24px;
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.plan-card .plan-button:hover {
+  opacity: 0.9;
+}
+
+/* En pantallas ≥768px, mostramos 4 columnas */
+@media (min-width: 768px) {
+  .plan-cards {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ------------------ */
+/* SECCIÓN DEMO       */
+/* ------------------ */
+
+#demo {
+  background-color: #1E1431; /* un poco más oscuro */
+  color: #EEEEEE;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+#demo h2 {
+  font-size: 2rem;
+  margin-bottom: 16px;
+  letter-spacing: 0.1em;
+}
+
+#demo p {
+  font-size: 1rem;
+  margin-bottom: 32px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.demo-form {
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.demo-form label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #333333;
+}
+
+.demo-form input[type="text"],
+.demo-form input[type="tel"],
+.demo-form input[type="email"] {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  border: 1px solid #CCCCCC;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.demo-form fieldset {
+  border: none;
+  margin-bottom: 16px;
+}
+
+.demo-form legend {
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333333;
+}
+
+.demo-form label > input[type="radio"] {
+  margin-right: 8px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  font-size: 0.9rem;
+  color: #333333;
+}
+
+.checkbox-label input {
+  margin-right: 8px;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 12px;
+  background: #0068C6;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.submit-button:hover {
+  opacity: 0.9;
+}
+
+/* ------------------ */
+/* FOOTER             */
+/* ------------------ */
+
+.footer {
+  background-color: #2A1B3D;
+  color: #CCCCCC;
+  padding: 40px 20px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.footer-legal,
+.footer-contact {
+  margin-bottom: 12px;
+}
+
+.footer-legal a,
+.footer-contact a {
+  color: #CCCCCC;
+  text-decoration: none;
+}
+
+.footer-legal a:hover,
+.footer-contact a:hover {
+  text-decoration: underline;
+}
+
+.footer-copy {
+  color: #777777;
+  font-size: 0.8rem;
+}
+
+/* ------------------ */
+/* FIN DE STYLES.CSS   */
+/* ------------------ */
+
+
