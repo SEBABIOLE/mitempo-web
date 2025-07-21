@@ -248,9 +248,9 @@
 
     <div id="formModal" class="modal">
         <div class="modal-content">
-            <span id="closeModal" class="close">&times;</span>
+            <span id="closeModal" class="close">×</span>
             <h2 class="text-2xl font-bold text-gray-900 mb-6">Registrate para tu prueba gratis</h2>
-            <form id="registrationForm" class="space-y-4">
+            <form id="registrationForm" action="https://script.google.com/macros/s/AKfycbxZ8j2vY-EXAMPLE-URL/exec" method="POST" class="space-y-4">
                 <div>
                     <label for="fullName" class="block text-sm font-medium text-gray-700">Nombre y Apellido *</label>
                     <input type="text" id="fullName" name="fullName" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-green">
@@ -385,7 +385,6 @@
         const openFormBtnPlan2 = document.getElementById('openFormBtnPlan2');
         const openFormBtnPlan3 = document.getElementById('openFormBtnPlan3');
         const openFormBtnPlan4 = document.getElementById('openFormBtnPlan4');
-        const form = document.getElementById('registrationForm');
 
         [openFormBtn, openFormBtnMain, openFormBtnPlan1, openFormBtnPlan2, openFormBtnPlan3, openFormBtnPlan4].forEach(btn => {
             btn.addEventListener('click', () => {
@@ -403,36 +402,24 @@
             }
         });
 
+        // Añadir manejo de envío del formulario
+        const form = document.getElementById('registrationForm');
         form.addEventListener('submit', (event) => {
             event.preventDefault();
-
-            const fullName = document.getElementById('fullName').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
-            const plan = document.getElementById('plan').value;
-            const invitedBy = document.getElementById('invitedBy').value;
-
-            // Validación del número de WhatsApp
-            const phoneRegex = /^\+?[1-9]\d{9,14}$/;
-            if (!phoneRegex.test(phone)) {
-                alert('El número de WhatsApp debe ser válido (sin 0 ni 15, ej. +549123456789)');
-                return;
-            }
-
-            // Simulación de envío
-            const data = {
-                'Marca temporal': new Date().toLocaleString(),
-                'Nombre completo': fullName,
-                'Número de WhatsApp': phone,
-                'Correo electrónico de Google': email,
-                '¿Qué plan eliges?': plan,
-                '¿Te invitó alguien?': invitedBy || 'No'
-            };
-            alert('Datos enviados:\n' + JSON.stringify(data, null, 2));
-
-            // Limpiar formulario y cerrar modal
-            form.reset();
-            modal.style.display = 'none';
+            fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form)
+            }).then(response => {
+                if (response.ok) {
+                    modal.style.display = 'none';
+                    alert('¡Registro enviado con éxito!');
+                    form.reset();
+                } else {
+                    alert('Hubo un error al enviar el formulario. Por favor, intentá de nuevo.');
+                }
+            }).catch(error => {
+                alert('Hubo un error al enviar el formulario. Por favor, intentá de nuevo.');
+            });
         });
     </script>
 </body>
