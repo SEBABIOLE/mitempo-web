@@ -15,186 +15,93 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f8fafc;
-    }
-    .brand-green {
-      color: #10B981;
-    }
-    .bg-brand-green {
-      background-color: #10B981;
-    }
-    .hover\:bg-brand-green-dark:hover {
-      background-color: #059669;
-    }
-    .border-brand-green {
-      border-color: #10B981;
-    }
-    .fade-in-section {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-    }
-    .fade-in-section.is-visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .phone-mockup {
-      width: 280px;
-      height: 560px;
-      background: #111827;
-      border-radius: 40px;
-      border: 12px solid #1f2937;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
-      position: relative;
-      overflow: hidden;
-    }
-    .phone-screen {
-      background: url('https://images.unsplash.com/photo-1554147090-e1221a04a025?q=80&w=500&auto=format&fit=crop') center/cover;
-      background-image: linear-gradient(to bottom, #111827, #374151); /* Fallback */
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      padding: 20px 10px;
-    }
-    .chat-bubble {
-      padding: 8px 14px;
-      border-radius: 18px;
-      margin-bottom: 8px;
-      max-width: 75%;
-      animation: bubble-pop 0.5s ease-out forwards;
-      opacity: 0;
-    }
-    .chat-bubble.user {
-      background-color: #25D366;
-      color: white;
-      align-self: flex-end;
-    }
-    .chat-bubble.assistant {
-      background-color: #ffffff;
-      color: #1f2937;
-      align-self: flex-start;
-    }
-    @keyframes bubble-pop {
-      0% {
-        transform: scale(0.5);
-        opacity: 0;
-      }
-      80% {
-        transform: scale(1.05);
-      }
-      100% {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-    .chat-bubble:nth-child(1) {
-      animation-delay: 0.5s;
-    }
-    .chat-bubble:nth-child(2) {
-      animation-delay: 1.5s;
-    }
-    .chat-bubble:nth-child(3) {
-      animation-delay: 2.5s;
-    }
-    .chat-bubble:nth-child(4) {
-      animation-delay: 3.5s;
-    }
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-    .modal-content {
-      background-color: white;
-      padding: 2rem;
-      border-radius: 0.5rem;
-      width: 90%;
-      max-width: 500px;
-      position: relative;
-      animation: slide-up 0.3s ease-out;
-    }
-    .close {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: #6b7280;
-    }
-    .close:hover {
-      color: #111827;
-    }
-    @keyframes slide-up {
-      from {
-        transform: translateY(20px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-    input:invalid:focus {
-      border-color: #ef4444;
-      box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
-    }
-    .error-text {
-      color: #ef4444;
-    }
-    .mobile-nav {
-      transition: transform 0.3s ease-in-out;
-    }
-    .mobile-nav-hidden {
-      transform: translateX(100%);
-    }
+    /*— Tipografía y colores —*/
+    body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+    .brand-green { color: #10B981; }
+    .bg-brand-green { background-color: #10B981; }
+    .hover\:bg-brand-green-dark:hover { background-color: #059669; }
+    .border-brand-green { border-color: #10B981; }
+
+    /*— Fade-in sections —*/
+    .fade-in-section { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+    .fade-in-section.is-visible { opacity: 1; transform: translateY(0); }
+
+    /*— Mockup de teléfono —*/
+    .phone-mockup { width:280px;height:560px;background:#111827;border-radius:40px;border:12px solid #1f2937;box-shadow:0 25px 50px -12px rgba(0,0,0,0.4);overflow:hidden; }
+    .phone-screen { background:url('https://images.unsplash.com/photo-1554147090-e1221a04a025?q=80&w=500&auto=format&fit=crop') center/cover; background-image:linear-gradient(to bottom,#111827,#374151); display:flex;flex-direction:column;padding:20px 10px;width:100%;height:100%; }
+    .chat-bubble { padding:8px 14px;border-radius:18px;margin-bottom:8px;max-width:75%;opacity:0;animation:bubble-pop 0.5s ease-out forwards; }
+    .chat-bubble.user { background-color:#25D366;color:white;align-self:flex-end; }
+    .chat-bubble.assistant { background-color:white;color:#1f2937;align-self:flex-start; }
+    @keyframes bubble-pop { 0%{transform:scale(0.5);opacity:0;}80%{transform:scale(1.05);}100%{transform:scale(1);opacity:1;} }
+    .chat-bubble:nth-child(1){animation-delay:0.5s;}
+    .chat-bubble:nth-child(2){animation-delay:1.5s;}
+    .chat-bubble:nth-child(3){animation-delay:2.5s;}
+    .chat-bubble:nth-child(4){animation-delay:3.5s;}
+
+    /*— Modal —*/
+    .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000; }
+    .modal-content { background:white; padding:2rem; border-radius:0.5rem; width:90%; max-width:500px; position:relative; animation:slide-up 0.3s ease-out; }
+    .close { position:absolute; top:1rem; right:1rem; font-size:1.5rem; cursor:pointer; color:#6b7280; }
+    .close:hover { color:#111827; }
+    @keyframes slide-up { from{transform:translateY(20px);opacity:0;} to{transform:translateY(0);opacity:1;} }
+
+    /*— Validaciones —*/
+    input:invalid:focus { border-color:#ef4444; box-shadow:0 0 0 2px rgba(239,68,68,0.2); }
+    .error-text { color:#ef4444; font-size:.875rem; }
+
+    /*— Navegación móvil —*/
+    .mobile-nav { transition: transform 0.3s ease-in-out; }
+    .mobile-nav-hidden { transform: translateX(100%); }
   </style>
 </head>
 <body class="text-gray-800">
+
+  <!-- HEADER -->
   <header class="bg-white/80 backdrop-blur-lg fixed top-0 left-0 right-0 z-50 border-b border-gray-200">
     <div class="container mx-auto px-6 py-3 flex justify-between items-center">
-      <a href="#" aria-label="Página de inicio de MiTempo.app">
-        <img src="./logo-mitempo.png" alt="Logo de MiTempo.app Cerebro Digital" class="h-12 w-auto" onerror="this.src='https://via.placeholder.com/150x50?text=MiTempo'">
+      <a href="#" aria-label="Inicio MiTempo.app">
+        <img src="./logo-mitempo.png" alt="MiTempo" class="h-12 w-auto"
+             onerror="this.src='https://via.placeholder.com/150x50?text=MiTempo'">
       </a>
-      <nav class="mobile-nav fixed top-0 right-0 h-full w-64 bg-white shadow-lg md:static md:flex md:items-center md:space-x-6 md:shadow-none md:w-auto md:h-auto transform md:transform-none mobile-nav-hidden">
-        <button class="md:hidden absolute top-4 right-4 text-gray-700" aria-label="Cerrar menú móvil">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      <nav class="mobile-nav fixed top-0 right-0 h-full w-64 bg-white shadow-lg md:static md:flex md:items-center md:space-x-6 md:shadow-none md:w-auto md:h-auto transform mobile-nav-hidden">
+        <button class="md:hidden absolute top-4 right-4 text-gray-700" aria-label="Cerrar menú">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+               stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
         <div class="flex flex-col md:flex-row md:space-x-6 p-6 md:p-0 space-y-4 md:space-y-0">
           <a href="#soluciones" class="text-gray-600 hover:text-brand-green transition">Soluciones</a>
-          <a href="#planes" class="text-gray-600 hover:text-brand-green transition">Planes</a>
-          <a href="#faq" class="text-gray-600 hover:text-brand-green transition">Preguntas Frecuentes</a>
-          <button id="openFormBtn" class="bg-brand-green text-white px-4 py-2 rounded-lg font-semibold hover:bg-brand-green-dark transition shadow-sm md:mt-0 mt-4">Probar Gratis</button>
+          <a href="#planes"     class="text-gray-600 hover:text-brand-green transition">Planes</a>
+          <a href="#faq"        class="text-gray-600 hover:text-brand-green transition">FAQ</a>
+          <button id="openFormBtn"
+                  class="bg-brand-green text-white px-4 py-2 rounded-lg font-semibold hover:bg-brand-green-dark transition shadow-sm">
+            Probar Gratis
+          </button>
         </div>
       </nav>
-      <button class="md:hidden text-gray-700" id="menuToggle" aria-label="Abrir menú móvil">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      <button class="md:hidden text-gray-700" id="menuToggle" aria-label="Abrir menú">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+             stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
     </div>
   </header>
+
+  <!-- MAIN -->
   <main class="pt-20">
+    <!-- Hero -->
     <section class="py-20 md:py-32 bg-white">
       <div class="container mx-auto px-6 text-center">
-        <div class="max-w-4xl mx-auto">
-          <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
-            Tu Asistente con IA y <span class="text-brand-green">Automatizaciones</span> para Crecer
-          </h1>
-          <p class="text-lg md:text-xl text-gray-600 mb-8">
-            Desde organizar tu agenda por WhatsApp hasta automatizar procesos clave de tu negocio.
-          </p>
-          <button id="openFormBtnMain" class="inline-block bg-brand-green text-white text-lg font-bold px-8 py-4 rounded-xl hover:bg-brand-green-dark transition-transform transform hover:scale-105 shadow-lg">
-            Empezar Gratis →
-          </button>
-        </div>
+        <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 mb-6">
+          Tu Asistente con IA y <span class="text-brand-green">Automatizaciones</span> para Crecer
+        </h1>
+        <p class="text-lg md:text-xl text-gray-600 mb-8">
+          Desde organizar tu agenda por WhatsApp hasta automatizar procesos clave de tu negocio.
+        </p>
+        <button id="openFormBtnMain"
+                class="bg-brand-green text-white text-lg font-bold px-8 py-4 rounded-xl hover:bg-brand-green-dark transition-transform transform hover:scale-105 shadow-lg">
+          Empezar Gratis →
+        </button>
         <div class="mt-16 flex justify-center">
           <div class="phone-mockup">
             <div class="phone-screen">
@@ -207,413 +114,348 @@
         </div>
       </div>
     </section>
+
+    <!-- Soluciones -->
     <section id="soluciones" class="py-20 fade-in-section">
-      <div class="container mx-auto px-6">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Soluciones a tu Medida</h2>
-          <p class="text-lg text-gray-600 mt-2">Tanto para tu día a día como para tu negocio.</p>
+      <div class="container mx-auto px-6 text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Soluciones a tu Medida</h2>
+        <p class="text-lg text-gray-600 mt-2">Tanto para tu día a día como para tu negocio.</p>
+      </div>
+      <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl">
+        <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-xl border-t-4 border-brand-green">
+          <h3 class="text-2xl font-bold mb-2">Asistente por WhatsApp</h3>
+          <p class="text-gray-600">Registro de gastos, agendado de eventos, recordatorios... ¡todo desde WhatsApp!</p>
+          <a href="#planes" class="text-brand-green font-semibold hover:underline">Ver planes →</a>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition-shadow border-t-4 border-brand-green">
-            <div class="mb-4 inline-block p-3 bg-emerald-100 rounded-full">
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-green"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="22"></line></svg>
-            </div>
-            <h3 class="text-2xl font-bold mb-2">Asistente Personal por WhatsApp</h3>
-            <p class="text-gray-600 mb-4">La forma más fácil de organizar tu vida. Hablá con tu asistente para registrar gastos, agendar eventos, crear recordatorios y más.</p>
-            <a href="#planes" class="font-semibold text-brand-green hover:underline">Ver planes de asistente →</a>
-          </div>
-          <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition-shadow border-t-4 border-blue-500">
-            <div class="mb-4 inline-block p-3 bg-blue-100 rounded-full">
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><path d="M12 6V3a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1v3"/><path d="M18 8h3a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1h-3"/><path d="M18 22h3a1 1 0 0 0 1-1v-3"/><path d="M6 16H3a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h3"/><rect x="8" y="8" width="8" height="8"/></svg>
-            </div>
-            <h3 class="text-2xl font-bold mb-2">Automatización para Pymes y Profesionales</h3>
-            <p class="text-gray-600 mb-4">Optimizamos tus procesos. Desde la gestión de clientes (CRM) hasta flujos de trabajo personalizados para que ahorres tiempo y dinero.</p>
-            <a href="#contacto" class="font-semibold text-blue-500 hover:underline">Consultar por automatización →</a>
-          </div>
+        <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-xl border-t-4 border-blue-500">
+          <h3 class="text-2xl font-bold mb-2">Automatizaciones</h3>
+          <p class="text-gray-600">Desde CRM hasta flujos de trabajo a medida para PYMES y profesionales.</p>
+          <a href="#contacto" class="text-blue-500 font-semibold hover:underline">Consultar →</a>
         </div>
       </div>
     </section>
+
+    <!-- Planes -->
     <section id="planes" class="py-20 bg-white fade-in-section">
-      <div class="container mx-auto px-6">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Planes del Asistente Personal</h2>
-          <p class="text-lg text-gray-600 mt-2">Comenzá gratis y crecé a tu ritmo.</p>
+      <div class="container mx-auto px-6 text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Planes del Asistente</h2>
+        <p class="text-lg text-gray-600 mt-2">Comenzá gratis y crecé a tu ritmo.</p>
+      </div>
+      <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Bronce -->
+        <div class="bg-white p-6 rounded-xl shadow-lg border flex flex-col">
+          <h3 class="text-xl font-bold text-amber-600">🥉 Plan Bronce</h3>
+          <p class="text-gray-600 mb-4 text-sm">
+            Agendá por voz o texto, recordatorios simples.
+          </p>
+          <p class="text-xl font-extrabold my-4">💰 $3 USD/mes</p>
+          <button id="openFormBtnPlan1"
+                  class="mt-auto bg-gray-200 text-gray-800 font-bold py-3 rounded-lg hover:bg-gray-300 transition"
+                  data-plan="Bronce">Probar</button>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div class="bg-white p-6 rounded-xl shadow-lg border flex flex-col">
-            <h3 class="text-xl font-bold text-amber-600">🥉 Plan Bronce</h3>
-            <p class="text-gray-500 mt-1 text-sm">Organizá tu tiempo de forma simple.</p>
-            <p class="text-gray-600 mb-4 text-sm">El plan Bronce te permite agendar eventos con tu voz directamente desde WhatsApp. Decí cosas como:<br><br>“El martes a las 9 tengo turno con el dentista”<br>“Recordame la reunión con Juan el viernes”<br><br>Tu asistente lo entiende, lo agenda en tu Google Calendar y te envía recordatorios automáticos. También podés ver tu agenda semanal con solo pedirlo.</p>
-            <ul class="space-y-2 text-gray-600 text-sm mb-6 flex-grow">
-              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Manejo de calendario básico</li>
-              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Agendado por voz o texto</li>
-              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Recordatorios y alertas simples</li>
-            </ul>
-            <p class="text-xl font-extrabold my-4">💰 Precio estimado: $3 USD<span class="text-base font-medium text-gray-500">/mes</span></p>
-            <button id="openFormBtnPlan1" class="block text-center w-full mt-auto bg-gray-200 text-gray-800 font-bold py-3 rounded-lg hover:bg-gray-300 transition" data-plan="Bronce">Probar</button>
-          </div>
-          <div class="bg-white p-6 rounded-xl shadow-lg border flex flex-col">
-            <h3 class="text-xl font-bold text-gray-500">🥈 Plan Plata</h3>
-            <p class="text-gray-500 mt-1 text-sm">Agenda inteligente + conversaciones naturales.</p>
-            <p class="text-gray-600 mb-4 text-sm">Este plan mejora la experiencia con soporte para texto libre. Podés hablarle como a una persona:<br><br>“Che, anotá que tengo que llevar a los chicos al médico el jueves a las 10”<br>“¿Qué tenía hoy a la tarde?”<br>“Cancelá lo del gimnasio del sábado”<br><br>El asistente interpreta el mensaje, agenda, responde e incluso cancela eventos por vos. Ideal si buscás comodidad sin complicaciones.</p>
-            <ul class="space-y-2 text-gray-600 text-sm mb-6 flex-grow">
-              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Todo lo del Plan Bronce</li>
-              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Calendario conectado a Google</li>
-              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Comprensión de lenguaje natural</li>
-              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Confirmaciones automáticas</li>
-            </ul>
-            <p class="text-xl font-extrabold my-4">💰 Precio estimado: $5 USD<span class="text-base font-medium text-gray-500">/mes</span></p>
-            <button id="openFormBtnPlan2" class="block text-center w-full mt-auto bg-gray-800 text-white font-bold py-3 rounded-lg hover:bg-gray-900 transition" data-plan="Plata">Elegir</button>
-          </div>
-          <div class="bg-white p-6 rounded-xl shadow-2xl border-2 border-brand-green relative flex flex-col">
-            <span class="absolute top-0 -translate-y-1/2 bg-brand-green text-white text-xs font-bold px-3 py-1 rounded-full">RECOMENDADO</span>
-            <h3 class="text-xl font-bold text-brand-green">🥇 Plan Oro</h3>
-            <p class="text-gray-500 mt-1 text-sm">Tu agenda y tus finanzas en piloto automático.</p>
-            <p class="text-gray-600 mb-4 text-sm">El plan más completo. No solo manejás tu agenda con voz, también registrás tus gastos y llevás el control de tus finanzas sin esfuerzo.<br><br>“Gasté 7000 en super”<br>“Cobré 120.000 del trabajo”<br>“¿Cuánto llevo gastado esta semana?”<br><br>El asistente clasifica automáticamente tus ingresos y egresos en Google Sheets, genera resúmenes, te da alertas de ahorro y predice tus gastos futuros.</p>
-            <ul class="space-y-2 text-gray-600 text-sm mb-6 flex-grow">
-              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Todo lo del Plan Plata</li>
-              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Registro de gastos e ingresos</li>
-              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Reportes semanales y mensuales</li>
-              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Recomendaciones de ahorro</li>
-            </ul>
-            <p class="text-xl font-extrabold my-4">💰 Precio estimado: $10 USD<span class="text-base font-medium text-gray-500">/mes</span></p>
-            <button id="openFormBtnPlan3" class="block text-center w-full mt-auto bg-brand-green text-white font-bold py-3 rounded-lg hover:bg-brand-green-dark transition" data-plan="Oro">Elegir</button>
-          </div>
-          <div class="bg-white p-6 rounded-xl shadow-lg border flex flex-col">
-            <h3 class="text-xl font-bold text-blue-500">👥 Plan Duo</h3>
-            <p class="text-gray-500 mt-1 text-sm">MiTempo para dos, con cuenta compartida.</p>
-            <p class="text-gray-600 mb-4 text-sm">Pensado para parejas, socios o familias. Ambos pueden usar el mismo asistente desde sus teléfonos y llevar una sola cuenta de gastos.<br><br>Usuario A: “Gasté 3000 en nafta”<br>Usuario B: “Anotá que pagué 5000 de cable”<br><br>Ambos: “¿Cuánto gastamos esta semana?”<br><br>MiTempo registra todo en la misma hoja, con etiquetas por usuario, genera alertas combinadas y organiza un calendario compartido.</p>
-            <ul class="space-y-2 text-gray-600 text-sm mb-6 flex-grow">
-              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Todo lo del Plan Oro</li>
-              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Hasta 2 usuarios</li>
-              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Control financiero conjunto</li>
-              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Registros separados y sincronizados</li>
-            </ul>
-            <p class="text-xl font-extrabold my-4">💰 Precio estimado: $10 USD<span class="text-base font-medium text-gray-500">/mes (ambos incluidos)</span></p>
-            <button id="openFormBtnPlan4" class="block text-center w-full mt-auto bg-gray-800 text-white font-bold py-3 rounded-lg hover:bg-gray-900 transition" data-plan="Duo">Elegir</button>
-          </div>
+        <!-- Plata -->
+        <div class="bg-white p-6 rounded-xl shadow-lg border flex flex-col">
+          <h3 class="text-xl font-bold text-gray-500">🥈 Plan Plata</h3>
+          <p class="text-gray-600 mb-4 text-sm">
+            Lenguaje natural, calendario Google, confirmaciones automáticas.
+          </p>
+          <p class="text-xl font-extrabold my-4">💰 $5 USD/mes</p>
+          <button id="openFormBtnPlan2"
+                  class="mt-auto bg-gray-800 text-white font-bold py-3 rounded-lg hover:bg-gray-900 transition"
+                  data-plan="Plata">Elegir</button>
+        </div>
+        <!-- Oro -->
+        <div class="bg-white p-6 rounded-xl shadow-2xl border-2 border-brand-green flex flex-col relative">
+          <span class="absolute top-0 -translate-y-1/2 bg-brand-green text-white text-xs font-bold px-3 py-1 rounded-full">RECOMENDADO</span>
+          <h3 class="text-xl font-bold text-brand-green">🥇 Plan Oro</h3>
+          <p class="text-gray-600 mb-4 text-sm">
+            Agenda + registro de gastos, reportes, recomendaciones de ahorro.
+          </p>
+          <p class="text-xl font-extrabold my-4">💰 $10 USD/mes</p>
+          <button id="openFormBtnPlan3"
+                  class="mt-auto bg-brand-green text-white font-bold py-3 rounded-lg hover:bg-brand-green-dark transition"
+                  data-plan="Oro">Elegir</button>
+        </div>
+        <!-- Duo -->
+        <div class="bg-white p-6 rounded-xl shadow-lg border flex flex-col">
+          <h3 class="text-xl font-bold text-blue-500">👥 Plan Duo</h3>
+          <p class="text-gray-600 mb-4 text-sm">
+            Hasta 2 usuarios, control financiero conjunto y sincronizado.
+          </p>
+          <p class="text-xl font-extrabold my-4">💰 $10 USD/mes (2 usuarios)</p>
+          <button id="openFormBtnPlan4"
+                  class="mt-auto bg-gray-800 text-white font-bold py-3 rounded-lg hover:bg-gray-900 transition"
+                  data-plan="Duo">Elegir</button>
         </div>
       </div>
     </section>
+
+    <!-- FAQ -->
     <section id="faq" class="py-20 fade-in-section">
-      <div class="container mx-auto px-6 max-w-3xl">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Preguntas Frecuentes</h2>
-        </div>
-        <div class="space-y-4" id="faq-accordion"></div>
+      <div class="container mx-auto px-6 max-w-3xl text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Preguntas Frecuentes</h2>
       </div>
+      <div class="container mx-auto px-6 space-y-4" id="faq-accordion"></div>
     </section>
+
+    <!-- Contacto -->
     <section id="contacto" class="py-20 bg-white fade-in-section">
       <div class="container mx-auto px-6 text-center">
-        <div class="max-w-3xl mx-auto bg-gray-50 p-8 rounded-2xl shadow-lg">
-          <h2 class="text-3xl font-bold text-gray-900">¿Necesitás una solución de automatización a medida?</h2>
-          <p class="text-lg text-gray-600 mt-4 mb-6">Hablemos de tu proyecto. Analizamos tus necesidades y te proponemos una solución personalizada para que tu empresa sea más eficiente.</p>
-          <a href="mailto:contacto@mitempo.app" class="inline-block bg-blue-600 text-white text-lg font-bold px-8 py-4 rounded-xl hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-lg">
+        <div class="bg-gray-50 p-8 rounded-2xl shadow-lg max-w-3xl mx-auto">
+          <h2 class="text-3xl font-bold text-gray-900">¿Necesitás una solución a medida?</h2>
+          <p class="text-lg text-gray-600 mt-4 mb-6">
+            Hablemos de tu proyecto y te proponemos la mejor automatización.
+          </p>
+          <a href="mailto:contacto@mitempo.app"
+             class="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-lg">
             Contactar por email
           </a>
         </div>
       </div>
     </section>
   </main>
+
+  <!-- FOOTER -->
   <footer class="bg-gray-900 text-gray-400 py-12">
     <div class="container mx-auto px-6 text-center">
-      <a href="#" aria-label="Página de inicio de MiTempo.app" class="inline-block mb-4">
-        <img src="./logo-mitempo.png" alt="Logo de MiTempo.app Cerebro Digital" class="h-12 w-auto mx-auto" onerror="this.src='https://via.placeholder.com/150x50?text=MiTempo'">
-      </a>
-      <div class="flex justify-center space-x-6 my-6">
-        <a href="./politicas.html" target="_blank" class="hover:text-white transition">Política de privacidad</a>
-        <a href="./terminos.html" target="_blank" class="hover:text-white transition">Términos de uso</a>
-        <a href="mailto:contacto@mitempo.app" class="hover:text-white transition">Contacto</a>
+      <img src="./logo-mitempo.png" alt="MiTempo" class="h-12 w-auto mx-auto mb-4"
+           onerror="this.src='https://via.placeholder.com/150x50?text=MiTempo'">
+      <div class="flex justify-center space-x-6 mb-6">
+        <a href="./politicas.html" class="hover:text-white">Política de privacidad</a>
+        <a href="./terminos.html" class="hover:text-white">Términos de uso</a>
+        <a href="mailto:contacto@mitempo.app" class="hover:text-white">Contacto</a>
       </div>
       <p>© 2025 MiTempo.app. Todos los derechos reservados.</p>
     </div>
   </footer>
+
+  <!-- MODAL FORM -->
   <div id="formModal" class="modal">
     <div class="modal-content">
       <button id="closeModal" class="close" aria-label="Cerrar modal">×</button>
       <h2 class="text-2xl font-bold text-gray-900 mb-6">Regístrate para tu prueba gratis</h2>
-      <form id="registrationForm" action="https://script.google.com/macros/s/AKfycbzD6Q93eJgKCHVdApCbDBxSa_UWIq8Nr3qgFC84CIz_ujaaBFnzaoVIctwKHRpZhhprCQ/exec" method="POST" class="space-y-4">
+      <form id="registrationForm"
+            action="https://script.google.com/macros/s/AKfycbzD6Q93eJgKCHVdApCbDBxSa_UWIq8Nr3qgFC84CIz_ujaaBFnzaoVIctwKHRpZhhprCQ/exec"
+            method="POST" class="space-y-4">
         <div>
           <label for="fullName" class="block text-sm font-medium text-gray-700">Nombre y Apellido *</label>
-          <input type="text" id="fullName" name="fullName" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-green" aria-required="true">
-          <p id="fullName-error" class="error-text text-sm mt-1 hidden">Por favor, ingrese un nombre completo válido.</p>
+          <input type="text" id="fullName" name="fullName" required
+                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-green">
+          <p id="fullName-error" class="error-text hidden">Ingrese un nombre válido.</p>
         </div>
         <div>
-          <label for="phone" class="block text-sm font-medium text-gray-700">Número de WhatsApp *</label>
-          <input type="tel" id="phone" name="phone" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-green" placeholder="Ej. +549123456789" aria-required="true" aria-describedby="phone-hint">
-          <p id="phone-hint" class="text-sm text-gray-500 mt-1">Ingrese su número con el código de país (ej. +549123456789).</p>
-          <p id="phone-error" class="error-text text-sm mt-1 hidden">Número de WhatsApp inválido.</p>
+          <label for="phone" class="block text-sm font-medium text-gray-700">WhatsApp *</label>
+          <input type="tel" id="phone" name="phone" required placeholder="+549123456789"
+                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-green">
+          <p id="phone-error" class="error-text hidden">Número inválido.</p>
         </div>
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700">Email *</label>
-          <input type="email" id="email" name="email" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-green" aria-required="true">
-          <p id="email-error" class="error-text text-sm mt-1 hidden">Por favor, ingrese un correo electrónico válido.</p>
+          <input type="email" id="email" name="email" required
+                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-green">
+          <p id="email-error" class="error-text hidden">Email inválido.</p>
         </div>
         <div>
           <label for="plan" class="block text-sm font-medium text-gray-700">Plan *</label>
-          <select id="plan" name="plan" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-green" aria-required="true">
+          <select id="plan" name="plan" required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-green">
             <option value="Prueba">Prueba</option>
-            <option value="Bronce">Plan Bronce</option>
-            <option value="Plata">Plan Plata</option>
-            <option value="Oro">Plan Oro</option>
-            <option value="Duo">Plan Duo</option>
+            <option value="Bronce">Bronce</option>
+            <option value="Plata">Plata</option>
+            <option value="Oro">Oro</option>
+            <option value="Duo">Duo</option>
           </select>
         </div>
         <div>
-          <label for="invitedBy" class="block text-sm font-medium text-gray-700">¿Fue invitado por alguien? (Obligatorio para el plan Duo)</label>
-          <input type="tel" id="invitedBy" name="invitedBy" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-green" placeholder="Ej. +549123456789">
-          <p id="invitedBy-error" class="error-text text-sm mt-1 hidden">Por favor, ingrese el número de quien lo invitó (Plan Duo).</p>
+          <label for="invitedBy" class="block text-sm font-medium text-gray-700">
+            ¿Invitado por alguien? (solo Duo)
+          </label>
+          <input type="tel" id="invitedBy" name="invitedBy"
+                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-green"
+                 placeholder="+549123456789">
+          <p id="invitedBy-error" class="error-text hidden">Requerido para Duo.</p>
         </div>
-        <button type="submit" id="submitButton" class="w-full bg-brand-green text-white font-bold py-2 rounded-md hover:bg-brand-green-dark transition">Enviar</button>
+        <button type="submit" id="submitButton"
+                class="w-full bg-brand-green text-white py-2 rounded-md hover:bg-brand-green-dark transition">
+          Enviar
+        </button>
       </form>
       <p id="mensaje" class="mt-4 text-center text-sm"></p>
     </div>
   </div>
+
+  <!-- SCRIPTS -->
   <script>
-    // Mobile Navigation
-    const menuToggle = document.getElementById('menuToggle');
-    const mobileNav = document.querySelector('.mobile-nav');
-    const closeNav = mobileNav.querySelector('button');
-    menuToggle.addEventListener('click', () => {
-      mobileNav.classList.remove('mobile-nav-hidden');
-    });
-    closeNav.addEventListener('click', () => {
-      mobileNav.classList.add('mobile-nav-hidden');
-    });
+    // Navegación móvil
+    const menuToggle = document.getElementById('menuToggle'),
+          mobileNav = document.querySelector('.mobile-nav'),
+          closeNav  = mobileNav.querySelector('button');
+    menuToggle.addEventListener('click', () => mobileNav.classList.remove('mobile-nav-hidden'));
+    closeNav .addEventListener('click', () => mobileNav.classList.add('mobile-nav-hidden'));
 
-    // Fade-in Sections
-    const fadeInSections = document.querySelectorAll('.fade-in-section');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1 });
-    fadeInSections.forEach(section => observer.observe(section));
-
-    // FAQ Accordion
-    const faqContainer = document.getElementById('faq-accordion');
-    const faqs = [
-      {
-        question: "¿Funciona con cualquier número de WhatsApp?",
-        answer: "¡Sí! Funciona con cualquier número de WhatsApp, tanto en Android como en iPhone. No importa si tu número es personal o de empresa (Business). Solo necesitás tener la aplicación de WhatsApp instalada."
-      },
-      {
-        question: "¿Es seguro? ¿Quién ve mis datos?",
-        answer: "La seguridad es nuestra máxima prioridad. Tus datos están encriptados y solo vos podés acceder a ellos. Nadie del equipo de MiTempo tiene acceso a tu información personal. Utilizamos los más altos estándares de seguridad para proteger tu privacidad."
-      },
-      {
-        question: "¿Necesito instalar algo?",
-        answer: "Absolutamente nada. MiTempo funciona directamente sobre WhatsApp. No tenés que descargar ninguna aplicación adicional. El proceso de registro es 100% online y solo te toma un minuto."
-      },
-      {
-        question: "¿Qué pasa cuando termina el período de prueba?",
-        answer: "Te avisaremos unos días antes de que finalice tu prueba gratuita de 15 días. Si te gustó, podés elegir uno de nuestros planes de pago para continuar usando todas las funciones. Si decidís no continuar, tu cuenta se desactivará, pero podrás exportar tus datos si lo deseás."
-      }
-    ];
-    faqs.forEach((faq, index) => {
-      const faqElement = document.createElement('div');
-      faqElement.className = 'bg-white rounded-lg shadow-sm border border-gray-200';
-      faqElement.innerHTML = `
-        <button class="faq-toggle flex justify-between items-center w-full p-6 text-left font-semibold" aria-expanded="false" aria-controls="faq-${index}">
-          ${faq.question}
-          <svg class="w-6 h-6 transition-transform transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
-        </button>
-        <div id="faq-${index}" class="faq-content max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
-          <p class="p-6 pt-0 text-gray-600">${faq.answer}</p>
-        </div>
-      `;
-      faqContainer.appendChild(faqElement);
-    });
-    document.querySelectorAll('.faq-toggle').forEach(toggle => {
-      toggle.addEventListener('click', () => {
-        const content = toggle.nextElementSibling;
-        const icon = toggle.querySelector('svg');
-        const isExpanded = content.style.maxHeight;
-        document.querySelectorAll('.faq-content').forEach(item => {
-          if (item !== content && item.style.maxHeight) {
-            item.style.maxHeight = null;
-            const otherIcon = item.previousElementSibling.querySelector('svg');
-            if (otherIcon) otherIcon.style.transform = 'rotate(0deg)';
-            item.previousElementSibling.setAttribute('aria-expanded', 'false');
+    // Fade-in
+    document.querySelectorAll('.fade-in-section').forEach(sec => {
+      new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('is-visible');
+            this.unobserve(e.target);
           }
         });
-        if (isExpanded) {
-          content.style.maxHeight = null;
-          icon.style.transform = 'rotate(0deg)';
-          toggle.setAttribute('aria-expanded', 'false');
-        } else {
-          content.style.maxHeight = content.scrollHeight + 'px';
-          icon.style.transform = 'rotate(180deg)';
-          toggle.setAttribute('aria-expanded', 'true');
-        }
+      }, { threshold: 0.1 }).observe(sec);
+    });
+
+    // FAQ
+    const faqContainer = document.getElementById('faq-accordion'),
+          faqs = [
+            { q:"¿Funciona con cualquier WhatsApp?", a:"¡Sí! Cualquier número funciona." },
+            { q:"¿Es seguro?",                  a:"Tus datos encriptados, privacidad garantizada." },
+            { q:"¿Instalo algo?",               a:"Nada, funciona directo en WhatsApp." },
+            { q:"¿Fin prueba?",                 a:"Aviso antes, podés exportar datos." }
+          ];
+    faqs.forEach((f,i)=> {
+      const div = document.createElement('div');
+      div.className = 'bg-white rounded-lg shadow-sm border';
+      div.innerHTML = `
+        <button class="faq-toggle flex justify-between items-center w-full p-6 font-semibold"
+                aria-expanded="false" aria-controls="faq-${i}">
+          ${f.q}
+          <svg class="w-6 h-6 transition-transform transform" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div id="faq-${i}" class="faq-content max-h-0 overflow-hidden transition-all duration-500 ease-in-out p-6 pt-0 text-gray-600">
+          ${f.a}
+        </div>`;
+      faqContainer.appendChild(div);
+    });
+    document.querySelectorAll('.faq-toggle').forEach(t => {
+      t.addEventListener('click', () => {
+        const c = t.nextElementSibling, svg=t.querySelector('svg'), open=!!c.style.maxHeight;
+        document.querySelectorAll('.faq-content').forEach(cc=>{
+          if(cc!==c){ cc.style.maxHeight=null; cc.previousElementSibling.setAttribute('aria-expanded','false');
+                      cc.previousElementSibling.querySelector('svg').style.transform='rotate(0deg)'; }
+        });
+        if(open) { c.style.maxHeight=null; svg.style.transform='rotate(0deg)'; t.setAttribute('aria-expanded','false'); }
+        else     { c.style.maxHeight=c.scrollHeight+'px'; svg.style.transform='rotate(180deg)'; t.setAttribute('aria-expanded','true'); }
       });
     });
 
-    // Modal Form Logic
-    const modal = document.getElementById('formModal');
-    const closeModal = document.getElementById('closeModal');
-    const openFormBtn = document.getElementById('openFormBtn');
-    const openFormBtnMain = document.getElementById('openFormBtnMain');
-    const openFormBtnPlan1 = document.getElementById('openFormBtnPlan1');
-    const openFormBtnPlan2 = document.getElementById('openFormBtnPlan2');
-    const openFormBtnPlan3 = document.getElementById('openFormBtnPlan3');
-    const openFormBtnPlan4 = document.getElementById('openFormBtnPlan4');
-    const form = document.getElementById('registrationForm');
-    const mensaje = document.getElementById('mensaje');
-    const submitButton = document.getElementById('submitButton');
-    const phoneInput = document.getElementById('phone');
-    const phoneError = document.getElementById('phone-error');
-    const emailInput = document.getElementById('email');
-    const emailError = document.getElementById('email-error');
-    const fullNameInput = document.getElementById('fullName');
-    const fullNameError = document.getElementById('fullName-error');
-    const invitedByInput = document.getElementById('invitedBy');
-    const invitedByError = document.getElementById('invitedBy-error');
-    const planInput = document.getElementById('plan');
-    const whatsappNumber = "+17432734544";
+    // Form Modal
+    const modal            = document.getElementById('formModal'),
+          openBtns         = [ 'openFormBtn','openFormBtnMain','openFormBtnPlan1','openFormBtnPlan2','openFormBtnPlan3','openFormBtnPlan4' ]
+                            .map(id=>document.getElementById(id)),
+          closeModalBtn    = document.getElementById('closeModal'),
+          form             = document.getElementById('registrationForm'),
+          mensaje          = document.getElementById('mensaje'),
+          submitButton     = document.getElementById('submitButton'),
+          inputs = {
+            phone:    document.getElementById('phone'),
+            email:    document.getElementById('email'),
+            fullName: document.getElementById('fullName'),
+            invitedBy:document.getElementById('invitedBy'),
+          },
+          errors = {
+            phone:    document.getElementById('phone-error'),
+            email:    document.getElementById('email-error'),
+            fullName: document.getElementById('fullName-error'),
+            invitedBy:document.getElementById('invitedBy-error'),
+          },
+          planInput       = document.getElementById('plan'),
+          whatsappNumber  = "+17432734544";
 
-    // Plan selection
-    const planButtons = {
-      openFormBtnPlan1: 'Bronce',
-      openFormBtnPlan2: 'Plata',
-      openFormBtnPlan3: 'Oro',
-      openFormBtnPlan4: 'Duo'
-    };
-    [openFormBtn, openFormBtnMain, openFormBtnPlan1, openFormBtnPlan2, openFormBtnPlan3, openFormBtnPlan4].forEach(btn => {
+    // Abrir modal y seleccionar plan
+    openBtns.forEach(btn=>{
       btn.addEventListener('click', () => {
-        modal.style.display = 'flex';
-        const plan = btn.dataset.plan || 'Prueba';
-        planInput.value = plan;
+        modal.style.display='flex';
+        planInput.value = btn.dataset.plan || 'Prueba';
       });
     });
-    closeModal.addEventListener('click', () => {
-      modal.style.display = 'none';
+    closeModalBtn.addEventListener('click', closeModal);
+    window.addEventListener('click', e => { if(e.target===modal) closeModal(); });
+    function closeModal(){
+      modal.style.display='none';
       form.reset();
       mensaje.textContent = '';
-      [phoneError, emailError, fullNameError, invitedByError].forEach(error => error.classList.add('hidden'));
-    });
-    window.addEventListener('click', (event) => {
-      if (event.target === modal) {
-        modal.style.display = 'none';
-        form.reset();
-        mensaje.textContent = '';
-        [phoneError, emailError, fullNameError, invitedByError].forEach(error => error.classList.add('hidden'));
-      }
-    });
+      Object.values(errors).forEach(el=>el.classList.add('hidden'));
+    }
 
-    // Real-time validation
-    phoneInput.addEventListener('input', () => {
-      const phoneRegex = /^\+?[1-9]\d{9,14}$/;
-      phoneError.classList.toggle('hidden', phoneRegex.test(phoneInput.value));
-    });
-    emailInput.addEventListener('input', () => {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      emailError.classList.toggle('hidden', emailRegex.test(emailInput.value));
-    });
-    fullNameInput.addEventListener('input', () => {
-      fullNameError.classList.toggle('hidden', fullNameInput.value.trim().length >= 2);
-    });
+    // Validación en tiempo real
+    inputs.phone.addEventListener('input',    ()=> toggleError('phone',/^\+?[1-9]\d{9,14}$/.test(inputs.phone.value)));
+    inputs.email.addEventListener('input',    ()=> toggleError('email',/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputs.email.value)));
+    inputs.fullName.addEventListener('input', ()=> toggleError('fullName',inputs.fullName.value.trim().length>=2));
+    function toggleError(field,valid){
+      errors[field].classList.toggle('hidden',valid);
+    }
 
-    // Form submission with retry logic
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      mensaje.textContent = 'Enviando datos...';
-      submitButton.disabled = true;
+    // Envío con reintentos
+    form.addEventListener('submit', async e=>{
+      e.preventDefault();
+      mensaje.style.color='inherit';
+      mensaje.textContent='Enviando datos...';
+      submitButton.disabled=true;
+      const data = Object.fromEntries(new FormData(form).entries());
 
-      const formData = new FormData(form);
-      const plainData = Object.fromEntries(formData.entries());
-
-      // Validations
-      const phoneRegex = /^\+?[1-9]\d{9,14}$/;
-      if (!phoneRegex.test(plainData.phone)) {
-        mensaje.textContent = '❌ Por favor, ingrese un número de WhatsApp válido (ej. +549123456789).';
-        mensaje.style.color = 'red';
-        submitButton.disabled = false;
-        return;
+      // Validaciones finales
+      if(!/^\+?[1-9]\d{9,14}$/.test(data.phone)){
+        return showError('phone','Número inválido');
       }
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(plainData.email)) {
-        mensaje.textContent = '❌ Por favor, ingrese un correo electrónico válido.';
-        mensaje.style.color = 'red';
-        submitButton.disabled = false;
-        return;
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)){
+        return showError('email','Email inválido');
       }
-      if (plainData.fullName.trim().length < 2) {
-        mensaje.textContent = '❌ Por favor, ingrese un nombre completo válido.';
-        mensaje.style.color = 'red';
-        submitButton.disabled = false;
-        return;
+      if(data.fullName.trim().length<2){
+        return showError('fullName','Nombre inválido');
       }
-      if (plainData.plan === 'Duo' && !plainData.invitedBy.trim()) {
-        mensaje.textContent = '❌ Por favor, ingrese el número de quien lo invitó (Plan Duo).';
-        mensaje.style.color = 'red';
-        invitedByError.classList.remove('hidden');
-        submitButton.disabled = false;
-        return;
-      } else {
-        invitedByError.classList.add('hidden');
+      if(data.plan==='Duo' && !data.invitedBy.trim()){
+        return showError('invitedBy','Requerido para Duo');
+      }
+      // +54 por defecto
+      if(!data.phone.startsWith('+')){
+        data.phone = '+54'+data.phone.replace(/^0+/,'');
       }
 
-      // Force +54 prefix if none provided
-      if (!plainData.phone.startsWith('+')) {
-        plainData.phone = '+54' + plainData.phone.replace(/^0+/, '');
-      }
-
-      const maxRetries = 3;
-      let attempts = 0;
-
-      async function attemptSubmission() {
+      let attempts=0, maxRetries=3, response;
+      const submitData = async ()=>{
         try {
-          const response = await fetch(form.action, {
-            method: 'POST',
-            body: new URLSearchParams(plainData),
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
+          response = await fetch(form.action,{
+            method:'POST',
+            body:new URLSearchParams(data),
+            headers:{ 'Content-Type':'application/x-www-form-urlencoded' }
           });
-          const data = await response.json();
-          if (response.ok && data.success) {
-            modal.style.display = 'none';
-            form.reset();
-            mensaje.innerHTML = `
-              ✅ ¡Gracias por registrarte en <strong>MiTempo</strong>!<br><br>
-              🟢 Para activar tu cuenta, envía un mensaje por WhatsApp haciendo clic aquí:<br>
-              👉 <a href="https://wa.me/${whatsappNumber.replace('+', '')}?text=Hola%20MiTempo" target="_blank" class="text-blue-600 underline" aria-label="Abrir WhatsApp para activar tu cuenta">Abrir WhatsApp</a><br><br>
-              Después de eso, te guiaremos paso a paso. 🚀
+          const res = await response.json();
+          if(response.ok && res.success){
+            closeModal();
+            mensaje.innerHTML=`
+              ✅ ¡Gracias por registrarte en <strong>MiTempo</strong>!<br>
+              🟢 Para activar tu cuenta, haz clic aquí:<br>
+              👉 <a href="https://wa.me/${whatsappNumber.slice(1)}?text=Hola%20MiTempo"
+                    target="_blank" class="underline text-blue-600">Abrir WhatsApp</a> 🚀
             `;
-            mensaje.style.color = 'green';
-            const isWhatsAppInstalled = navigator.userAgent.includes('WhatsApp');
-            if (!isWhatsAppInstalled) {
-              mensaje.innerHTML += `<br>⚠️ Asegúrate de tener WhatsApp instalado en tu dispositivo.`;
-            }
+            mensaje.style.color='green';
           } else {
-            mensaje.textContent = data.message || '❌ Hubo un error al enviar el formulario. Por favor, intenta de nuevo.';
-            mensaje.style.color = 'red';
+            mensaje.textContent = res.message || '❌ Error al enviar.';
+            mensaje.style.color='red';
           }
-        } catch (error) {
+        } catch(err){
           attempts++;
-          if (attempts < maxRetries) {
-            mensaje.textContent = `⚠️ Error de conexión, reintentando (${attempts}/${maxRetries})...`;
-            setTimeout(attemptSubmission, 2000); // Retry after 2 seconds
+          if(attempts<maxRetries){
+            mensaje.textContent=`⚠️ Error de conexión (${attempts}/${maxRetries}), reintentando...`;
+            setTimeout(submitData,2000);
           } else {
-            mensaje.textContent = '❌ Error de conexión persistente: ' + error.message + '. Por favor, intenta de nuevo más tarde.';
-            mensaje.style.color = 'red';
-            alert('Error al enviar el formulario. Verifica tu conexión o contacta a soporte en contacto@mitempo.app.');
+            mensaje.textContent='❌ Conexión fallida. Intenta más tarde.';
+            mensaje.style.color='red';
+            alert('Error persistente. Contacta a contacto@mitempo.app');
           }
         } finally {
-          if (attempts >= maxRetries || response?.ok) {
-            submitButton.disabled = false;
-          }
+          if(attempts>=maxRetries || (response && response.ok)) submitButton.disabled=false;
         }
-      }
-
-      attemptSubmission();
+      };
+      submitData();
     });
+    function showError(field, text){
+      mensaje.textContent=text;
+      mensaje.style.color='red';
+      errors[field].classList.remove('hidden');
+      submitButton.disabled=false;
+    }
   </script>
 </body>
 </html>
