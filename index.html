@@ -33,6 +33,44 @@
         .chat-bubble:nth-child(2) { animation-delay: 1.5s; }
         .chat-bubble:nth-child(3) { animation-delay: 2.5s; }
         .chat-bubble:nth-child(4) { animation-delay: 3.5s; }
+
+        /* Estilos para el modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            animation: slide-up 0.3s ease-out;
+        }
+        .close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+        }
+        .close:hover {
+            color: #111827;
+        }
+        @keyframes slide-up {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
     </style>
 </head>
 <body class="text-gray-800">
@@ -46,7 +84,7 @@
                 <a href="#soluciones" class="text-gray-600 hover:text-brand-green transition">Soluciones</a>
                 <a href="#planes" class="text-gray-600 hover:text-brand-green transition">Planes</a>
                 <a href="#faq" class="text-gray-600 hover:text-brand-green transition">Preguntas Frecuentes</a>
-                <a href="https://m.me/308155932378393?ref=PRUEBA_GRATIS" target="_blank" class="bg-brand-green text-white px-4 py-2 rounded-lg font-semibold hover:bg-brand-green-dark transition shadow-sm">Probar Gratis</a>
+                <button id="openFormBtn" class="bg-brand-green text-white px-4 py-2 rounded-lg font-semibold hover:bg-brand-green-dark transition shadow-sm">Probar Gratis</button>
             </nav>
             <button class="md:hidden text-gray-700" aria-label="Abrir menú">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
@@ -64,9 +102,9 @@
                     <p class="text-lg md:text-xl text-gray-600 mb-8">
                         Desde organizar tu agenda por WhatsApp hasta automatizar procesos clave de tu negocio.
                     </p>
-                    <a href="https://m.me/308155932378393?ref=PRUEBA_GRATIS" target="_blank" class="inline-block bg-brand-green text-white text-lg font-bold px-8 py-4 rounded-xl hover:bg-brand-green-dark transition-transform transform hover:scale-105 shadow-lg">
+                    <button id="openFormBtnMain" class="inline-block bg-brand-green text-white text-lg font-bold px-8 py-4 rounded-xl hover:bg-brand-green-dark transition-transform transform hover:scale-105 shadow-lg">
                         Empezar Gratis →
-                    </a>
+                    </button>
                 </div>
                 <div class="mt-16 flex justify-center">
                     <div class="phone-mockup">
@@ -125,7 +163,7 @@
                             <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Recordatorios y alertas simples</li>
                         </ul>
                         <p class="text-xl font-extrabold my-4">💰 Precio estimado: $3 USD<span class="text-base font-medium text-gray-500">/mes</span></p>
-                        <a href="https://m.me/308155932378393?ref=PRUEBA_GRATIS" target="_blank" class="block text-center w-full mt-auto bg-gray-200 text-gray-800 font-bold py-3 rounded-lg hover:bg-gray-300 transition">Probar</a>
+                        <button id="openFormBtnPlan1" class="block text-center w-full mt-auto bg-gray-200 text-gray-800 font-bold py-3 rounded-lg hover:bg-gray-300 transition">Probar</button>
                     </div>
                     <div class="bg-white p-6 rounded-xl shadow-lg border flex flex-col">
                         <h3 class="text-xl font-bold text-gray-500">🥈 Plan Plata</h3>
@@ -138,7 +176,7 @@
                             <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Confirmaciones automáticas</li>
                         </ul>
                         <p class="text-xl font-extrabold my-4">💰 Precio estimado: $5 USD<span class="text-base font-medium text-gray-500">/mes</span></p>
-                        <a href="https://m.me/308155932378393?ref=PRUEBA_GRATIS" target="_blank" class="block text-center w-full mt-auto bg-gray-800 text-white font-bold py-3 rounded-lg hover:bg-gray-900 transition">Elegir</a>
+                        <button id="openFormBtnPlan2" class="block text-center w-full mt-auto bg-gray-800 text-white font-bold py-3 rounded-lg hover:bg-gray-900 transition">Elegir</button>
                     </div>
                     <div class="bg-white p-6 rounded-xl shadow-2xl border-2 border-brand-green relative flex flex-col">
                         <span class="absolute top-0 -translate-y-1/2 bg-brand-green text-white text-xs font-bold px-3 py-1 rounded-full">RECOMENDADO</span>
@@ -152,7 +190,7 @@
                             <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Recomendaciones de ahorro</li>
                         </ul>
                         <p class="text-xl font-extrabold my-4">💰 Precio estimado: $10 USD<span class="text-base font-medium text-gray-500">/mes</span></p>
-                        <a href="https://m.me/308155932378393?ref=PRUEBA_GRATIS" target="_blank" class="block text-center w-full mt-auto bg-brand-green text-white font-bold py-3 rounded-lg hover:bg-brand-green-dark transition">Elegir</a>
+                        <button id="openFormBtnPlan3" class="block text-center w-full mt-auto bg-brand-green text-white font-bold py-3 rounded-lg hover:bg-brand-green-dark transition">Elegir</button>
                     </div>
                     <div class="bg-white p-6 rounded-xl shadow-lg border flex flex-col">
                         <h3 class="text-xl font-bold text-blue-500">👥 Plan Duo</h3>
@@ -165,7 +203,7 @@
                            <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Registros separados y sincronizados</li>
                         </ul>
                         <p class="text-xl font-extrabold my-4">💰 Precio estimado: $10 USD<span class="text-base font-medium text-gray-500">/mes (ambos incluidos)</span></p>
-                        <a href="https://m.me/308155932378393?ref=PRUEBA_GRATIS" target="_blank" class="block text-center w-full mt-auto bg-gray-800 text-white font-bold py-3 rounded-lg hover:bg-gray-900 transition">Elegir</a>
+                        <button id="openFormBtnPlan4" class="block text-center w-full mt-auto bg-gray-800 text-white font-bold py-3 rounded-lg hover:bg-gray-900 transition">Elegir</button>
                     </div>
                 </div>
             </div>
@@ -176,35 +214,7 @@
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Preguntas Frecuentes</h2>
                 </div>
-                <div class="space-y-4" id="faq-accordion">
-                     <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                        <button class="faq-toggle flex justify-between items-center w-full p-6 text-left font-semibold">
-                            ¿Funciona con cualquier número de WhatsApp?
-                            <svg class="w-6 h-6 transition-transform transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </button>
-                        <div class="faq-content max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
-                            <p class="p-6 pt-0 text-gray-600">¡Sí! Funciona con cualquier número de WhatsApp, tanto en Android como en iPhone. No importa si tu número es personal o de empresa (Business). Solo necesitás tener la aplicación de WhatsApp instalada.</p>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                        <button class="faq-toggle flex justify-between items-center w-full p-6 text-left font-semibold">
-                            ¿Es seguro? ¿Quién ve mis datos?
-                            <svg class="w-6 h-6 transition-transform transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </button>
-                        <div class="faq-content max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
-                            <p class="p-6 pt-0 text-gray-600">La seguridad es nuestra máxima prioridad. Tus datos están encriptados y solo vos podés acceder a ellos. Nadie del equipo de MiTempo tiene acceso a tu información personal. Utilizamos los más altos estándares de seguridad para proteger tu privacidad.</p>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                        <button class="faq-toggle flex justify-between items-center w-full p-6 text-left font-semibold">
-                            ¿Necesito instalar algo?
-                            <svg class="w-6 h-6 transition-transform transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </button>
-                        <div class="faq-content max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
-                            <p class="p-6 pt-0 text-gray-600">Absolutamente nada. MiTempo funciona directamente sobre WhatsApp. No tenés que descargar ninguna aplicación adicional. El proceso de registro es 100% online y solo te toma un minuto.</p>
-                        </div>
-                    </div>
-                </div>
+                <div class="space-y-4" id="faq-accordion"></div>
             </div>
         </section>
         
@@ -232,9 +242,41 @@
                 <a href="./terminos.html" target="_blank" class="hover:text-white transition">Términos de uso</a>
                 <a href="mailto:SEBABOLE6@GMAIL.COM" class="hover:text-white transition">Contacto</a>
             </div>
-            <p>&copy; 2024 MiTempo.app. Todos los derechos reservados.</p>
+            <p>© 2024 MiTempo.app. Todos los derechos reservados.</p>
         </div>
     </footer>
+
+    <div id="formModal" class="modal">
+        <div class="modal-content">
+            <span id="closeModal" class="close">&times;</span>
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Registrate para tu prueba gratis</h2>
+            <form id="registrationForm" class="space-y-4">
+                <div>
+                    <label for="fullName" class="block text-sm font-medium text-gray-700">Nombre y Apellido *</label>
+                    <input type="text" id="fullName" name="fullName" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-green">
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email *</label>
+                    <input type="email" id="email" name="email" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-green">
+                </div>
+                <div>
+                    <label for="phone" class="block text-sm font-medium text-gray-700">Número de WhatsApp (sin 0 ni 15) *</label>
+                    <input type="tel" id="phone" name="phone" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-green" placeholder="+549123456789" pattern="^\+?[1-9]\d{9,14}$" title="Ingresa un número válido sin 0 ni 15 (ej. +549123456789)">
+                </div>
+                <div>
+                    <label for="plan" class="block text-sm font-medium text-gray-700">Plan *</label>
+                    <select id="plan" name="plan" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-green">
+                        <option value="Prueba">Prueba</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="invitedBy" class="block text-sm font-medium text-gray-700">¿Fue invitado por alguien? (Número WhatsApp, solo para Duo)</label>
+                    <input type="tel" id="invitedBy" name="invitedBy" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-green" placeholder="+549123456789" pattern="^\+?[1-9]\d{9,14}$">
+                </div>
+                <button type="submit" class="w-full bg-brand-green text-white font-bold py-2 rounded-md hover:bg-brand-green-dark transition">Enviar</button>
+            </form>
+        </div>
+    </div>
 
     <script>
         const fadeInSections = document.querySelectorAll('.fade-in-section');
@@ -273,8 +315,6 @@
         });
         
         // Cargar contenido de FAQ dinámicamente
-        // Esto es para evitar la repetición de código.
-        // En una aplicación real, esto podría venir de una API.
         const faqContainer = document.getElementById('faq-accordion');
         const faqs = [
             {
@@ -336,6 +376,64 @@
             });
         });
 
+        // Modal Form Logic
+        const modal = document.getElementById('formModal');
+        const closeModal = document.getElementById('closeModal');
+        const openFormBtn = document.getElementById('openFormBtn');
+        const openFormBtnMain = document.getElementById('openFormBtnMain');
+        const openFormBtnPlan1 = document.getElementById('openFormBtnPlan1');
+        const openFormBtnPlan2 = document.getElementById('openFormBtnPlan2');
+        const openFormBtnPlan3 = document.getElementById('openFormBtnPlan3');
+        const openFormBtnPlan4 = document.getElementById('openFormBtnPlan4');
+        const form = document.getElementById('registrationForm');
+
+        [openFormBtn, openFormBtnMain, openFormBtnPlan1, openFormBtnPlan2, openFormBtnPlan3, openFormBtnPlan4].forEach(btn => {
+            btn.addEventListener('click', () => {
+                modal.style.display = 'flex';
+            });
+        });
+
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const fullName = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const plan = document.getElementById('plan').value;
+            const invitedBy = document.getElementById('invitedBy').value;
+
+            // Validación del número de WhatsApp
+            const phoneRegex = /^\+?[1-9]\d{9,14}$/;
+            if (!phoneRegex.test(phone)) {
+                alert('El número de WhatsApp debe ser válido (sin 0 ni 15, ej. +549123456789)');
+                return;
+            }
+
+            // Simulación de envío
+            const data = {
+                'Marca temporal': new Date().toLocaleString(),
+                'Nombre completo': fullName,
+                'Número de WhatsApp': phone,
+                'Correo electrónico de Google': email,
+                '¿Qué plan eliges?': plan,
+                '¿Te invitó alguien?': invitedBy || 'No'
+            };
+            alert('Datos enviados:\n' + JSON.stringify(data, null, 2));
+
+            // Limpiar formulario y cerrar modal
+            form.reset();
+            modal.style.display = 'none';
+        });
     </script>
 </body>
 </html>
