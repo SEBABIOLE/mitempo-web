@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Redireccionando a Google...</title>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const userId = params.get("u") || "sin_dato";
+
+      const clientId = "395746584240-ue4uh3k5p0a24db69jkhsq7at95ns0gv.apps.googleusercontent.com";
+      const redirectUri = encodeURIComponent("https://sebabiole.app.n8n.cloud/webhook/google-callback");
+      const scope = encodeURIComponent("https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/spreadsheets");
+
+      const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent&state=${userId}`;
+
+      window.location.href = oauthUrl;
+    </script>
+  </head>
+  <body>
+    <p>Redirigiendo a Google para vincular tu cuenta...</p>
+  </body>
+</html>
