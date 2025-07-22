@@ -1,191 +1,367 @@
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MiTempo.app | Asistente IA y Automatizaciones</title>
-  <meta name="description" content="MiTempo.app: Tu asistente con IA y automatizaciones para profesionales. Organiza tu agenda, registra gastos y optimiza procesos desde WhatsApp." />
-  <meta name="keywords" content="asistente IA, automatización, WhatsApp, gestión de agenda, finanzas personales" />
-  <!-- Tailwind CDN -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MiTempo.app | Asistente IA y Automatizaciones para Profesionales</title>
+  <meta name="description" content="MiTempo.app: Tu asistente con IA y automatizaciones para profesionales. Organiza tu agenda, registra gastos y optimiza procesos desde WhatsApp.">
+  <meta name="keywords" content="asistente IA, automatización, WhatsApp, gestión de agenda, finanzas personales">
+  <meta property="og:title" content="MiTempo.app | Asistente IA y Automatizaciones">
+  <meta property="og:description" content="Organiza tu vida y negocio con nuestro asistente IA en WhatsApp. Planes desde $3 USD/mes.">
+  <meta property="og:image" content="https://yourdomain.com/logo-mitempo.png">
+  <meta property="og:url" content="https://yourdomain.com">
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Fuente Inter -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Inter', sans-serif; }
-    .phone-mockup { width:280px; height:560px; background:#111827; border-radius:40px; border:12px solid #1f2937; box-shadow:0 25px 50px -12px rgba(0,0,0,0.4); overflow:hidden; }
-    .phone-screen { background:linear-gradient(to bottom,#111827,#374151); width:100%; height:100%; display:flex; flex-direction:column; padding:20px 10px; }
-    .chat-bubble { padding:8px 14px; border-radius:18px; margin-bottom:8px; max-width:75%; animation:bubble-pop .5s ease-out forwards; opacity:0; }
-    .chat-bubble.user { background:#25D366; color:#fff; align-self:flex-end; }
-    .chat-bubble.assistant { background:#fff; color:#1f2937; align-self:flex-start; }
-    @keyframes bubble-pop { 0% { transform:scale(0.5); opacity:0 } 80% { transform:scale(1.05) } 100% { transform:scale(1); opacity:1 } }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+    }
+    .brand-green {
+      color: #10B981;
+    }
+    .bg-brand-green {
+      background-color: #10B981;
+    }
+    .hover\:bg-brand-green-dark:hover {
+      background-color: #059669;
+    }
+    .border-brand-green {
+      border-color: #10B981;
+    }
+    .fade-in-section {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .fade-in-section.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .phone-mockup {
+      width: 280px;
+      height: 560px;
+      background: #111827;
+      border-radius: 40px;
+      border: 12px solid #1f2937;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+    .phone-screen {
+      background: url('https://images.unsplash.com/photo-1554147090-e1221a04a025?q=80&w=500&auto=format&fit=crop') center/cover;
+      background-image: linear-gradient(to bottom, #111827, #374151); /* Fallback */
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 20px 10px;
+    }
+    .chat-bubble {
+      padding: 8px 14px;
+      border-radius: 18px;
+      margin-bottom: 8px;
+      max-width: 75%;
+      animation: bubble-pop 0.5s ease-out forwards;
+      opacity: 0;
+    }
+    .chat-bubble.user {
+      background-color: #25D366;
+      color: white;
+      align-self: flex-end;
+    }
+    .chat-bubble.assistant {
+      background-color: #ffffff;
+      color: #1f2937;
+      align-self: flex-start;
+    }
+    @keyframes bubble-pop {
+      0% {
+        transform: scale(0.5);
+        opacity: 0;
+      }
+      80% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    .chat-bubble:nth-child(1) {
+      animation-delay: 0.5s;
+    }
+    .chat-bubble:nth-child(2) {
+      animation-delay: 1.5s;
+    }
+    .chat-bubble:nth-child(3) {
+      animation-delay: 2.5s;
+    }
+    .chat-bubble:nth-child(4) {
+      animation-delay: 3.5s;
+    }
+    .mobile-nav {
+      transition: transform 0.3s ease-in-out;
+    }
+    .mobile-nav-hidden {
+      transform: translateX(100%);
+    }
   </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
-
-  <!-- HEADER -->
-  <header class="fixed inset-x-0 top-0 bg-white/90 backdrop-blur border-b z-50">
-    <div class="container mx-auto flex items-center justify-between p-4">
-      <a href="index.html" class="text-xl font-extrabold">MiTempo.app</a>
-      <nav class="hidden md:flex space-x-6">
-        <a href="#soluciones" class="hover:text-green-500">Soluciones</a>
-        <a href="#planes"     class="hover:text-green-500">Planes</a>
-        <a href="#faq"        class="hover:text-green-500">FAQ</a>
-        <a href="registro.html" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Regístrate Gratis</a>
+<body class="text-gray-800">
+  <header class="bg-white/80 backdrop-blur-lg fixed top-0 left-0 right-0 z-50 border-b border-gray-200">
+    <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+      <a href="#" aria-label="Página de inicio de MiTempo.app">
+        <img src="./logo-mitempo.png" alt="Logo de MiTempo.app Cerebro Digital" class="h-12 w-auto" onerror="this.src='https://via.placeholder.com/150x50?text=MiTempo'">
+      </a>
+      <nav class="mobile-nav fixed top-0 right-0 h-full w-64 bg-white shadow-lg md:static md:flex md:items-center md:space-x-6 md:shadow-none md:w-auto md:h-auto transform md:transform-none mobile-nav-hidden">
+        <button class="md:hidden absolute top-4 right-4 text-gray-700" aria-label="Cerrar menú móvil">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        <div class="flex flex-col md:flex-row md:space-x-6 p-6 md:p-0 space-y-4 md:space-y-0">
+          <a href="#soluciones" class="text-gray-600 hover:text-brand-green transition">Soluciones</a>
+          <a href="#planes" class="text-gray-600 hover:text-brand-green transition">Planes</a>
+          <a href="#faq" class="text-gray-600 hover:text-brand-green transition">Preguntas Frecuentes</a>
+          <a href="registro.html" class="bg-brand-green text-white px-4 py-2 rounded-lg font-semibold hover:bg-brand-green-dark transition shadow-sm md:mt-0 mt-4">Probar Gratis</a>
+        </div>
       </nav>
-      <button id="btnMenu" class="md:hidden text-2xl">☰</button>
-    </div>
-    <!-- MOBILE NAV -->
-    <div id="mobileNav" class="hidden absolute inset-x-0 top-full bg-white shadow-md">
-      <div class="flex flex-col p-4 space-y-4">
-        <a href="#soluciones" class="hover:text-green-500">Soluciones</a>
-        <a href="#planes"     class="hover:text-green-500">Planes</a>
-        <a href="#faq"        class="hover:text-green-500">FAQ</a>
-        <a href="registro.html" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Regístrate Gratis</a>
-      </div>
+      <button class="md:hidden text-gray-700" id="menuToggle" aria-label="Abrir menú móvil">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </button>
     </div>
   </header>
-
-  <main class="pt-24">
-
-    <!-- HERO -->
-    <section class="text-center py-20 bg-white">
-      <h1 class="text-4xl md:text-6xl font-extrabold">
-        Tu Asistente con IA y <span class="text-green-500">Automatizaciones</span>
-      </h1>
-      <p class="mt-4 text-gray-600">Organiza tu agenda por WhatsApp y automatiza procesos clave.</p>
-      <a href="registro.html" class="mt-8 inline-block bg-green-500 text-white px-8 py-3 rounded hover:bg-green-600">
-        Regístrate Gratis →
-      </a>
-      <div class="mt-12 flex justify-center">
-        <div class="phone-mockup">
-          <div class="phone-screen">
-            <div class="chat-bubble user">Hola! Gasté 2000 en nafta</div>
-            <div class="chat-bubble assistant">¡Registrado! Gasto de $2000.</div>
-            <div class="chat-bubble user">Agendá médico lunes 10</div>
-            <div class="chat-bubble assistant">Agendado: “Médico”.</div>
+  <main class="pt-20">
+    <section class="py-20 md:py-32 bg-white">
+      <div class="container mx-auto px-6 text-center">
+        <div class="max-w-4xl mx-auto">
+          <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
+            Tu Asistente con IA y <span class="text-brand-green">Automatizaciones</span> para Crecer
+          </h1>
+          <p class="text-lg md:text-xl text-gray-600 mb-8">
+            Desde organizar tu agenda por WhatsApp hasta automatizar procesos clave de tu negocio.
+          </p>
+          <a href="registro.html" class="inline-block bg-brand-green text-white text-lg font-bold px-8 py-4 rounded-xl hover:bg-brand-green-dark transition-transform transform hover:scale-105 shadow-lg">
+            Empezar Gratis →
+          </a>
+        </div>
+        <div class="mt-16 flex justify-center">
+          <div class="phone-mockup">
+            <div class="phone-screen">
+              <div class="chat-bubble user">Hola! Gasté 2000 en nafta</div>
+              <div class="chat-bubble assistant">¡Registrado! Gasto de $2000 en "Nafta".</div>
+              <div class="chat-bubble user">Agendá médico el lunes a las 10</div>
+              <div class="chat-bubble assistant">Agendado: "Médico". Te enviaré un recordatorio.</div>
+            </div>
           </div>
         </div>
       </div>
     </section>
-
-    <!-- SOLUCIONES -->
-    <section id="soluciones" class="container mx-auto px-6 py-20">
-      <h2 class="text-3xl font-bold text-center mb-8">Soluciones a tu Medida</h2>
-      <div class="grid md:grid-cols-2 gap-8">
-        <div class="bg-white p-8 rounded-xl shadow border-t-4 border-green-500">
-          <h3 class="text-2xl font-bold mb-2">Asistente por WhatsApp</h3>
-          <p>Habla con tu asistente para registrar gastos, agendar eventos, crear recordatorios y más.</p>
-          <a href="registro.html#planes" class="mt-4 inline-block text-green-500 font-semibold hover:underline">
-            Ver planes →
-          </a>
+    <section id="soluciones" class="py-20 fade-in-section">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Soluciones a tu Medida</h2>
+          <p class="text-lg text-gray-600 mt-2">Tanto para tu día a día como para tu negocio.</p>
         </div>
-        <div class="bg-white p-8 rounded-xl shadow border-t-4 border-blue-500">
-          <h3 class="text-2xl font-bold mb-2">Automatización para PYMES</h3>
-          <p>Desde CRM hasta flujos de trabajo personalizados para que ahorres tiempo y dinero.</p>
-          <a href="#contacto" class="mt-4 inline-block text-blue-500 font-semibold hover:underline">
-            Consultar →
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- PLANES -->
-    <section id="planes" class="bg-gray-50 py-20">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold">Planes del Asistente</h2>
-        <p class="mt-2 text-gray-600">Comenzá gratis y crecé a tu ritmo.</p>
-      </div>
-      <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        <!-- Bronce -->
-        <div class="bg-white p-6 rounded-xl shadow text-center border">
-          <h4 class="text-xl font-bold text-amber-600 mb-2">🥉 Bronce</h4>
-          <p class="mb-4">Agendá eventos con tu voz. Alertas simples.</p>
-          <p class="font-extrabold mb-4">$3 USD/mes</p>
-          <a href="registro.html#Bronce" class="block bg-gray-200 py-2 rounded hover:bg-gray-300">Elegir</a>
-        </div>
-        <!-- Plata -->
-        <div class="bg-white p-6 rounded-xl shadow text-center border">
-          <h4 class="text-xl font-bold text-gray-500 mb-2">🥈 Plata</h4>
-          <p class="mb-4">Google Calendar + confirmaciones automáticas.</p>
-          <p class="font-extrabold mb-4">$5 USD/mes</p>
-          <a href="registro.html#Plata" class="block bg-gray-800 text-white py-2 rounded hover:bg-gray-900">Elegir</a>
-        </div>
-        <!-- Oro -->
-        <div class="relative bg-white p-6 rounded-2xl shadow-2xl border-2 border-green-500 text-center">
-          <span class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-2 text-xs rounded">RECOMENDADO</span>
-          <h4 class="text-xl font-bold text-green-500 mb-2">🥇 Oro</h4>
-          <p class="mb-4">Gastos en Google Sheets + reportes.</p>
-          <p class="font-extrabold mb-4">$10 USD/mes</p>
-          <a href="registro.html#Oro" class="block bg-green-500 text-white py-2 rounded hover:bg-green-600">Elegir</a>
-        </div>
-        <!-- Duo -->
-        <div class="bg-white p-6 rounded-xl shadow text-center border">
-          <h4 class="text-xl font-bold text-blue-500 mb-2">👥 Duo</h4>
-          <p class="mb-4">2 usuarios sincronizados.</p>
-          <p class="font-extrabold mb-4">$10 USD/mes</p>
-          <a href="registro.html#Duo" class="block bg-gray-800 text-white py-2 rounded hover:bg-gray-900">Elegir</a>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition-shadow border-t-4 border-brand-green">
+            <div class="mb-4 inline-block p-3 bg-emerald-100 rounded-full">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-green"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="22"></line></svg>
+            </div>
+            <h3 class="text-2xl font-bold mb-2">Asistente Personal por WhatsApp</h3>
+            <p class="text-gray-600 mb-4">La forma más fácil de organizar tu vida. Hablá con tu asistente para registrar gastos, agendar eventos, crear recordatorios y más.</p>
+            <a href="#planes" class="font-semibold text-brand-green hover:underline">Ver planes de asistente →</a>
+          </div>
+          <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition-shadow border-t-4 border-blue-500">
+            <div class="mb-4 inline-block p-3 bg-blue-100 rounded-full">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><path d="M12 6V3a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1v3"/><path d="M18 8h3a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1h-3"/><path d="M18 22h3a1 1 0 0 0 1-1v-3"/><path d="M6 16H3a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h3"/><rect x="8" y="8" width="8" height="8"/></svg>
+            </div>
+            <h3 class="text-2xl font-bold mb-2">Automatización para Pymes y Profesionales</h3>
+            <p class="text-gray-600 mb-4">Optimizamos tus procesos. Desde la gestión de clientes (CRM) hasta flujos de trabajo personalizados para que ahorres tiempo y dinero.</p>
+            <a href="#contacto" class="font-semibold text-blue-500 hover:underline">Consultar por automatización →</a>
+          </div>
         </div>
       </div>
     </section>
-
-    <!-- FAQ -->
-    <section id="faq" class="py-20">
-      <h2 class="text-3xl font-bold text-center mb-6">Preguntas Frecuentes</h2>
-      <div class="container mx-auto px-6 space-y-4" id="accordion"></div>
+    <section id="planes" class="py-20 bg-white fade-in-section">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Planes del Asistente Personal</h2>
+          <p class="text-lg text-gray-600 mt-2">Comenzá gratis y crecé a tu ritmo.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div class="bg-white p-6 rounded-xl shadow-lg border flex flex-col">
+            <h3 class="text-xl font-bold text-amber-600">🥉 Plan Bronce</h3>
+            <p class="text-gray-500 mt-1 text-sm">Organizá tu tiempo de forma simple.</p>
+            <p class="text-gray-600 mb-4 text-sm">El plan Bronce te permite agendar eventos con tu voz directamente desde WhatsApp. Decí cosas como:<br><br>“El martes a las 9 tengo turno con el dentista”<br>“Recordame la reunión con Juan el viernes”<br><br>Tu asistente lo entiende, lo agenda en tu Google Calendar y te envía recordatorios automáticos. También podés ver tu agenda semanal con solo pedirlo.</p>
+            <ul class="space-y-2 text-gray-600 text-sm mb-6 flex-grow">
+              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Manejo de calendario básico</li>
+              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Agendado por voz o texto</li>
+              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Recordatorios y alertas simples</li>
+            </ul>
+            <p class="text-xl font-extrabold my-4">💰 Precio estimado: $3 USD<span class="text-base font-medium text-gray-500">/mes</span></p>
+            <a href="registro.html?plan=Bronce" class="block text-center w-full mt-auto bg-gray-200 text-gray-800 font-bold py-3 rounded-lg hover:bg-gray-300 transition">Probar</a>
+          </div>
+          <div class="bg-white p-6 rounded-xl shadow-lg border flex flex-col">
+            <h3 class="text-xl font-bold text-gray-500">🥈 Plan Plata</h3>
+            <p class="text-gray-500 mt-1 text-sm">Agenda inteligente + conversaciones naturales.</p>
+            <p class="text-gray-600 mb-4 text-sm">Este plan mejora la experiencia con soporte para texto libre. Podés hablarle como a una persona:<br><br>“Che, anotá que tengo que llevar a los chicos al médico el jueves a las 10”<br>“¿Qué tenía hoy a la tarde?”<br>“Cancelá lo del gimnasio del sábado”<br><br>El asistente interpreta el mensaje, agenda, responde e incluso cancela eventos por vos. Ideal si buscás comodidad sin complicaciones.</p>
+            <ul class="space-y-2 text-gray-600 text-sm mb-6 flex-grow">
+              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Todo lo del Plan Bronce</li>
+              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Calendario conectado a Google</li>
+              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Comprensión de lenguaje natural</li>
+              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Confirmaciones automáticas</li>
+            </ul>
+            <p class="text-xl font-extrabold my-4">💰 Precio estimado: $5 USD<span class="text-base font-medium text-gray-500">/mes</span></p>
+            <a href="registro.html?plan=Plata" class="block text-center w-full mt-auto bg-gray-800 text-white font-bold py-3 rounded-lg hover:bg-gray-900 transition">Elegir</a>
+          </div>
+          <div class="bg-white p-6 rounded-xl shadow-2xl border-2 border-brand-green relative flex flex-col">
+            <span class="absolute top-0 -translate-y-1/2 bg-brand-green text-white text-xs font-bold px-3 py-1 rounded-full">RECOMENDADO</span>
+            <h3 class="text-xl font-bold text-brand-green">🥇 Plan Oro</h3>
+            <p class="text-gray-500 mt-1 text-sm">Tu agenda y tus finanzas en piloto automático.</p>
+            <p class="text-gray-600 mb-4 text-sm">El plan más completo. No solo manejás tu agenda con voz, también registrás tus gastos y llevás el control de tus finanzas sin esfuerzo.<br><br>“Gasté 7000 en super”<br>“Cobré 120.000 del trabajo”<br>“¿Cuánto llevo gastado esta semana?”<br><br>El asistente clasifica automáticamente tus ingresos y egresos en Google Sheets, genera resúmenes, te da alertas de ahorro y predice tus gastos futuros.</p>
+            <ul class="space-y-2 text-gray-600 text-sm mb-6 flex-grow">
+              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Todo lo del Plan Plata</li>
+              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Registro de gastos e ingresos</li>
+              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Reportes semanales y mensuales</li>
+              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Recomendaciones de ahorro</li>
+            </ul>
+            <p class="text-xl font-extrabold my-4">💰 Precio estimado: $10 USD<span class="text-base font-medium text-gray-500">/mes</span></p>
+            <a href="registro.html?plan=Oro" class="block text-center w-full mt-auto bg-brand-green text-white font-bold py-3 rounded-lg hover:bg-brand-green-dark transition">Elegir</a>
+          </div>
+          <div class="bg-white p-6 rounded-xl shadow-lg border flex flex-col">
+            <h3 class="text-xl font-bold text-blue-500">👥 Plan Duo</h3>
+            <p class="text-gray-500 mt-1 text-sm">MiTempo para dos, con cuenta compartida.</p>
+            <p class="text-gray-600 mb-4 text-sm">Pensado para parejas, socios o familias. Ambos pueden usar el mismo asistente desde sus teléfonos y llevar una sola cuenta de gastos.<br><br>Usuario A: “Gasté 3000 en nafta”<br>Usuario B: “Anotá que pagué 5000 de cable”<br><br>Ambos: “¿Cuánto gastamos esta semana?”<br><br>MiTempo registra todo en la misma hoja, con etiquetas por usuario, genera alertas combinadas y organiza un calendario compartido.</p>
+            <ul class="space-y-2 text-gray-600 text-sm mb-6 flex-grow">
+              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Todo lo del Plan Oro</li>
+              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Hasta 2 usuarios</li>
+              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Control financiero conjunto</li>
+              <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Registros separados y sincronizados</li>
+            </ul>
+            <p class="text-xl font-extrabold my-4">💰 Precio estimado: $10 USD<span class="text-base font-medium text-gray-500">/mes (ambos incluidos)</span></p>
+            <a href="registro.html?plan=Duo" class="block text-center w-full mt-auto bg-gray-800 text-white font-bold py-3 rounded-lg hover:bg-gray-900 transition">Elegir</a>
+          </div>
+        </div>
+      </div>
     </section>
-
-    <!-- CONTACTO -->
-    <section id="contacto" class="bg-white py-20">
+    <section id="faq" class="py-20 fade-in-section">
+      <div class="container mx-auto px-6 max-w-3xl">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Preguntas Frecuentes</h2>
+        </div>
+        <div class="space-y-4" id="faq-accordion"></div>
+      </div>
+    </section>
+    <section id="contacto" class="py-20 bg-white fade-in-section">
       <div class="container mx-auto px-6 text-center">
-        <h2 class="text-3xl font-bold mb-4">¿Necesitás algo a medida?</h2>
-        <p class="text-gray-600 mb-6">Hablemos de tu proyecto y creemos juntos la mejor solución.</p>
-        <a href="mailto:contacto@mitempo.app" class="bg-blue-600 text-white px-8 py-3 rounded hover:bg-blue-700">
-          Contactar por email
-        </a>
+        <div class="max-w-3xl mx-auto bg-gray-50 p-8 rounded-2xl shadow-lg">
+          <h2 class="text-3xl font-bold text-gray-900">¿Necesitás una solución de automatización a medida?</h2>
+          <p class="text-lg text-gray-600 mt-4 mb-6">Hablemos de tu proyecto. Analizamos tus necesidades y te proponemos una solución personalizada para que tu empresa sea más eficiente.</p>
+          <a href="mailto:contacto@mitempo.app" class="inline-block bg-blue-600 text-white text-lg font-bold px-8 py-4 rounded-xl hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-lg">
+            Contactar por email
+          </a>
+        </div>
       </div>
     </section>
-
   </main>
-
-  <!-- FOOTER -->
-  <footer class="bg-gray-900 text-gray-400 py-6">
-    <div class="container mx-auto text-center">
-      © 2025 MiTempo.app — Todos los derechos reservados.
+  <footer class="bg-gray-900 text-gray-400 py-12">
+    <div class="container mx-auto px-6 text-center">
+      <a href="#" aria-label="Página de inicio de MiTempo.app" class="inline-block mb-4">
+        <img src="./logo-mitempo.png" alt="Logo de MiTempo.app Cerebro Digital" class="h-12 w-auto mx-auto" onerror="this.src='https://via.placeholder.com/150x50?text=MiTempo'">
+      </a>
+      <div class="flex justify-center space-x-6 my-6">
+        <a href="./politicas.html" target="_blank" class="hover:text-white transition">Política de privacidad</a>
+        <a href="./terminos.html" target="_blank" class="hover:text-white transition">Términos de uso</a>
+        <a href="mailto:contacto@mitempo.app" class="hover:text-white transition">Contacto</a>
+      </div>
+      <p>© 2025 MiTempo.app. Todos los derechos reservados.</p>
     </div>
   </footer>
-
-  <!-- MAIN JS -->
   <script>
-    // Toggle móvil
-    const btnMenu = document.getElementById('btnMenu'),
-          mobileNav = document.getElementById('mobileNav');
-    btnMenu.onclick = () => mobileNav.classList.toggle('hidden');
-
-    // Animar burbujas
-    document.querySelectorAll('.chat-bubble').forEach((b, i) => {
-      setTimeout(() => b.classList.add('opacity-100'), i * 400);
+    // Mobile Navigation
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileNav = document.querySelector('.mobile-nav');
+    const closeNav = mobileNav.querySelector('button');
+    menuToggle.addEventListener('click', () => {
+      mobileNav.classList.remove('mobile-nav-hidden');
+    });
+    closeNav.addEventListener('click', () => {
+      mobileNav.classList.add('mobile-nav-hidden');
     });
 
-    // Accordion FAQ
+    // Fade-in Sections
+    const fadeInSections = document.querySelectorAll('.fade-in-section');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    fadeInSections.forEach(section => observer.observe(section));
+
+    // FAQ Accordion
+    const faqContainer = document.getElementById('faq-accordion');
     const faqs = [
-      {q:'¿Funciona con cualquier WhatsApp?', a:'¡Sí! Cualquier número con WhatsApp.'},
-      {q:'¿Es seguro?',                  a:'Datos encriptados y privacidad total.'},
-      {q:'¿Instalo algo?',              a:'Nada, funciona directo en WhatsApp.'},
-      {q:'¿Fin de prueba?',             a:'Te avisamos antes de que termine.'}
+      {
+        question: "¿Funciona con cualquier número de WhatsApp?",
+        answer: "¡Sí! Funciona con cualquier número de WhatsApp, tanto en Android como en iPhone. No importa si tu número es personal o de empresa (Business). Solo necesitás tener la aplicación de WhatsApp instalada."
+      },
+      {
+        question: "¿Es seguro? ¿Quién ve mis datos?",
+        answer: "La seguridad es nuestra máxima prioridad. Tus datos están encriptados y solo vos podés acceder a ellos. Nadie del equipo de MiTempo tiene acceso a tu información personal. Utilizamos los más altos estándares de seguridad para proteger tu privacidad."
+      },
+      {
+        question: "¿Necesito instalar algo?",
+        answer: "Absolutamente nada. MiTempo funciona directamente sobre WhatsApp. No tenés que descargar ninguna aplicación adicional. El proceso de registro es 100% online y solo te toma un minuto."
+      },
+      {
+        question: "¿Qué pasa cuando termina el período de prueba?",
+        answer: "Te avisaremos unos días antes de que finalice tu prueba gratuita de 15 días. Si te gustó, podés elegir uno de nuestros planes de pago para continuar usando todas las funciones. Si decidís no continuar, tu cuenta se desactivará, pero podrás exportar tus datos si lo deseás."
+      }
     ];
-    const acc = document.getElementById('accordion');
-    faqs.forEach((f,i)=>{
-      const btn = document.createElement('button');
-      btn.className = 'w-full text-left p-4 bg-white rounded shadow flex justify-between';
-      btn.innerHTML = `${f.q} <span>▾</span>`;
-      const ans = document.createElement('div');
-      ans.className = 'max-h-0 overflow-hidden transition-all bg-white px-4';
-      ans.textContent = f.a;
-      btn.onclick = () => {
-        if(ans.style.maxHeight) { ans.style.maxHeight = null; }
-        else { ans.style.maxHeight = ans.scrollHeight + 'px'; }
-      };
-      acc.append(btn, ans);
+    faqs.forEach((faq, index) => {
+      const faqElement = document.createElement('div');
+      faqElement.className = 'bg-white rounded-lg shadow-sm border border-gray-200';
+      faqElement.innerHTML = `
+        <button class="faq-toggle flex justify-between items-center w-full p-6 text-left font-semibold" aria-expanded="false" aria-controls="faq-${index}">
+          ${faq.question}
+          <svg class="w-6 h-6 transition-transform transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div id="faq-${index}" class="faq-content max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+          <p class="p-6 pt-0 text-gray-600">${faq.answer}</p>
+        </div>
+      `;
+      faqContainer.appendChild(faqElement);
+    });
+    document.querySelectorAll('.faq-toggle').forEach(toggle => {
+      toggle.addEventListener('click', () => {
+        const content = toggle.nextElementSibling;
+        const icon = toggle.querySelector('svg');
+        const isExpanded = content.style.maxHeight;
+        document.querySelectorAll('.faq-content').forEach(item => {
+          if (item !== content && item.style.maxHeight) {
+            item.style.maxHeight = null;
+            const otherIcon = item.previousElementSibling.querySelector('svg');
+            if (otherIcon) otherIcon.style.transform = 'rotate(0deg)';
+            item.previousElementSibling.setAttribute('aria-expanded', 'false');
+          }
+        });
+        if (isExpanded) {
+          content.style.maxHeight = null;
+          icon.style.transform = 'rotate(0deg)';
+          toggle.setAttribute('aria-expanded', 'false');
+        } else {
+          content.style.maxHeight = content.scrollHeight + 'px';
+          icon.style.transform = 'rotate(180deg)';
+          toggle.setAttribute('aria-expanded', 'true');
+        }
+      });
     });
   </script>
 </body>
