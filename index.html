@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>MiTempo.app | Asistente IA y Automatizaciones</title>
-  <meta name="description" content="MiTempo.app: Tu asistente con IA y automatizaciones para profesionales. Organiza tu agenda, registra gastos y optimiza procesos desde WhatsApp.">
-  <meta name="keywords" content="asistente IA, automatización, WhatsApp, gestión de agenda, finanzas personales">
+  <meta name="description" content="MiTempo.app: Tu asistente con IA y automatizaciones para profesionales. Organiza tu agenda, registra gastos y optimiza procesos desde WhatsApp." />
+  <meta name="keywords" content="asistente IA, automatización, WhatsApp, gestión de agenda, finanzas personales" />
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { font-family: 'Inter', sans-serif; background: #f8fafc; }
@@ -20,12 +20,6 @@
     .close { position:absolute; top:1rem; right:1rem; font-size:1.5rem; cursor:pointer; }
     input:invalid:focus { border-color:#ef4444; box-shadow:0 0 0 2px rgba(239,68,68,0.2); }
     .error { color:#ef4444; font-size:.875rem; }
-    .phone-mockup { width:280px;height:560px;background:#111827;border-radius:40px;border:12px solid #1f2937;box-shadow:0 25px 50px -12px rgba(0,0,0,0.4);overflow:hidden; }
-    .phone-screen { background:linear-gradient(to bottom,#111827,#374151);width:100%;height:100%;display:flex;flex-direction:column;padding:20px 10px; }
-    .chat-bubble { padding:8px 14px;border-radius:18px;margin-bottom:8px;max-width:75%;animation:bubble-pop .5s ease-out forwards;opacity:0; }
-    .chat-bubble.user { background:#25D366;color:#fff;align-self:flex-end; }
-    .chat-bubble.assistant { background:#fff;color:#1f2937;align-self:flex-start; }
-    @keyframes bubble-pop { 0% { transform:scale(0.5);opacity:0; } 80% { transform:scale(1.05); } 100% { transform:scale(1);opacity:1; } }
   </style>
 </head>
 <body class="text-gray-800">
@@ -36,8 +30,8 @@
       <h1 class="text-xl font-bold">MiTempo.app</h1>
       <nav class="hidden md:flex space-x-6">
         <a href="#soluciones" class="hover:text-brand-green">Soluciones</a>
-        <a href="#planes"     class="hover:text-brand-green">Planes</a>
-        <a href="#faq"        class="hover:text-brand-green">FAQ</a>
+        <a href="#planes" class="hover:text-brand-green">Planes</a>
+        <a href="#faq" class="hover:text-brand-green">FAQ</a>
         <button id="btnTrial" class="bg-brand-green text-white px-4 py-2 rounded hover:bg-brand-green-dark">Probar Gratis</button>
       </nav>
       <button id="btnMenu" class="md:hidden text-2xl">☰</button>
@@ -52,8 +46,8 @@
     </div>
     <nav class="flex flex-col p-4 space-y-4">
       <a href="#soluciones" class="hover:text-brand-green">Soluciones</a>
-      <a href="#planes"     class="hover:text-brand-green">Planes</a>
-      <a href="#faq"        class="hover:text-brand-green">FAQ</a>
+      <a href="#planes" class="hover:text-brand-green">Planes</a>
+      <a href="#faq" class="hover:text-brand-green">FAQ</a>
       <button id="btnTrial2" class="bg-brand-green text-white px-4 py-2 rounded hover:bg-brand-green-dark">Probar Gratis</button>
     </nav>
   </div>
@@ -67,16 +61,6 @@
       </h2>
       <p class="mt-4 text-gray-600">Organiza tu agenda por WhatsApp y automatiza procesos clave.</p>
       <button id="btnHero" class="mt-8 bg-brand-green text-white px-8 py-3 rounded hover:bg-brand-green-dark">Empezar Gratis →</button>
-      <div class="mt-12 flex justify-center">
-        <div class="phone-mockup">
-          <div class="phone-screen">
-            <div class="chat-bubble user">Hola! Gasté 2000 en nafta</div>
-            <div class="chat-bubble assistant">¡Registrado! Gasto de $2000.</div>
-            <div class="chat-bubble user">Agendá médico lunes 10</div>
-            <div class="chat-bubble assistant">Agendado: “Médico”.</div>
-          </div>
-        </div>
-      </div>
     </section>
 
     <!-- SOLUCIONES -->
@@ -103,16 +87,17 @@
         <p class="mt-2 text-gray-600">Comenzá gratis y crecé a tu ritmo.</p>
       </div>
       <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Bronce -->
         <div class="bg-white p-6 rounded-xl shadow flex flex-col border">
           <h4 class="text-xl font-bold text-amber-600 mb-2">🥉 Plan Bronce</h4>
           <p class="flex-grow mb-4 text-sm">
-            Agendá eventos por voz desde WhatsApp.<br>
-            “El martes a las 9 tengo turno con el dentista”<br>
-            Manejo básico de calendario y alertas simples.
+            Agendá eventos con tu voz desde WhatsApp.<br>
+            Manejo de calendario básico, voz o texto y alertas simples.
           </p>
           <p class="font-extrabold">💰 $3 USD/mes</p>
           <button class="mt-4 bg-gray-200 py-2 rounded hover:bg-gray-300 openModal" data-plan="Bronce">Probar</button>
         </div>
+        <!-- Plata -->
         <div class="bg-white p-6 rounded-xl shadow flex flex-col border">
           <h4 class="text-xl font-bold text-gray-500 mb-2">🥈 Plan Plata</h4>
           <p class="flex-grow mb-4 text-sm">
@@ -122,21 +107,23 @@
           <p class="font-extrabold">💰 $5 USD/mes</p>
           <button class="mt-4 bg-gray-800 text-white py-2 rounded hover:bg-gray-900 openModal" data-plan="Plata">Elegir</button>
         </div>
+        <!-- Oro -->
         <div class="bg-white p-6 rounded-2xl shadow-2xl border-2 border-brand-green flex flex-col relative">
           <span class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-brand-green text-white px-2 text-xs rounded-full">RECOMENDADO</span>
           <h4 class="text-xl font-bold text-brand-green mb-2">🥇 Plan Oro</h4>
           <p class="flex-grow mb-4 text-sm">
-            Agenda + registro de gastos en Google Sheets.<br>
+            Agenda + registro de gastos e ingresos en Google Sheets.<br>
             Reportes y recomendaciones de ahorro.
           </p>
           <p class="font-extrabold">💰 $10 USD/mes</p>
           <button class="mt-4 bg-brand-green text-white py-2 rounded hover:bg-brand-green-dark openModal" data-plan="Oro">Elegir</button>
         </div>
+        <!-- Duo -->
         <div class="bg-white p-6 rounded-xl shadow flex flex-col border">
           <h4 class="text-xl font-bold text-blue-500 mb-2">👥 Plan Duo</h4>
           <p class="flex-grow mb-4 text-sm">
             Hasta 2 usuarios con cuenta compartida.<br>
-            Registros sincronizados y alertas conjuntas.
+            Registros sincronizados y alertas combinadas.
           </p>
           <p class="font-extrabold">💰 $10 USD/mes (2 usuarios)</p>
           <button class="mt-4 bg-gray-800 text-white py-2 rounded hover:bg-gray-900 openModal" data-plan="Duo">Elegir</button>
@@ -174,22 +161,51 @@
         method="POST"
         class="space-y-4"
       >
-        <div class="mb-4">
+        <!-- Nombre completo -->
+        <div>
           <label class="block text-sm font-medium">Nombre completo *</label>
-          <input id="fullName" name="Nombre completo" required class="w-full border px-3 py-2 rounded" />
+          <input
+            name="Nombre completo"
+            id="fullName"
+            required
+            class="w-full border px-3 py-2 rounded"
+          />
         </div>
-        <div class="mb-4">
+
+        <!-- Número de WhatsApp -->
+        <div>
           <label class="block text-sm font-medium">Número de WhatsApp *</label>
-          <input id="phone" name="Número de WhatsApp" required placeholder="3382416087" class="w-full border px-3 py-2 rounded" />
+          <input
+            name="Número de WhatsApp"
+            id="phone"
+            placeholder="3382416087"
+            required
+            class="w-full border px-3 py-2 rounded"
+          />
           <p id="errPhone" class="error hidden">Ingresa 10 dígitos locales válidos.</p>
         </div>
-        <div class="mb-4">
+
+        <!-- Correo de Google -->
+        <div>
           <label class="block text-sm font-medium">Correo electrónico de Google *</label>
-          <input id="email" name="Correo electrónico de Google" type="email" required class="w-full border px-3 py-2 rounded" />
+          <input
+            name="Correo electrónico de Google"
+            id="email"
+            type="email"
+            required
+            class="w-full border px-3 py-2 rounded"
+          />
         </div>
-        <div class="mb-4">
+
+        <!-- Plan -->
+        <div>
           <label class="block text-sm font-medium">¿Qué plan elegís? *</label>
-          <select id="plan" name="¿Qué plan elegís?" required class="w-full border px-3 py-2 rounded">
+          <select
+            name="¿Qué plan elegís?"
+            id="plan"
+            required
+            class="w-full border px-3 py-2 rounded"
+          >
             <option>Prueba</option>
             <option>Bronce</option>
             <option>Plata</option>
@@ -197,17 +213,33 @@
             <option>Duo</option>
           </select>
         </div>
-        <div class="mb-4">
+
+        <!-- Invitado -->
+        <div>
           <label class="block text-sm font-medium">¿Te invitó alguien? (solo Duo)</label>
-          <input id="invitedBy" name="¿Te invitó alguien?" class="w-full border px-3 py-2 rounded" />
+          <input
+            name="¿Te invitó alguien?"
+            id="invitedBy"
+            class="w-full border px-3 py-2 rounded"
+          />
         </div>
-        <button type="submit" id="submitBtn" class="w-full bg-brand-green text-white py-2 rounded hover:bg-brand-green-dark">Enviar</button>
+
+        <!-- Cómo te enteraste (hidden) -->
+        <input type="hidden" name="¿Cómo te enteraste?" value="" />
+
+        <!-- Enviar -->
+        <button
+          type="submit"
+          id="submitBtn"
+          class="w-full bg-brand-green text-white py-2 rounded hover:bg-brand-green-dark"
+        >
+          Enviar
+        </button>
       </form>
       <p id="msg" class="mt-4 text-center"></p>
     </div>
   </div>
 
-  <!-- FOOTER -->
   <footer class="bg-gray-900 text-gray-400 py-8 mt-12">
     <div class="container mx-auto text-center">
       © 2025 MiTempo.app — Todos los derechos reservados.
@@ -215,109 +247,110 @@
   </footer>
 
   <script>
-    // Mobile nav toggle
-    document.getElementById('btnMenu').onclick  = ()=> document.getElementById('mobileNav').classList.remove('translate-x-full');
-    document.getElementById('btnClose').onclick = ()=> document.getElementById('mobileNav').classList.add('translate-x-full');
+    // Mobile nav toggles
+    const btnMenu = document.getElementById('btnMenu'),
+          btnClose = document.getElementById('btnClose'),
+          mobileNav= document.getElementById('mobileNav');
+    btnMenu.onclick  = () => mobileNav.classList.remove('translate-x-full');
+    btnClose.onclick = () => mobileNav.classList.add('translate-x-full');
 
-    // Fade-in on scroll
+    // Fade-in observer
     document.querySelectorAll('.fade-in').forEach(el => {
-      const obs = new IntersectionObserver(entries => {
+      const observer = new IntersectionObserver(entries => {
         entries.forEach(e => {
-          if(e.isIntersecting){
+          if (e.isIntersecting) {
             e.target.classList.add('visible');
-            obs.unobserve(e.target);
+            observer.unobserve(e.target);
           }
         });
-      }, { threshold: 0.1 });
-      obs.observe(el);
+      }, {threshold:0.1});
+      observer.observe(el);
     });
 
     // FAQ accordion
     const faqs = [
       {q:'¿Funciona con cualquier WhatsApp?', a:'¡Sí! Cualquier número con WhatsApp.'},
-      {q:'¿Es seguro?',                  a:'Datos encriptados y privacidad total.'},
-      {q:'¿Instalo algo?',              a:'Nada, funciona directo en WhatsApp.'},
-      {q:'¿Fin de prueba?',             a:'Te avisamos antes de que termine.'}
+      {q:'¿Es seguro?', a:'Datos encriptados y privacidad total.'},
+      {q:'¿Instalo algo?', a:'Nada, funciona directo en WhatsApp.'},
+      {q:'¿Fin de prueba?', a:'Te avisamos antes de que termine.'}
     ];
     const acc = document.getElementById('accordion');
-    faqs.forEach((f,i)=>{
+    faqs.forEach((f,i) => {
       const div = document.createElement('div');
       div.className = 'border rounded bg-white';
       div.innerHTML = `
         <button class="w-full text-left p-4 flex justify-between" data-open="false" data-id="${i}">
-          ${f.q} <span>▾</span>
+          ${f.q}<span>▾</span>
         </button>
         <div class="px-4 max-h-0 overflow-hidden transition-all" id="ans${i}">${f.a}</div>`;
       acc.appendChild(div);
     });
-    acc.querySelectorAll('button').forEach(btn=>{
-      btn.onclick = ()=>{
-        const id = btn.dataset.id;
-        const open = btn.dataset.open === 'true';
-        document.querySelectorAll('#accordion div[id^="ans"]').forEach(d => {
+    acc.querySelectorAll('button').forEach(btn => {
+      btn.onclick = () => {
+        const id = btn.dataset.id,
+              open = btn.dataset.open==='true',
+              ans  = document.getElementById('ans'+id);
+        acc.querySelectorAll('div[id^="ans"]').forEach(d => {
           d.style.maxHeight = null;
           d.previousElementSibling.dataset.open = 'false';
         });
-        if(!open){
-          const ans = document.getElementById('ans' + id);
-          ans.style.maxHeight = ans.scrollHeight + 'px';
+        if (!open) {
+          ans.style.maxHeight = ans.scrollHeight+'px';
           btn.dataset.open = 'true';
         }
       };
     });
 
     // Open modal
-    document.querySelectorAll('.openModal, #btnTrial, #btnTrial2, #btnHero').forEach(el=>{
-      el.onclick = ()=>{
+    document.querySelectorAll('.openModal, #btnTrial, #btnTrial2, #btnHero').forEach(el => {
+      el.onclick = () => {
         document.getElementById('modal').classList.add('show');
-        document.getElementById('form').reset();
-        document.getElementById('errPhone').classList.add('hidden');
-        document.getElementById('msg').textContent = '';
-        document.getElementById('msg').classList.remove('text-red-600','text-green-600');
-        // Preseleccionar plan
-        const plan = el.dataset.plan || 'Prueba';
-        document.getElementById('plan').value = plan;
+        document.getElementById('plan').value = el.dataset.plan || 'Prueba';
+        resetForm();
       };
     });
-    document.getElementById('close').onclick = ()=> document.getElementById('modal').classList.remove('show');
+    document.getElementById('close').onclick = () => document.getElementById('modal').classList.remove('show');
 
     // Form submission
-    const form = document.getElementById('form');
-    const errP = document.getElementById('errPhone');
-    const msg  = document.getElementById('msg');
-    const url  = form.action;
+    const form = document.getElementById('form'),
+          errP = document.getElementById('errPhone'),
+          msg  = document.getElementById('msg'),
+          url  = form.action;
+
+    function resetForm(){
+      form.reset();
+      errP.classList.add('hidden');
+      msg.textContent = '';
+      msg.classList.remove('text-red-600','text-green-600');
+    }
 
     form.onsubmit = async e => {
       e.preventDefault();
-      let phone = document.getElementById('phone').value
-        .trim()
-        .replace(/\D/g,'')
-        .replace(/^0+/,'');
-      if(!/^\d{10}$/.test(phone)){
+      let phone = form.phone.value.trim().replace(/\D/g,'').replace(/^0+/,'');
+      if (!/^\d{10}$/.test(phone)) {
         errP.textContent = 'Ingresa 10 dígitos locales válidos.';
         errP.classList.remove('hidden');
         return;
       }
       errP.classList.add('hidden');
-      document.getElementById('phone').value = phone;
+      form.phone.value = phone;
 
       msg.textContent = 'Enviando…';
-      msg.classList.remove('text-red-600','text-green-600');
-
       try {
         const res = await fetch(url, {
           method: 'POST',
-          body: new URLSearchParams(new FormData(form)),
+          body: new URLSearchParams(new FormData(form))
         });
         const { success, message } = await res.json();
 
-        if(success){
+        if (success) {
           msg.innerHTML = `✅ ${message}<br>
-            👉 <a href="https://wa.me/17432734544?text=Hola%20MiTempo" target="_blank" class="text-blue-600 underline">
+            👉 <a href="https://wa.me/549${phone}?text=${encodeURIComponent('Hola MiTempo')}"
+                 target="_blank" class="text-blue-600 underline">
               Abrir WhatsApp
             </a>`;
           msg.classList.add('text-green-600');
-          form.reset();
+          resetForm();
         } else {
           msg.textContent = message;
           msg.classList.add('text-red-600');
