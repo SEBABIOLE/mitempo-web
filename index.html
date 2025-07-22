@@ -40,9 +40,7 @@
         <img src="./logo-mitempo.png" alt="MiTempo" class="h-12" onerror="this.src='https://via.placeholder.com/150x50?text=MiTempo'">
       </a>
       <nav class="mobile-nav fixed right-0 top-0 h-full w-64 bg-white shadow-lg md:static md:flex md:space-x-6 md:shadow-none md:w-auto md:h-auto transform mobile-nav-hidden">
-        <button class="md:hidden absolute top-4 right-4" aria-label="Cerrar menú" onclick="closeNav()">
-          ✕
-        </button>
+        <button class="md:hidden absolute top-4 right-4" aria-label="Cerrar menú" onclick="closeNav()">✕</button>
         <div class="flex flex-col md:flex-row p-6 md:p-0 space-y-4 md:space-y-0 md:space-x-6">
           <a href="#soluciones" class="hover:text-brand-green">Soluciones</a>
           <a href="#planes"     class="hover:text-brand-green">Planes</a>
@@ -85,12 +83,14 @@
       </div>
       <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8">
         <div class="p-8 bg-white rounded-xl shadow-md hover:shadow-xl border-t-4 border-brand-green">
-          <h3 class="text-2xl font-bold mb-2">Asistente por WhatsApp</h3>
-          <p>Registro de gastos, agendado de eventos, recordatorios... ¡todo desde WhatsApp!</p>
+          <h3 class="text-2xl font-bold mb-2">Asistente Personal por WhatsApp</h3>
+          <p class="text-gray-600 mb-4">La forma más fácil de organizar tu vida. Hablá con tu asistente para registrar gastos, agendar eventos, crear recordatorios y más.</p>
+          <a href="#planes" class="font-semibold text-brand-green hover:underline">Ver planes de asistente →</a>
         </div>
         <div class="p-8 bg-white rounded-xl shadow-md hover:shadow-xl border-t-4 border-blue-500">
-          <h3 class="text-2xl font-bold mb-2">Automatizaciones</h3>
-          <p>Desde CRM hasta flujos de trabajo a medida para PYMES y profesionales.</p>
+          <h3 class="text-2xl font-bold mb-2">Automatización para Pymes y Profesionales</h3>
+          <p class="text-gray-600 mb-4">Optimizamos tus procesos. Desde la gestión de clientes (CRM) hasta flujos de trabajo personalizados para que ahorres tiempo y dinero.</p>
+          <a href="#contacto" class="font-semibold text-blue-500 hover:underline">Consultar por automatización →</a>
         </div>
       </div>
     </section>
@@ -98,39 +98,94 @@
     <!-- Planes -->
     <section id="planes" class="py-20 bg-white fade-in-section">
       <div class="container mx-auto px-6 text-center mb-12">
-        <h2 class="text-3xl font-bold mb-2">Planes del Asistente</h2>
+        <h2 class="text-3xl font-bold mb-2">Planes del Asistente Personal</h2>
         <p class="text-lg text-gray-600">Comenzá gratis y crecé a tu ritmo.</p>
       </div>
       <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+
         <!-- Bronce -->
         <div class="p-6 bg-white rounded-xl shadow-lg flex flex-col">
-          <h3 class="text-xl font-bold text-amber-600 mb-2">🥉 Bronce</h3>
-          <p class="flex-grow">Agendá por voz o texto, recordatorios simples.</p>
-          <p class="font-extrabold my-4">💰 $3 USD/mes</p>
-          <button id="openFormBtnPlan1" data-plan="Bronce" class="mt-auto bg-gray-200 py-2 rounded-lg hover:bg-gray-300">Probar</button>
+          <h3 class="text-xl font-bold text-amber-600 mb-2">🥉 Plan Bronce</h3>
+          <p class="text-gray-600 text-sm mb-4">
+            Organizá tu tiempo de forma simple.<br><br>
+            El plan Bronce te permite agendar eventos con tu voz directamente desde WhatsApp. Decí cosas como:<br>
+            “El martes a las 9 tengo turno con el dentista”<br>
+            “Recordame la reunión con Juan el viernes”<br><br>
+            Tu asistente lo entiende, lo agenda en tu Google Calendar y te envía recordatorios automáticos. También podés ver tu agenda semanal con solo pedirlo.
+          </p>
+          <ul class="space-y-2 text-gray-600 text-sm mb-6 flex-grow">
+            <li>✔ Manejo de calendario básico</li>
+            <li>✔ Agendado por voz o texto</li>
+            <li>✔ Recordatorios y alertas simples</li>
+          </ul>
+          <p class="text-xl font-extrabold my-4">💰 Precio estimado: $3 USD<span class="text-base font-medium text-gray-500">/mes</span></p>
+          <button id="openFormBtnPlan1" data-plan="Bronce" class="mt-auto bg-gray-200 text-gray-800 py-2 rounded-lg hover:bg-gray-300">Probar</button>
         </div>
+
         <!-- Plata -->
         <div class="p-6 bg-white rounded-xl shadow-lg flex flex-col">
-          <h3 class="text-xl font-bold text-gray-500 mb-2">🥈 Plata</h3>
-          <p class="flex-grow">Lenguaje natural, calendario Google, confirmaciones automáticas.</p>
-          <p class="font-extrabold my-4">💰 $5 USD/mes</p>
+          <h3 class="text-xl font-bold text-gray-500 mb-2">🥈 Plan Plata</h3>
+          <p class="text-gray-600 text-sm mb-4">
+            Agenda inteligente + conversaciones naturales.<br><br>
+            Este plan mejora la experiencia con soporte para texto libre. Podés hablarle como a una persona:<br>
+            “Che, anotá que tengo que llevar a los chicos al médico el jueves a las 10”<br>
+            “¿Qué tenía hoy a la tarde?”<br>
+            “Cancelá lo del gimnasio del sábado”<br><br>
+            El asistente interpreta el mensaje, agenda, responde e incluso cancela eventos por vos. Ideal si buscás comodidad sin complicaciones.
+          </p>
+          <ul class="space-y-2 text-gray-600 text-sm mb-6 flex-grow">
+            <li>✔ Todo lo del Plan Bronce</li>
+            <li>✔ Calendario conectado a Google</li>
+            <li>✔ Comprensión de lenguaje natural</li>
+            <li>✔ Confirmaciones automáticas</li>
+          </ul>
+          <p class="text-xl font-extrabold my-4">💰 Precio estimado: $5 USD<span class="text-base font-medium text-gray-500">/mes</span></p>
           <button id="openFormBtnPlan2" data-plan="Plata" class="mt-auto bg-gray-800 text-white py-2 rounded-lg hover:bg-gray-900">Elegir</button>
         </div>
+
         <!-- Oro -->
         <div class="p-6 bg-white rounded-xl shadow-2xl border-2 border-brand-green flex flex-col relative">
           <span class="absolute top-0 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-brand-green text-white px-2 text-xs rounded-full">RECOMENDADO</span>
-          <h3 class="text-xl font-bold text-brand-green mb-2">🥇 Oro</h3>
-          <p class="flex-grow">Agenda + registro de gastos, reportes, recomendaciones de ahorro.</p>
-          <p class="font-extrabold my-4">💰 $10 USD/mes</p>
+          <h3 class="text-xl font-bold text-brand-green mb-2">🥇 Plan Oro</h3>
+          <p class="text-gray-600 text-sm mb-4">
+            Tu agenda y tus finanzas en piloto automático.<br><br>
+            El plan más completo. No solo manejás tu agenda con voz, también registrás tus gastos y llevás el control de tus finanzas sin esfuerzo.<br>
+            “Gasté 7000 en super”<br>
+            “Cobré 120.000 del trabajo”<br>
+            “¿Cuánto llevo gastado esta semana?”<br><br>
+            El asistente clasifica automáticamente tus ingresos y egresos en Google Sheets, genera resúmenes, te da alertas de ahorro y predice tus gastos futuros.
+          </p>
+          <ul class="space-y-2 text-gray-600 text-sm mb-6 flex-grow">
+            <li>✔ Todo lo del Plan Plata</li>
+            <li>✔ Registro de gastos e ingresos</li>
+            <li>✔ Reportes semanales y mensuales</li>
+            <li>✔ Recomendaciones de ahorro</li>
+          </ul>
+          <p class="text-xl font-extrabold my-4">💰 Precio estimado: $10 USD<span class="text-base font-medium text-gray-500">/mes</span></p>
           <button id="openFormBtnPlan3" data-plan="Oro" class="mt-auto bg-brand-green text-white py-2 rounded-lg hover:bg-brand-green-dark">Elegir</button>
         </div>
+
         <!-- Duo -->
         <div class="p-6 bg-white rounded-xl shadow-lg flex flex-col">
-          <h3 class="text-xl font-bold text-blue-500 mb-2">👥 Duo</h3>
-          <p class="flex-grow">Hasta 2 usuarios, control financiero conjunto y sincronizado.</p>
-          <p class="font-extrabold my-4">💰 $10 USD/mes (2 usuarios)</p>
+          <h3 class="text-xl font-bold text-blue-500 mb-2">👥 Plan Duo</h3>
+          <p class="text-gray-600 text-sm mb-4">
+            MiTempo para dos, con cuenta compartida.<br><br>
+            Pensado para parejas, socios o familias. Ambos pueden usar el mismo asistente desde sus teléfonos y llevar una sola cuenta de gastos.<br>
+            Usuario A: “Gasté 3000 en nafta”<br>
+            Usuario B: “Anotá que pagué 5000 de cable”<br><br>
+            Ambos: “¿Cuánto gastamos esta semana?”<br><br>
+            MiTempo registra todo en la misma hoja, con etiquetas por usuario, genera alertas combinadas y organiza un calendario compartido.
+          </p>
+          <ul class="space-y-2 text-gray-600 text-sm mb-6 flex-grow">
+            <li>✔ Todo lo del Plan Oro</li>
+            <li>✔ Hasta 2 usuarios</li>
+            <li>✔ Control financiero conjunto</li>
+            <li>✔ Registros separados y sincronizados</li>
+          </ul>
+          <p class="text-xl font-extrabold my-4">💰 Precio estimado: $10 USD<span class="text-base font-medium text-gray-500">/mes (ambos incluidos)</span></p>
           <button id="openFormBtnPlan4" data-plan="Duo" class="mt-auto bg-gray-800 text-white py-2 rounded-lg hover:bg-gray-900">Elegir</button>
         </div>
+
       </div>
     </section>
 
@@ -147,7 +202,7 @@
       <div class="container mx-auto px-6 text-center">
         <div class="bg-gray-50 p-8 rounded-2xl shadow-lg max-w-3xl mx-auto">
           <h2 class="text-3xl font-bold mb-4">¿Necesitás una solución a medida?</h2>
-          <p class="text-lg text-gray-600 mb-6">Hablemos de tu proyecto y te proponemos la mejor automatización.</p>
+          <p class="text-lg text-gray-600 mb-6">Hablemos de tu proyecto y te proponemos la mejor automatización para tu negocio.</p>
           <a href="mailto:contacto@mitempo.app" class="bg-blue-600 text-white px-8 py-4 rounded-xl hover:bg-blue-700">Contactar por email</a>
         </div>
       </div>
@@ -170,7 +225,7 @@
   <!-- MODAL FORM -->
   <div id="formModal" class="modal">
     <div class="modal-content">
-      <button id="closeModal" class="close" aria-label="Cerrar modal">×</button>
+      <button id="closeModal" class="close text-2xl absolute top-4 right-4" aria-label="Cerrar modal">×</button>
       <h2 class="text-2xl font-bold mb-6">Regístrate para tu prueba gratis</h2>
       <form id="registrationForm"
             action="https://script.google.com/macros/s/AKfycbx9A3cg16_7pyB1twtBwJntp9FOAhN5UbmndrWtggqa1GcJ1XDj6q5G2muVRg-OjetmRQ/exec"
@@ -178,17 +233,17 @@
         <div>
           <label for="fullName" class="block text-sm font-medium">Nombre y Apellido *</label>
           <input type="text" id="fullName" name="fullName" required class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-brand-green">
-          <p id="fullName-error" class="error-text hidden">Por favor ingresa un nombre válido.</p>
+          <p id="fullName-error" class="error-text hidden text-sm mt-1">Por favor ingresa un nombre válido.</p>
         </div>
         <div>
           <label for="phone" class="block text-sm font-medium">WhatsApp *</label>
           <input type="tel" id="phone" name="phone" required placeholder="+549112345678" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-brand-green">
-          <p id="phone-error" class="error-text hidden">Número inválido.</p>
+          <p id="phone-error" class="error-text hidden text-sm mt-1">Número inválido.</p>
         </div>
         <div>
           <label for="email" class="block text-sm font-medium">Email *</label>
           <input type="email" id="email" name="email" required class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-brand-green">
-          <p id="email-error" class="error-text hidden">Email inválido.</p>
+          <p id="email-error" class="error-text hidden text-sm mt-1">Email inválido.</p>
         </div>
         <div>
           <label for="plan" class="block text-sm font-medium">Plan *</label>
@@ -203,18 +258,16 @@
         <div>
           <label for="invitedBy" class="block text-sm font-medium">¿Invitado por alguien? (solo Duo)</label>
           <input type="tel" id="invitedBy" name="invitedBy" placeholder="+54911..." class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-brand-green">
-          <p id="invitedBy-error" class="error-text hidden">Requerido para Duo.</p>
+          <p id="invitedBy-error" class="error-text hidden text-sm mt-1">Requerido para Duo.</p>
         </div>
         <button type="submit" id="submitButton" class="w-full bg-brand-green text-white py-2 rounded-md hover:bg-brand-green-dark">Enviar</button>
       </form>
-      <!-- Mensaje de éxito/error -->
       <p id="mensaje" class="mt-4 text-center text-sm"></p>
     </div>
   </div>
 
-  <!-- SCRIPTS -->
   <script>
-    // Navegación móvil
+    // Mobile nav
     const mobileNav = document.querySelector('.mobile-nav');
     function openNav() { mobileNav.classList.remove('mobile-nav-hidden'); }
     function closeNav(){ mobileNav.classList.add('mobile-nav-hidden'); }
@@ -225,95 +278,94 @@
         entries.forEach(e=>{
           if(e.isIntersecting){
             e.target.classList.add('is-visible');
-            this.unobserve(e.target);
+            e.target.observer && e.target.observer.disconnect();
           }
         });
       },{threshold:0.1}).observe(sec);
     });
 
-    // FAQ
+    // FAQ accordion
     const faqContainer = document.getElementById('faq-accordion');
     const faqs = [
-      {q:"¿Funciona con cualquier WhatsApp?", a:"¡Sí! Cualquier número funciona."},
-      {q:"¿Es seguro?",                 a:"Datos encriptados, privacidad garantizada."},
-      {q:"¿Instalo algo?",              a:"Nada, funciona directo en WhatsApp."},
-      {q:"¿Fin prueba?",                a:"Aviso antes, puedes exportar datos."}
+      { q: "¿Funciona con cualquier WhatsApp?", a: "¡Sí! Cualquier número funciona." },
+      { q: "¿Es seguro?", a: "Tus datos están encriptados y solo tú los ves." },
+      { q: "¿Instalo algo?", a: "No necesitas descargar nada. Funciona en WhatsApp." },
+      { q: "¿Fin periodo de prueba?", a: "Te avisamos antes. Puedes exportar datos." }
     ];
     faqs.forEach((f,i)=>{
-      const div=document.createElement('div');
-      div.className='bg-white rounded-lg shadow-sm border';
-      div.innerHTML=`
-        <button class="faq-toggle flex justify-between p-6 font-semibold" aria-expanded="false" aria-controls="faq-${i}">
-          ${f.q}<span>▾</span>
+      const div = document.createElement('div');
+      div.className = "bg-white rounded-lg shadow-sm border";
+      div.innerHTML = `
+        <button class="faq-toggle flex justify-between p-6 font-semibold w-full" aria-expanded="false" aria-controls="faq-${i}">
+          ${f.q}<span class="transform transition">▾</span>
         </button>
-        <div id="faq-${i}" class="faq-content max-h-0 overflow-hidden transition-all duration-300 p-6 pt-0 text-gray-600">
+        <div id="faq-${i}" class="faq-content max-h-0 overflow-hidden transition-all duration-300 px-6 text-gray-600">
           ${f.a}
         </div>`;
       faqContainer.appendChild(div);
     });
     document.querySelectorAll('.faq-toggle').forEach(btn=>{
-      btn.addEventListener('click',()=>{
-        const c=btn.nextElementSibling, open=!!c.style.maxHeight;
-        document.querySelectorAll('.faq-content').forEach(cc=>{
-          cc.style.maxHeight=null; cc.previousElementSibling.setAttribute('aria-expanded','false');
+      btn.addEventListener('click', ()=>{
+        const content = btn.nextElementSibling;
+        const open = content.style.maxHeight;
+        document.querySelectorAll('.faq-content').forEach(c=>{
+          c.style.maxHeight = null;
+          c.previousElementSibling.setAttribute('aria-expanded','false');
         });
         if(!open){
-          c.style.maxHeight=c.scrollHeight+'px';
+          content.style.maxHeight = content.scrollHeight + 'px';
           btn.setAttribute('aria-expanded','true');
         }
       });
     });
 
-    // Modal Form Logic
-    const modal       = document.getElementById('formModal');
-    const openBtns    = ['openFormBtn','openFormBtnMain','openFormBtnPlan1','openFormBtnPlan2','openFormBtnPlan3','openFormBtnPlan4']
-                        .map(id=>document.getElementById(id)).filter(Boolean);
-    const closeBtn    = document.getElementById('closeModal');
-    const form        = document.getElementById('registrationForm');
-    const mensaje     = document.getElementById('mensaje');
-    const submitBtn   = document.getElementById('submitButton');
-    const inputs      = {
+    // Modal form logic
+    const modal = document.getElementById('formModal');
+    const openBtns = ['openFormBtn','openFormBtnMain','openFormBtnPlan1','openFormBtnPlan2','openFormBtnPlan3','openFormBtnPlan4']
+      .map(id=>document.getElementById(id)).filter(Boolean);
+    const closeBtn = document.getElementById('closeModal');
+    const form = document.getElementById('registrationForm');
+    const mensaje = document.getElementById('mensaje');
+    const submitBtn = document.getElementById('submitButton');
+    const inputs = {
       fullName: document.getElementById('fullName'),
       phone:    document.getElementById('phone'),
       email:    document.getElementById('email'),
       invitedBy:document.getElementById('invitedBy')
     };
-    const errors      = {
+    const errors = {
       fullName: document.getElementById('fullName-error'),
       phone:    document.getElementById('phone-error'),
       email:    document.getElementById('email-error'),
       invitedBy:document.getElementById('invitedBy-error')
     };
-    const planInput   = document.getElementById('plan');
+    const planInput = document.getElementById('plan');
     const whatsappNum = "+17432734544";
 
     openBtns.forEach(btn=>{
       btn.addEventListener('click', ()=>{
-        modal.style.display='flex';
+        modal.style.display = 'flex';
         planInput.value = btn.dataset.plan || 'Prueba';
       });
     });
     closeBtn.addEventListener('click', ()=>{ modal.style.display='none'; form.reset(); mensaje.textContent=''; Object.values(errors).forEach(e=>e.classList.add('hidden')); });
-    window.addEventListener('click', e=>{ if(e.target===modal){ closeBtn.click(); } });
+    window.addEventListener('click', e=>{ if(e.target===modal) closeBtn.click(); });
 
     // Real-time validation
-    inputs.fullName.addEventListener('input', () => toggleErr('fullName', inputs.fullName.value.trim().length >= 2));
-    inputs.phone    .addEventListener('input', () => toggleErr('phone', /^\+?[1-9]\d{9,14}$/.test(inputs.phone.value)));
-    inputs.email    .addEventListener('input', () => toggleErr('email', /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputs.email.value)));
+    inputs.fullName.addEventListener('input', ()=> toggleErr('fullName', inputs.fullName.value.trim().length>=2));
+    inputs.phone   .addEventListener('input', ()=> toggleErr('phone', /^\+?[1-9]\d{9,14}$/.test(inputs.phone.value)));
+    inputs.email   .addEventListener('input', ()=> toggleErr('email', /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputs.email.value)));
     function toggleErr(f, ok){ errors[f].classList.toggle('hidden', ok); }
 
-    // Submit with retries
+    // Submit with retry
     form.addEventListener('submit', async e=>{
       e.preventDefault();
-      mensaje.style.color='inherit'; mensaje.textContent='Enviando datos...'; submitBtn.disabled=true;
+      mensaje.textContent = 'Enviando datos...'; mensaje.style.color='inherit'; submitBtn.disabled=true;
       const data = Object.fromEntries(new FormData(form).entries());
-
-      // final checks
-      if(data.fullName.trim().length<2) { return fail('fullName','Nombre inválido'); }
-      if(!/^\+?[1-9]\d{9,14}$/.test(data.phone)) { return fail('phone','Teléfono inválido'); }
-      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) { return fail('email','Email inválido'); }
-      if(data.plan==='Duo' && !data.invitedBy.trim()) { return fail('invitedBy','Requerido para Duo'); }
-
+      if(data.fullName.trim().length<2) return fail('fullName','Nombre inválido');
+      if(!/^\+?[1-9]\d{9,14}$/.test(data.phone)) return fail('phone','Teléfono inválido');
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) return fail('email','Email inválido');
+      if(data.plan==='Duo' && !data.invitedBy.trim()) return fail('invitedBy','Requerido para Duo');
       let attempts=0, max=3, res;
       async function send(){
         try {
@@ -324,19 +376,27 @@
           });
           const json = await res.json();
           if(res.ok && json.success){
-            modal.style.display='none'; form.reset();
-            mensaje.innerHTML=`
+            modal.style.display='none';
+            form.reset();
+            mensaje.innerHTML = `
               ✅ ¡Gracias por registrarte en <strong>MiTempo</strong>!<br>
               🟢 Para activar tu cuenta, haz clic aquí:<br>
               👉 <a href="https://wa.me/${whatsappNum.slice(1)}?text=Hola%20MiTempo" target="_blank">Abrir WhatsApp</a>
-            `; mensaje.style.color='green';
+            `;
+            mensaje.style.color='green';
           } else {
-            mensaje.textContent = json.message || '❌ Error al enviar.'; mensaje.style.color='red';
+            mensaje.textContent = json.message||'❌ Error al enviar.';
+            mensaje.style.color='red';
           }
         } catch(err){
           attempts++;
-          if(attempts<max){ mensaje.textContent=`⚠️ Conexión fallida (${attempts}/${max}), reintentando...`; setTimeout(send,2000); }
-          else { mensaje.textContent='❌ No se pudo enviar. Intenta más tarde.'; mensaje.style.color='red'; }
+          if(attempts<max){
+            mensaje.textContent = `⚠️ Conexión fallida (${attempts}/${max}), reintentando...`;
+            setTimeout(send,2000);
+          } else {
+            mensaje.textContent='❌ No se pudo enviar. Intenta más tarde.';
+            mensaje.style.color='red';
+          }
         } finally {
           if(attempts>=max || (res && res.ok)) submitBtn.disabled=false;
         }
@@ -344,9 +404,11 @@
       send();
     });
 
-    function fail(field, msg){
-      mensaje.textContent = msg; mensaje.style.color='red';
-      errors[field].classList.remove('hidden'); submitBtn.disabled=false;
+    function fail(field,msg){
+      mensaje.textContent = msg;
+      mensaje.style.color='red';
+      errors[field].classList.remove('hidden');
+      submitBtn.disabled=false;
     }
   </script>
 </body>
