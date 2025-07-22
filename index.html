@@ -103,47 +103,40 @@
         <p class="mt-2 text-gray-600">Comenzá gratis y crecé a tu ritmo.</p>
       </div>
       <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        <!-- Bronce -->
         <div class="bg-white p-6 rounded-xl shadow flex flex-col border">
           <h4 class="text-xl font-bold text-amber-600 mb-2">🥉 Plan Bronce</h4>
           <p class="flex-grow mb-4 text-sm">
-            El plan Bronce te permite agendar eventos con tu voz desde WhatsApp.<br>
+            Agendá eventos por voz desde WhatsApp.<br>
             “El martes a las 9 tengo turno con el dentista”<br>
-            Manejo de calendario básico, voz o texto y alertas simples.
+            Manejo básico de calendario y alertas simples.
           </p>
           <p class="font-extrabold">💰 $3 USD/mes</p>
           <button class="mt-4 bg-gray-200 py-2 rounded hover:bg-gray-300 openModal" data-plan="Bronce">Probar</button>
         </div>
-        <!-- Plata -->
         <div class="bg-white p-6 rounded-xl shadow flex flex-col border">
           <h4 class="text-xl font-bold text-gray-500 mb-2">🥈 Plan Plata</h4>
           <p class="flex-grow mb-4 text-sm">
             Soporte de lenguaje natural y Google Calendar.<br>
-            “Che, anotá que llevo a los chicos al médico”<br>
             Confirmaciones automáticas y cancelaciones.
           </p>
           <p class="font-extrabold">💰 $5 USD/mes</p>
           <button class="mt-4 bg-gray-800 text-white py-2 rounded hover:bg-gray-900 openModal" data-plan="Plata">Elegir</button>
         </div>
-        <!-- Oro -->
         <div class="bg-white p-6 rounded-2xl shadow-2xl border-2 border-brand-green flex flex-col relative">
           <span class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-brand-green text-white px-2 text-xs rounded-full">RECOMENDADO</span>
           <h4 class="text-xl font-bold text-brand-green mb-2">🥇 Plan Oro</h4>
           <p class="flex-grow mb-4 text-sm">
-            Agenda + registro de gastos e ingresos en Google Sheets.<br>
-            “Gasté 7000 en super”<br>
+            Agenda + registro de gastos en Google Sheets.<br>
             Reportes y recomendaciones de ahorro.
           </p>
           <p class="font-extrabold">💰 $10 USD/mes</p>
           <button class="mt-4 bg-brand-green text-white py-2 rounded hover:bg-brand-green-dark openModal" data-plan="Oro">Elegir</button>
         </div>
-        <!-- Duo -->
         <div class="bg-white p-6 rounded-xl shadow flex flex-col border">
           <h4 class="text-xl font-bold text-blue-500 mb-2">👥 Plan Duo</h4>
           <p class="flex-grow mb-4 text-sm">
             Hasta 2 usuarios con cuenta compartida.<br>
-            “Gasté 3000 en nafta” / “Pagué 5000 de cable”<br>
-            Registros sincronizados y alertas combinadas.
+            Registros sincronizados y alertas conjuntas.
           </p>
           <p class="font-extrabold">💰 $10 USD/mes (2 usuarios)</p>
           <button class="mt-4 bg-gray-800 text-white py-2 rounded hover:bg-gray-900 openModal" data-plan="Duo">Elegir</button>
@@ -182,76 +175,39 @@
         class="space-y-4"
       >
         <div class="mb-4">
-          <label class="block text-sm font-medium">Nombre y Apellido *</label>
-          <input
-            id="fullName"
-            name="fullName"
-            required
-            class="w-full border px-3 py-2 rounded"
-          />
+          <label class="block text-sm font-medium">Nombre completo *</label>
+          <input id="fullName" name="Nombre completo" required class="w-full border px-3 py-2 rounded" />
         </div>
         <div class="mb-4">
-          <label class="block text-sm font-medium">
-            WhatsApp (10 dígitos locales) *
-          </label>
-          <input
-            id="phone"
-            name="phone"
-            required
-            placeholder="3382416087"
-            class="w-full border px-3 py-2 rounded"
-          />
-          <p id="errPhone" class="error hidden">
-            Ingresa 10 dígitos locales válidos.
-          </p>
+          <label class="block text-sm font-medium">Número de WhatsApp *</label>
+          <input id="phone" name="Número de WhatsApp" required placeholder="3382416087" class="w-full border px-3 py-2 rounded" />
+          <p id="errPhone" class="error hidden">Ingresa 10 dígitos locales válidos.</p>
         </div>
         <div class="mb-4">
-          <label class="block text-sm font-medium">Email *</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            required
-            class="w-full border px-3 py-2 rounded"
-          />
+          <label class="block text-sm font-medium">Correo electrónico de Google *</label>
+          <input id="email" name="Correo electrónico de Google" type="email" required class="w-full border px-3 py-2 rounded" />
         </div>
         <div class="mb-4">
-          <label class="block text-sm font-medium">Plan *</label>
-          <select
-            id="plan"
-            name="plan"
-            required
-            class="w-full border px-3 py-2 rounded"
-          >
-            <option value="Prueba">Prueba</option>
-            <option value="Bronce">Bronce</option>
-            <option value="Plata">Plata</option>
-            <option value="Oro">Oro</option>
-            <option value="Duo">Duo</option>
+          <label class="block text-sm font-medium">¿Qué plan elegís? *</label>
+          <select id="plan" name="¿Qué plan elegís?" required class="w-full border px-3 py-2 rounded">
+            <option>Prueba</option>
+            <option>Bronce</option>
+            <option>Plata</option>
+            <option>Oro</option>
+            <option>Duo</option>
           </select>
         </div>
         <div class="mb-4">
-          <label class="block text-sm font-medium">
-            ¿Invitado por alguien? (solo Duo)
-          </label>
-          <input
-            id="invitedBy"
-            name="invitedBy"
-            class="w-full border px-3 py-2 rounded"
-          />
+          <label class="block text-sm font-medium">¿Te invitó alguien? (solo Duo)</label>
+          <input id="invitedBy" name="¿Te invitó alguien?" class="w-full border px-3 py-2 rounded" />
         </div>
-        <button
-          type="submit"
-          id="submitBtn"
-          class="w-full bg-brand-green text-white py-2 rounded hover:bg-brand-green-dark"
-        >
-          Enviar
-        </button>
+        <button type="submit" id="submitBtn" class="w-full bg-brand-green text-white py-2 rounded hover:bg-brand-green-dark">Enviar</button>
       </form>
       <p id="msg" class="mt-4 text-center"></p>
     </div>
   </div>
 
+  <!-- FOOTER -->
   <footer class="bg-gray-900 text-gray-400 py-8 mt-12">
     <div class="container mx-auto text-center">
       © 2025 MiTempo.app — Todos los derechos reservados.
@@ -259,24 +215,21 @@
   </footer>
 
   <script>
-    // Mobile nav
-    const btnMenu  = document.getElementById('btnMenu'),
-          btnClose = document.getElementById('btnClose'),
-          mobileNav= document.getElementById('mobileNav');
-    btnMenu.onclick  = ()=> mobileNav.classList.remove('translate-x-full');
-    btnClose.onclick = ()=> mobileNav.classList.add('translate-x-full');
+    // Mobile nav toggle
+    document.getElementById('btnMenu').onclick  = ()=> document.getElementById('mobileNav').classList.remove('translate-x-full');
+    document.getElementById('btnClose').onclick = ()=> document.getElementById('mobileNav').classList.add('translate-x-full');
 
-    // Fade in
-    document.querySelectorAll('.fade-in').forEach(el=>{
-      const observer = new IntersectionObserver(entries=>{
-        entries.forEach(e=>{
+    // Fade-in on scroll
+    document.querySelectorAll('.fade-in').forEach(el => {
+      const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
           if(e.isIntersecting){
             e.target.classList.add('visible');
-            observer.unobserve(e.target);
+            obs.unobserve(e.target);
           }
         });
-      },{threshold:0.1});
-      observer.observe(el);
+      }, { threshold: 0.1 });
+      obs.observe(el);
     });
 
     // FAQ accordion
@@ -289,69 +242,75 @@
     const acc = document.getElementById('accordion');
     faqs.forEach((f,i)=>{
       const div = document.createElement('div');
-      div.className='border rounded bg-white';
+      div.className = 'border rounded bg-white';
       div.innerHTML = `
         <button class="w-full text-left p-4 flex justify-between" data-open="false" data-id="${i}">
-          ${f.q}<span>▾</span>
+          ${f.q} <span>▾</span>
         </button>
         <div class="px-4 max-h-0 overflow-hidden transition-all" id="ans${i}">${f.a}</div>`;
       acc.appendChild(div);
     });
     acc.querySelectorAll('button').forEach(btn=>{
       btn.onclick = ()=>{
-        const id = btn.dataset.id,
-              open = btn.dataset.open==='true',
-              ans = document.getElementById('ans'+id);
-        acc.querySelectorAll('div[id^="ans"]').forEach(d=>{
-          d.style.maxHeight=null;
-          d.previousElementSibling.dataset.open='false';
+        const id = btn.dataset.id;
+        const open = btn.dataset.open === 'true';
+        document.querySelectorAll('#accordion div[id^="ans"]').forEach(d => {
+          d.style.maxHeight = null;
+          d.previousElementSibling.dataset.open = 'false';
         });
         if(!open){
-          ans.style.maxHeight=ans.scrollHeight+'px';
-          btn.dataset.open='true';
+          const ans = document.getElementById('ans' + id);
+          ans.style.maxHeight = ans.scrollHeight + 'px';
+          btn.dataset.open = 'true';
         }
       };
     });
 
-    // Open modal buttons
+    // Open modal
     document.querySelectorAll('.openModal, #btnTrial, #btnTrial2, #btnHero').forEach(el=>{
       el.onclick = ()=>{
         document.getElementById('modal').classList.add('show');
+        document.getElementById('form').reset();
+        document.getElementById('errPhone').classList.add('hidden');
+        document.getElementById('msg').textContent = '';
+        document.getElementById('msg').classList.remove('text-red-600','text-green-600');
+        // Preseleccionar plan
         const plan = el.dataset.plan || 'Prueba';
         document.getElementById('plan').value = plan;
-        resetForm();
       };
     });
     document.getElementById('close').onclick = ()=> document.getElementById('modal').classList.remove('show');
 
-    // Form logic
-    const form = document.getElementById('form'),
-          errP = document.getElementById('errPhone'),
-          msg  = document.getElementById('msg'),
-          url  = 'https://sebabiole.app.n8n.cloud/webhook/registro-formulario';
-    function resetForm(){
-      form.reset();
-      errP.classList.add('hidden');
-      msg.textContent='';
-      msg.classList.remove('text-red-600','text-green-600');
-    }
-    form.onsubmit = async e=>{
+    // Form submission
+    const form = document.getElementById('form');
+    const errP = document.getElementById('errPhone');
+    const msg  = document.getElementById('msg');
+    const url  = form.action;
+
+    form.onsubmit = async e => {
       e.preventDefault();
-      let phone = form.phone.value.trim().replace(/\D/g,'').replace(/^0+/,'');
+      let phone = document.getElementById('phone').value
+        .trim()
+        .replace(/\D/g,'')
+        .replace(/^0+/,'');
       if(!/^\d{10}$/.test(phone)){
-        errP.textContent='Ingresa 10 dígitos locales válidos.';
+        errP.textContent = 'Ingresa 10 dígitos locales válidos.';
         errP.classList.remove('hidden');
         return;
       }
       errP.classList.add('hidden');
-      form.phone.value = phone;
-      msg.textContent='Enviando…';
+      document.getElementById('phone').value = phone;
+
+      msg.textContent = 'Enviando…';
+      msg.classList.remove('text-red-600','text-green-600');
+
       try {
-        const res = await fetch(url,{
-          method:'POST',
-          body:new URLSearchParams(new FormData(form))
+        const res = await fetch(url, {
+          method: 'POST',
+          body: new URLSearchParams(new FormData(form)),
         });
-        const {success,message} = await res.json();
+        const { success, message } = await res.json();
+
         if(success){
           msg.innerHTML = `✅ ${message}<br>
             👉 <a href="https://wa.me/17432734544?text=Hola%20MiTempo" target="_blank" class="text-blue-600 underline">
@@ -364,7 +323,7 @@
           msg.classList.add('text-red-600');
         }
       } catch {
-        msg.textContent='Error de red. Intenta luego.';
+        msg.textContent = 'Error de red. Intenta luego.';
         msg.classList.add('text-red-600');
       }
     };
