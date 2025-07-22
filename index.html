@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MiTempo.app | Asistente IA y Automatizaciones</title>
-  <meta name="description" content="MiTempo.app: Tu asistente IA en WhatsApp. Organiza agenda, registra gastos y automatiza procesos.">
+  <meta name="description" content="MiTempo.app: Tu asistente con IA y automatizaciones para profesionales. Organiza tu agenda, registra gastos y optimiza procesos desde WhatsApp.">
+  <meta name="keywords" content="asistente IA, automatización, WhatsApp, gestión de agenda, finanzas personales">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { font-family: 'Inter', sans-serif; background: #f8fafc; }
@@ -15,8 +16,16 @@
     .fade-in.visible { opacity:1; transform:translateY(0); }
     .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); justify-content:center; align-items:center; z-index:50; }
     .modal.show { display:flex; }
-    .modal-content { background:#fff; padding:2rem; border-radius:.5rem; width:90%; max-width:480px; position:relative; }
+    .modal-content { background:#fff; padding:2rem; border-radius:.5rem; width:90%; max-width:500px; position:relative; }
+    .close { position:absolute; top:1rem; right:1rem; font-size:1.5rem; cursor:pointer; }
+    input:invalid:focus { border-color:#ef4444; box-shadow:0 0 0 2px rgba(239,68,68,0.2); }
     .error { color:#ef4444; font-size:.875rem; }
+    .phone-mockup { width:280px;height:560px;background:#111827;border-radius:40px;border:12px solid #1f2937;box-shadow:0 25px 50px -12px rgba(0,0,0,0.4);overflow:hidden; }
+    .phone-screen { background:linear-gradient(to bottom,#111827,#374151);width:100%;height:100%;display:flex;flex-direction:column;padding:20px 10px; }
+    .chat-bubble { padding:8px 14px;border-radius:18px;margin-bottom:8px;max-width:75%;animation:bubble-pop .5s ease-out forwards;opacity:0; }
+    .chat-bubble.user { background:#25D366;color:#fff;align-self:flex-end; }
+    .chat-bubble.assistant { background:#fff;color:#1f2937;align-self:flex-start; }
+    @keyframes bubble-pop { 0% { transform:scale(0.5);opacity:0; } 80% { transform:scale(1.05); } 100% { transform:scale(1);opacity:1; } }
   </style>
 </head>
 <body class="text-gray-800">
@@ -25,21 +34,21 @@
   <header class="fixed top-0 inset-x-0 bg-white/80 backdrop-blur border-b z-40">
     <div class="container mx-auto flex items-center justify-between p-4">
       <h1 class="text-xl font-bold">MiTempo.app</h1>
-      <nav class="space-x-6 hidden md:block">
+      <nav class="hidden md:flex space-x-6">
         <a href="#soluciones" class="hover:text-brand-green">Soluciones</a>
         <a href="#planes"     class="hover:text-brand-green">Planes</a>
         <a href="#faq"        class="hover:text-brand-green">FAQ</a>
         <button id="btnTrial" class="bg-brand-green text-white px-4 py-2 rounded hover:bg-brand-green-dark">Probar Gratis</button>
       </nav>
-      <button id="btnMenu" class="md:hidden">☰</button>
+      <button id="btnMenu" class="md:hidden text-2xl">☰</button>
     </div>
   </header>
 
   <!-- MOBILE NAV -->
-  <div id="mobileNav" class="fixed inset-0 bg-white z-30 transform translate-x-full transition md:hidden">
-    <div class="p-4 flex justify-between">
+  <div id="mobileNav" class="fixed inset-0 bg-white transform translate-x-full transition z-30">
+    <div class="flex justify-between p-4 border-b">
       <span class="font-bold">MiTempo.app</span>
-      <button id="btnClose" class="text-xl">✕</button>
+      <button id="btnClose" class="text-2xl">✕</button>
     </div>
     <nav class="flex flex-col p-4 space-y-4">
       <a href="#soluciones" class="hover:text-brand-green">Soluciones</a>
@@ -53,19 +62,18 @@
 
     <!-- HERO -->
     <section class="text-center py-20 bg-white">
-      <h2 class="text-4xl md:text-6xl font-extrabold leading-tight">
+      <h2 class="text-4xl md:text-6xl font-extrabold">
         Tu Asistente con IA y <span class="brand-green">Automatizaciones</span>
       </h2>
-      <p class="mt-4 text-lg text-gray-600">Organiza tu agenda por WhatsApp y automatiza procesos clave.</p>
-      <button id="btnHero" class="mt-8 bg-brand-green text-white px-8 py-3 rounded-xl hover:bg-brand-green-dark">Empezar Gratis →</button>
-      <!-- Mockup Chat -->
+      <p class="mt-4 text-gray-600">Organiza tu agenda por WhatsApp y automatiza procesos clave.</p>
+      <button id="btnHero" class="mt-8 bg-brand-green text-white px-8 py-3 rounded hover:bg-brand-green-dark">Empezar Gratis →</button>
       <div class="mt-12 flex justify-center">
-        <div class="w-64 h-112 bg-gray-900 rounded-3xl p-4 shadow-lg">
-          <div class="space-y-2">
-            <div class="bg-green-500 text-white p-2 rounded-xl text-sm self-end animate-pop">Hola! Gasté 2000 en nafta</div>
-            <div class="bg-white text-gray-800 p-2 rounded-xl text-sm animate-pop delay-200">¡Registrado! Gasto de $2000.</div>
-            <div class="bg-green-500 text-white p-2 rounded-xl text-sm animate-pop delay-400">Agendá médico lunes 10</div>
-            <div class="bg-white text-gray-800 p-2 rounded-xl text-sm animate-pop delay-600">Agendado: “Médico”.</div>
+        <div class="phone-mockup">
+          <div class="phone-screen">
+            <div class="chat-bubble user">Hola! Gasté 2000 en nafta</div>
+            <div class="chat-bubble assistant">¡Registrado! Gasto de $2000.</div>
+            <div class="chat-bubble user">Agendá médico lunes 10</div>
+            <div class="chat-bubble assistant">Agendado: “Médico”.</div>
           </div>
         </div>
       </div>
@@ -78,12 +86,12 @@
         <div class="bg-white p-8 rounded-xl shadow border-t-4 border-brand-green">
           <h4 class="text-2xl font-bold mb-2">Asistente Personal por WhatsApp</h4>
           <p>La forma más fácil de organizar tu vida. Hablá con tu asistente para registrar gastos, agendar eventos, crear recordatorios y más.</p>
-          <a href="#planes" class="mt-4 inline-block text-brand-green font-semibold">Ver planes de asistente →</a>
+          <a href="#planes" class="mt-4 inline-block text-brand-green font-semibold hover:underline">Ver planes de asistente →</a>
         </div>
         <div class="bg-white p-8 rounded-xl shadow border-t-4 border-blue-500">
           <h4 class="text-2xl font-bold mb-2">Automatización para PYMES y Profesionales</h4>
           <p>Optimizamos tus procesos. Desde CRM hasta flujos de trabajo personalizados para que ahorres tiempo y dinero.</p>
-          <a href="#contacto" class="mt-4 inline-block text-blue-500 font-semibold">Consultar por automatización →</a>
+          <a href="#contacto" class="mt-4 inline-block text-blue-500 font-semibold hover:underline">Consultar por automatización →</a>
         </div>
       </div>
     </section>
@@ -96,19 +104,18 @@
       </div>
       <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         <!-- Bronce -->
-        <div class="bg-white p-6 rounded-xl shadow flex flex-col">
+        <div class="bg-white p-6 rounded-xl shadow flex flex-col border">
           <h4 class="text-xl font-bold text-amber-600 mb-2">🥉 Plan Bronce</h4>
           <p class="flex-grow mb-4 text-sm">
             El plan Bronce te permite agendar eventos con tu voz desde WhatsApp.<br>
             “El martes a las 9 tengo turno con el dentista”<br>
-            “Recordame la reunión con Juan”<br>
             Manejo de calendario básico, voz o texto y alertas simples.
           </p>
           <p class="font-extrabold">💰 $3 USD/mes</p>
-          <button data-plan="Bronce" class="mt-4 bg-gray-200 py-2 rounded hover:bg-gray-300 openModal">Probar</button>
+          <button class="mt-4 bg-gray-200 py-2 rounded hover:bg-gray-300 openModal" data-plan="Bronce">Probar</button>
         </div>
         <!-- Plata -->
-        <div class="bg-white p-6 rounded-xl shadow flex flex-col">
+        <div class="bg-white p-6 rounded-xl shadow flex flex-col border">
           <h4 class="text-xl font-bold text-gray-500 mb-2">🥈 Plan Plata</h4>
           <p class="flex-grow mb-4 text-sm">
             Soporte de lenguaje natural y Google Calendar.<br>
@@ -116,11 +123,11 @@
             Confirmaciones automáticas y cancelaciones.
           </p>
           <p class="font-extrabold">💰 $5 USD/mes</p>
-          <button data-plan="Plata" class="mt-4 bg-gray-800 text-white py-2 rounded hover:bg-gray-900 openModal">Elegir</button>
+          <button class="mt-4 bg-gray-800 text-white py-2 rounded hover:bg-gray-900 openModal" data-plan="Plata">Elegir</button>
         </div>
         <!-- Oro -->
         <div class="bg-white p-6 rounded-2xl shadow-2xl border-2 border-brand-green flex flex-col relative">
-          <span class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-brand-green text-white px-2 text-xs rounded-full">RECOMENDADO</span>
+          <span class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-brand-green text-white px-2 text-xs rounded-full">RECOMENDADO</span>
           <h4 class="text-xl font-bold text-brand-green mb-2">🥇 Plan Oro</h4>
           <p class="flex-grow mb-4 text-sm">
             Agenda + registro de gastos e ingresos en Google Sheets.<br>
@@ -128,10 +135,10 @@
             Reportes y recomendaciones de ahorro.
           </p>
           <p class="font-extrabold">💰 $10 USD/mes</p>
-          <button data-plan="Oro" class="mt-4 bg-brand-green text-white py-2 rounded hover:bg-brand-green-dark openModal">Elegir</button>
+          <button class="mt-4 bg-brand-green text-white py-2 rounded hover:bg-brand-green-dark openModal" data-plan="Oro">Elegir</button>
         </div>
         <!-- Duo -->
-        <div class="bg-white p-6 rounded-xl shadow flex flex-col">
+        <div class="bg-white p-6 rounded-xl shadow flex flex-col border">
           <h4 class="text-xl font-bold text-blue-500 mb-2">👥 Plan Duo</h4>
           <p class="flex-grow mb-4 text-sm">
             Hasta 2 usuarios con cuenta compartida.<br>
@@ -139,25 +146,25 @@
             Registros sincronizados y alertas combinadas.
           </p>
           <p class="font-extrabold">💰 $10 USD/mes (2 usuarios)</p>
-          <button data-plan="Duo" class="mt-4 bg-gray-800 text-white py-2 rounded hover:bg-gray-900 openModal">Elegir</button>
+          <button class="mt-4 bg-gray-800 text-white py-2 rounded hover:bg-gray-900 openModal" data-plan="Duo">Elegir</button>
         </div>
       </div>
     </section>
 
     <!-- FAQ -->
-    <section id="faq" class="container mx-auto px-6 py-20 fade-in">
-      <h3 class="text-3xl font-bold text-center mb-8">Preguntas Frecuentes</h3>
-      <div class="space-y-4" id="accordion">
-        <!-- JS generará los ítems -->
+    <section id="faq" class="py-20 fade-in">
+      <div class="container mx-auto px-6 text-center mb-8">
+        <h3 class="text-3xl font-bold">Preguntas Frecuentes</h3>
       </div>
+      <div class="container mx-auto px-6 space-y-4" id="accordion"></div>
     </section>
 
     <!-- CONTACTO -->
     <section id="contacto" class="bg-white py-20 fade-in">
-      <div class="container mx-auto px-6 max-w-xl text-center">
+      <div class="container mx-auto px-6 max-w-lg text-center">
         <h3 class="text-3xl font-bold mb-4">¿Necesitás una solución a medida?</h3>
-        <p class="text-lg text-gray-600 mb-6">Hablemos de tu proyecto y creemos juntos la mejor automatización.</p>
-        <a href="mailto:contacto@mitempo.app" class="bg-blue-600 text-white px-8 py-3 rounded-xl hover:bg-blue-700">Contactar por email</a>
+        <p class="text-gray-600 mb-6">Hablemos de tu proyecto y creemos juntos la mejor automatización.</p>
+        <a href="mailto:contacto@mitempo.app" class="bg-blue-600 text-white px-8 py-3 rounded hover:bg-blue-700">Contactar por email</a>
       </div>
     </section>
 
@@ -166,27 +173,23 @@
   <!-- MODAL FORM -->
   <div id="modal" class="modal">
     <div class="modal-content">
-      <button id="close" class="absolute top-2 right-2 text-xl">✕</button>
+      <button id="close" class="close">✕</button>
       <h4 class="text-2xl font-bold mb-4">Regístrate para tu prueba gratis</h4>
-      <form id="form" class="space-y-4">
-        <div>
+      <form id="form">
+        <div class="mb-4">
           <label class="block text-sm font-medium">Nombre y Apellido *</label>
           <input id="fullName" name="fullName" required class="w-full border px-3 py-2 rounded" />
         </div>
-        <div>
-          <label class="block text-sm font-medium">
-            WhatsApp (solo 10 dígitos locales, ej. 3382416087) *
-          </label>
-          <input id="phone" name="phone" pattern="^\d{10}$" required
-                 class="w-full border px-3 py-2 rounded" />
-          <p id="errPhone" class="error hidden">Ingresa exactamente 10 dígitos.</p>
+        <div class="mb-4">
+          <label class="block text-sm font-medium">WhatsApp (10 dígitos locales) *</label>
+          <input id="phone" name="phone" required placeholder="3382416087" class="w-full border px-3 py-2 rounded" />
+          <p id="errPhone" class="error hidden">Ingresa 10 dígitos locales válidos.</p>
         </div>
-        <div>
+        <div class="mb-4">
           <label class="block text-sm font-medium">Email *</label>
-          <input id="email" name="email" type="email" required
-                 class="w-full border px-3 py-2 rounded" />
+          <input id="email" name="email" type="email" required class="w-full border px-3 py-2 rounded" />
         </div>
-        <div>
+        <div class="mb-4">
           <label class="block text-sm font-medium">Plan *</label>
           <select id="plan" name="plan" required class="w-full border px-3 py-2 rounded">
             <option value="Prueba">Prueba</option>
@@ -196,14 +199,11 @@
             <option value="Duo">Duo</option>
           </select>
         </div>
-        <div>
+        <div class="mb-4">
           <label class="block text-sm font-medium">¿Invitado por alguien? (solo Duo)</label>
           <input id="invitedBy" name="invitedBy" class="w-full border px-3 py-2 rounded" />
         </div>
-        <button type="submit" id="submitBtn"
-                class="w-full bg-brand-green text-white py-2 rounded hover:bg-brand-green-dark">
-          Enviar
-        </button>
+        <button type="submit" id="submitBtn" class="w-full bg-brand-green text-white py-2 rounded hover:bg-brand-green-dark">Enviar</button>
       </form>
       <p id="msg" class="mt-4 text-center"></p>
     </div>
@@ -215,16 +215,15 @@
     </div>
   </footer>
 
-  <!-- SCRIPTS -->
   <script>
-    // MOBILE NAV
-    const btnMenu = document.getElementById('btnMenu'),
-          btnClose= document.getElementById('btnClose'),
-          mobNav  = document.getElementById('mobileNav');
-    btnMenu.onclick = ()=> mobNav.classList.remove('translate-x-full');
-    btnClose.onclick= ()=> mobNav.classList.add('translate-x-full');
+    // Mobile nav
+    const btnMenu  = document.getElementById('btnMenu'),
+          btnClose = document.getElementById('btnClose'),
+          mobileNav= document.getElementById('mobileNav');
+    btnMenu.onclick  = ()=> mobileNav.classList.remove('translate-x-full');
+    btnClose.onclick = ()=> mobileNav.classList.add('translate-x-full');
 
-    // FADE-IN
+    // Fade in
     document.querySelectorAll('.fade-in').forEach(el=>{
       new IntersectionObserver(entries=>{
         entries.forEach(e=>{
@@ -233,82 +232,81 @@
             observer.unobserve(e.target);
           }
         });
-      },{ threshold:0.1 }).observe(el);
+      },{threshold:0.1}).observe(el);
     });
 
-    // FAQ ACCORDION
+    // FAQ accordion
     const faqs = [
       {q:'¿Funciona con cualquier WhatsApp?', a:'¡Sí! Cualquier número con WhatsApp.'},
       {q:'¿Es seguro?',                  a:'Datos encriptados y privacidad total.'},
-      {q:'¿Debo instalar algo?',        a:'Nada, funciona directo en WhatsApp.'},
+      {q:'¿Instalo algo?',              a:'Nada, funciona directo en WhatsApp.'},
       {q:'¿Fin de prueba?',             a:'Te avisamos antes de que termine.'}
     ];
     const acc = document.getElementById('accordion');
     faqs.forEach((f,i)=>{
-      const item = document.createElement('div');
-      item.className='border rounded-lg bg-white';
-      item.innerHTML=`
-        <button class="w-full text-left p-4 font-semibold flex justify-between" data-open="false" data-id="${i}">
+      const div = document.createElement('div');
+      div.className='border rounded bg-white';
+      div.innerHTML = `
+        <button class="w-full text-left p-4 flex justify-between" data-open="false" data-id="${i}">
           ${f.q}<span>▾</span>
         </button>
         <div class="px-4 max-h-0 overflow-hidden transition-all" id="ans${i}">${f.a}</div>`;
-      acc.appendChild(item);
+      acc.appendChild(div);
     });
     acc.querySelectorAll('button').forEach(btn=>{
       btn.onclick = ()=>{
-        const open = btn.dataset.open==='true',
-              id   = btn.dataset.id,
-              ans  = document.getElementById('ans'+id);
+        const id = btn.dataset.id,
+              open = btn.dataset.open==='true',
+              ans = document.getElementById('ans'+id);
         acc.querySelectorAll('div[id^="ans"]').forEach(d=>{
-          d.style.maxHeight = null;
+          d.style.maxHeight=null;
           d.previousElementSibling.dataset.open='false';
         });
         if(!open){
-          ans.style.maxHeight = ans.scrollHeight+'px';
+          ans.style.maxHeight=ans.scrollHeight+'px';
           btn.dataset.open='true';
         }
       };
     });
 
-    // OPEN MODAL
-    document.querySelectorAll('.openModal').forEach(b=>b.onclick = ()=>{
-      document.getElementById('modal').classList.add('show');
-      document.getElementById('plan').value = b.dataset.plan;
-    });
-    ['btnTrial','btnTrial2','btnHero'].forEach(id=>{
-      document.getElementById(id).onclick = ()=>{
+    // Open modal buttons
+    document.querySelectorAll('.openModal, #btnTrial, #btnTrial2, #btnHero').forEach(el=>{
+      el.onclick = ()=>{
         document.getElementById('modal').classList.add('show');
-        document.getElementById('plan').value='Prueba';
+        const plan = el.dataset.plan || 'Prueba';
+        document.getElementById('plan').value = plan;
+        resetForm();
       };
     });
-    document.getElementById('close').onclick = ()=>{
-      document.getElementById('modal').classList.remove('show');
-      resetForm();
-    };
+    document.getElementById('close').onclick = ()=> document.getElementById('modal').classList.remove('show');
 
-    // FORM LOGIC
+    // Form logic
     const form = document.getElementById('form'),
-          msg  = document.getElementById('msg'),
           errP = document.getElementById('errPhone'),
-          url  = 'https://script.google.com/macros/s/AKfycbw9xhiJq3bO2L0IXhcIUdbi2RSsLaCVXPXkxlPhiADZRNt6ETaqUR7fZuku97W0EuwEbA/exec';
+          msg  = document.getElementById('msg'),
+          url  = 'https://script.google.com/macros/s/AKfycbxDrHbDPFJ1hDhrYXJZ4Jts_9IRDxV52DNtrd62sEbZqdvxvGMB6xRLfXt9K4MGRvU48Q/exec';
+    function resetForm(){
+      form.reset();
+      errP.classList.add('hidden');
+      msg.textContent='';
+      msg.classList.remove('text-red-600','text-green-600');
+    }
     form.onsubmit = async e=>{
       e.preventDefault();
-      // validación local
-      const phone = form.phone.value.trim();
+      let phone = form.phone.value.trim().replace(/\D/g,'').replace(/^0+/,'');
       if(!/^\d{10}$/.test(phone)){
+        errP.textContent='Ingresa 10 dígitos locales válidos.';
         errP.classList.remove('hidden');
         return;
       }
       errP.classList.add('hidden');
-      // enviar
-      msg.textContent = 'Enviando…';
-      const data = new URLSearchParams(new FormData(form));
+      form.phone.value = phone;
+      msg.textContent='Enviando…';
       try {
-        const res = await fetch(url, { method:'POST', body:data });
-        const { success, message } = await res.json();
+        const res = await fetch(url,{method:'POST',body:new URLSearchParams(new FormData(form))});
+        const {success,message} = await res.json();
         if(success){
-          msg.innerHTML = `
-            ✅ ${message}<br>
+          msg.innerHTML = `✅ ${message}<br>
             👉 <a href="https://wa.me/17432734544?text=Hola%20MiTempo" target="_blank" class="text-blue-600 underline">
               Abrir WhatsApp
             </a>`;
@@ -318,18 +316,11 @@
           msg.textContent = message;
           msg.classList.add('text-red-600');
         }
-      } catch(err){
-        msg.textContent = 'Error de red. Intenta luego.';
+      } catch {
+        msg.textContent='Error de red. Intenta luego.';
         msg.classList.add('text-red-600');
       }
     };
-    function resetForm(){
-      form.reset();
-      errP.classList.add('hidden');
-      msg.textContent='';
-      msg.classList.remove('text-red-600','text-green-600');
-    }
   </script>
-
 </body>
 </html>
