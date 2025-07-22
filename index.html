@@ -6,385 +6,140 @@
   <title>MiTempo.app | Asistente IA y Automatizaciones</title>
   <meta name="description" content="MiTempo.app: Tu asistente con IA y automatizaciones para profesionales. Organiza tu agenda, registra gastos y optimiza procesos desde WhatsApp." />
   <meta name="keywords" content="asistente IA, automatización, WhatsApp, gestión de agenda, finanzas personales" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body { font-family: 'Inter', sans-serif; background: #f8fafc; }
-    .brand-green { color: #10B981; }
-    .bg-brand-green { background: #10B981; }
-    .hover\:bg-brand-green-dark:hover { background: #059669; }
-    .fade-in { opacity: 0; transform: translateY(20px); transition: all .6s ease-out; }
-    .fade-in.visible { opacity:1; transform:translateY(0); }
-    .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); justify-content:center; align-items:center; z-index:50; }
-    .modal.show { display:flex; }
-    .modal-content { background:#fff; padding:2rem; border-radius:.5rem; width:90%; max-width:500px; position:relative; }
-    .close { position:absolute; top:1rem; right:1rem; font-size:1.5rem; cursor:pointer; }
-    input:invalid:focus { border-color:#ef4444; box-shadow:0 0 0 2px rgba(239,68,68,0.2); }
-    .error { color:#ef4444; font-size:.875rem; }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="text-gray-800">
+<body class="font-inter bg-gray-100 text-gray-800">
 
   <!-- HEADER -->
-  <header class="fixed top-0 inset-x-0 bg-white/80 backdrop-blur border-b z-40">
+  <header class="fixed w-full bg-white/80 backdrop-blur border-b z-50">
     <div class="container mx-auto flex items-center justify-between p-4">
-      <h1 class="text-xl font-bold">MiTempo.app</h1>
+      <a href="index.html" class="text-xl font-bold">MiTempo.app</a>
       <nav class="hidden md:flex space-x-6">
-        <a href="#soluciones" class="hover:text-brand-green">Soluciones</a>
-        <a href="#planes" class="hover:text-brand-green">Planes</a>
-        <a href="#faq" class="hover:text-brand-green">FAQ</a>
-        <button id="btnTrial" class="bg-brand-green text-white px-4 py-2 rounded hover:bg-brand-green-dark">Probar Gratis</button>
+        <a href="#soluciones" class="hover:text-green-500">Soluciones</a>
+        <a href="#planes" class="hover:text-green-500">Planes</a>
+        <a href="#faq" class="hover:text-green-500">FAQ</a>
+        <a href="registro.html" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Regístrate Gratis</a>
       </nav>
       <button id="btnMenu" class="md:hidden text-2xl">☰</button>
     </div>
-  </header>
-
-  <!-- MOBILE NAV -->
-  <div id="mobileNav" class="fixed inset-0 bg-white transform translate-x-full transition z-30">
-    <div class="flex justify-between p-4 border-b">
-      <span class="font-bold">MiTempo.app</span>
-      <button id="btnClose" class="text-2xl">✕</button>
+    <!-- MOBILE NAV -->
+    <div id="mobileNav" class="hidden absolute top-full inset-x-0 bg-white shadow-md">
+      <div class="flex flex-col p-4 space-y-4">
+        <a href="#soluciones" class="hover:text-green-500">Soluciones</a>
+        <a href="#planes" class="hover:text-green-500">Planes</a>
+        <a href="#faq" class="hover:text-green-500">FAQ</a>
+        <a href="registro.html" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Regístrate Gratis</a>
+      </div>
     </div>
-    <nav class="flex flex-col p-4 space-y-4">
-      <a href="#soluciones" class="hover:text-brand-green">Soluciones</a>
-      <a href="#planes" class="hover:text-brand-green">Planes</a>
-      <a href="#faq" class="hover:text-brand-green">FAQ</a>
-      <button id="btnTrial2" class="bg-brand-green text-white px-4 py-2 rounded hover:bg-brand-green-dark">Probar Gratis</button>
-    </nav>
-  </div>
+  </header>
 
   <main class="pt-24">
 
     <!-- HERO -->
     <section class="text-center py-20 bg-white">
-      <h2 class="text-4xl md:text-6xl font-extrabold">
-        Tu Asistente con IA y <span class="brand-green">Automatizaciones</span>
-      </h2>
+      <h1 class="text-4xl md:text-6xl font-extrabold">
+        Tu Asistente con IA y <span class="text-green-500">Automatizaciones</span>
+      </h1>
       <p class="mt-4 text-gray-600">Organiza tu agenda por WhatsApp y automatiza procesos clave.</p>
-      <button id="btnHero" class="mt-8 bg-brand-green text-white px-8 py-3 rounded hover:bg-brand-green-dark">Empezar Gratis →</button>
+      <a href="registro.html" class="mt-8 inline-block bg-green-500 text-white px-8 py-3 rounded hover:bg-green-600">
+        Regístrate Gratis →
+      </a>
+      <div class="mt-12 flex justify-center">
+        <div class="phone-mockup">
+          <div class="phone-screen p-4">
+            <div class="chat-bubble user">Hola! Gasté 2000 en nafta</div>
+            <div class="chat-bubble assistant">¡Registrado! Gasto de $2000.</div>
+            <div class="chat-bubble user">Agendá médico lunes 10</div>
+            <div class="chat-bubble assistant">Agendado: “Médico”.</div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- SOLUCIONES -->
-    <section id="soluciones" class="container mx-auto px-6 py-20 fade-in">
-      <h3 class="text-3xl font-bold text-center mb-4">Soluciones a tu Medida</h3>
+    <section id="soluciones" class="container mx-auto px-6 py-20">
+      <h2 class="text-3xl font-bold text-center mb-8">Soluciones a tu Medida</h2>
       <div class="grid md:grid-cols-2 gap-8">
-        <div class="bg-white p-8 rounded-xl shadow border-t-4 border-brand-green">
-          <h4 class="text-2xl font-bold mb-2">Asistente Personal por WhatsApp</h4>
+        <div class="bg-white p-8 rounded-xl shadow border-t-4 border-green-500">
+          <h3 class="text-2xl font-bold mb-2">Asistente Personal por WhatsApp</h3>
           <p>La forma más fácil de organizar tu vida. Hablá con tu asistente para registrar gastos, agendar eventos, crear recordatorios y más.</p>
-          <a href="#planes" class="mt-4 inline-block text-brand-green font-semibold hover:underline">Ver planes de asistente →</a>
+          <a href="registro.html#planes" class="mt-4 inline-block text-green-500 font-semibold hover:underline">
+            Ver planes →</a>
         </div>
         <div class="bg-white p-8 rounded-xl shadow border-t-4 border-blue-500">
-          <h4 class="text-2xl font-bold mb-2">Automatización para PYMES y Profesionales</h4>
-          <p>Optimizamos tus procesos. Desde CRM hasta flujos de trabajo personalizados para que ahorres tiempo y dinero.</p>
-          <a href="#contacto" class="mt-4 inline-block text-blue-500 font-semibold hover:underline">Consultar por automatización →</a>
+          <h3 class="text-2xl font-bold mb-2">Automatización para PYMES</h3>
+          <p>Optimizamos tus procesos. Desde CRM hasta flujos personalizados para que ahorres tiempo y dinero.</p>
+          <a href="#contacto" class="mt-4 inline-block text-blue-500 font-semibold hover:underline">
+            Consultar →</a>
         </div>
       </div>
     </section>
 
     <!-- PLANES -->
-    <section id="planes" class="bg-gray-50 py-20 fade-in">
+    <section id="planes" class="bg-gray-50 py-20">
       <div class="text-center mb-12">
-        <h3 class="text-3xl font-bold">Planes del Asistente Personal</h3>
+        <h2 class="text-3xl font-bold">Planes del Asistente</h2>
         <p class="mt-2 text-gray-600">Comenzá gratis y crecé a tu ritmo.</p>
       </div>
       <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        <!-- Bronce -->
-        <div class="bg-white p-6 rounded-xl shadow flex flex-col border">
-          <h4 class="text-xl font-bold text-amber-600 mb-2">🥉 Plan Bronce</h4>
-          <p class="flex-grow mb-4 text-sm">
-            Agendá eventos con tu voz desde WhatsApp.<br>
-            Manejo de calendario básico, voz o texto y alertas simples.
-          </p>
-          <p class="font-extrabold">💰 $3 USD/mes</p>
-          <button class="mt-4 bg-gray-200 py-2 rounded hover:bg-gray-300 openModal" data-plan="Bronce">Probar</button>
+        <!-- Planes cards -->
+        <div class="plan-card border rounded p-6 text-center">
+          <h4 class="text-xl font-bold text-amber-600 mb-2">🥉 Bronce</h4>
+          <p class="mb-4">Agendá eventos con voz. Calendario básico y alertas simples.</p>
+          <p class="font-extrabold mb-4">$3 USD/mes</p>
+          <a href="registro.html#Bronce" class="block bg-gray-200 py-2 rounded hover:bg-gray-300">Elegir</a>
         </div>
-        <!-- Plata -->
-        <div class="bg-white p-6 rounded-xl shadow flex flex-col border">
-          <h4 class="text-xl font-bold text-gray-500 mb-2">🥈 Plan Plata</h4>
-          <p class="flex-grow mb-4 text-sm">
-            Soporte de lenguaje natural y Google Calendar.<br>
-            Confirmaciones automáticas y cancelaciones.
-          </p>
-          <p class="font-extrabold">💰 $5 USD/mes</p>
-          <button class="mt-4 bg-gray-800 text-white py-2 rounded hover:bg-gray-900 openModal" data-plan="Plata">Elegir</button>
+        <div class="plan-card border rounded p-6 text-center">
+          <h4 class="text-xl font-bold text-gray-500 mb-2">🥈 Plata</h4>
+          <p class="mb-4">Natural language + Google Calendar. Confirmaciones y cancelaciones.</p>
+          <p class="font-extrabold mb-4">$5 USD/mes</p>
+          <a href="registro.html#Plata" class="block bg-gray-800 text-white py-2 rounded hover:bg-gray-900">Elegir</a>
         </div>
-        <!-- Oro -->
-        <div class="bg-white p-6 rounded-2xl shadow-2xl border-2 border-brand-green flex flex-col relative">
-          <span class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-brand-green text-white px-2 text-xs rounded-full">RECOMENDADO</span>
-          <h4 class="text-xl font-bold text-brand-green mb-2">🥇 Plan Oro</h4>
-          <p class="flex-grow mb-4 text-sm">
-            Agenda + registro de gastos e ingresos en Google Sheets.<br>
-            Reportes y recomendaciones de ahorro.
-          </p>
-          <p class="font-extrabold">💰 $10 USD/mes</p>
-          <button class="mt-4 bg-brand-green text-white py-2 rounded hover:bg-brand-green-dark openModal" data-plan="Oro">Elegir</button>
+        <div class="plan-card border-2 rounded-2xl p-6 text-center border-green-500 bg-white shadow-lg relative">
+          <span class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-2 text-xs rounded">RECOMENDADO</span>
+          <h4 class="text-xl font-bold text-green-500 mb-2">🥇 Oro</h4>
+          <p class="mb-4">Agenda + registro de gastos en Google Sheets. Reportes y recomendaciones.</p>
+          <p class="font-extrabold mb-4">$10 USD/mes</p>
+          <a href="registro.html#Oro" class="block bg-green-500 text-white py-2 rounded hover:bg-green-600">Elegir</a>
         </div>
-        <!-- Duo -->
-        <div class="bg-white p-6 rounded-xl shadow flex flex-col border">
-          <h4 class="text-xl font-bold text-blue-500 mb-2">👥 Plan Duo</h4>
-          <p class="flex-grow mb-4 text-sm">
-            Hasta 2 usuarios con cuenta compartida.<br>
-            Registros sincronizados y alertas combinadas.
-          </p>
-          <p class="font-extrabold">💰 $10 USD/mes (2 usuarios)</p>
-          <button class="mt-4 bg-gray-800 text-white py-2 rounded hover:bg-gray-900 openModal" data-plan="Duo">Elegir</button>
+        <div class="plan-card border rounded p-6 text-center">
+          <h4 class="text-xl font-bold text-blue-500 mb-2">👥 Duo</h4>
+          <p class="mb-4">2 usuarios con cuenta compartida. Registros sincronizados.</p>
+          <p class="font-extrabold mb-4">$10 USD/mes</p>
+          <a href="registro.html#Duo" class="block bg-gray-800 text-white py-2 rounded hover:bg-gray-900">Elegir</a>
         </div>
       </div>
     </section>
 
     <!-- FAQ -->
-    <section id="faq" class="py-20 fade-in">
-      <div class="container mx-auto px-6 text-center mb-8">
-        <h3 class="text-3xl font-bold">Preguntas Frecuentes</h3>
+    <section id="faq" class="py-20">
+      <h2 class="text-3xl font-bold text-center mb-6">Preguntas Frecuentes</h2>
+      <div class="container mx-auto px-6 space-y-4" id="accordion">
+        <!-- JS construirá el acordeón aquí -->
       </div>
-      <div class="container mx-auto px-6 space-y-4" id="accordion"></div>
     </section>
 
     <!-- CONTACTO -->
-    <section id="contacto" class="bg-white py-20 fade-in">
-      <div class="container mx-auto px-6 max-w-lg text-center">
-        <h3 class="text-3xl font-bold mb-4">¿Necesitás una solución a medida?</h3>
-        <p class="text-gray-600 mb-6">Hablemos de tu proyecto y creemos juntos la mejor automatización.</p>
-        <a href="mailto:contacto@mitempo.app" class="bg-blue-600 text-white px-8 py-3 rounded hover:bg-blue-700">Contactar por email</a>
+    <section id="contacto" class="bg-white py-20">
+      <div class="container mx-auto px-6 text-center">
+        <h2 class="text-3xl font-bold mb-4">¿Necesitás algo a medida?</h2>
+        <p class="text-gray-600 mb-6">Hablemos de tu proyecto y creemos juntos la mejor solución.</p>
+        <a href="mailto:contacto@mitempo.app" class="bg-blue-600 text-white px-8 py-3 rounded hover:bg-blue-700">
+          Contactar por email
+        </a>
       </div>
     </section>
 
   </main>
 
-  <!-- MODAL FORM -->
-  <div id="modal" class="modal">
-    <div class="modal-content">
-      <button id="close" class="close">✕</button>
-      <h4 class="text-2xl font-bold mb-4">Regístrate para tu prueba gratis</h4>
-      <form
-        id="form"
-        action="https://sebabiole.app.n8n.cloud/webhook/registro-formulario"
-        method="POST"
-        class="space-y-4"
-      >
-        <!-- Nombre completo -->
-        <div>
-          <label class="block text-sm font-medium">Nombre completo *</label>
-          <input
-            name="Nombre completo"
-            id="fullName"
-            required
-            class="w-full border px-3 py-2 rounded"
-          />
-        </div>
-
-        <!-- Número de WhatsApp -->
-        <div>
-          <label class="block text-sm font-medium">Número de WhatsApp *</label>
-          <input
-            name="Número de WhatsApp"
-            id="phone"
-            placeholder="3382416087"
-            required
-            class="w-full border px-3 py-2 rounded"
-          />
-          <p id="errPhone" class="error hidden">Ingresa 10 dígitos locales válidos.</p>
-        </div>
-
-        <!-- Correo de Google -->
-        <div>
-          <label class="block text-sm font-medium">Correo electrónico de Google *</label>
-          <input
-            name="Correo electrónico de Google"
-            id="email"
-            type="email"
-            required
-            class="w-full border px-3 py-2 rounded"
-          />
-        </div>
-
-        <!-- Plan -->
-        <div>
-          <label class="block text-sm font-medium">¿Qué plan elegís? *</label>
-          <select
-            name="¿Qué plan elegís?"
-            id="plan"
-            required
-            class="w-full border px-3 py-2 rounded"
-          >
-            <option>Prueba</option>
-            <option>Bronce</option>
-            <option>Plata</option>
-            <option>Oro</option>
-            <option>Duo</option>
-          </select>
-        </div>
-
-        <!-- Invitado -->
-        <div>
-          <label class="block text-sm font-medium">¿Te invitó alguien? (solo Duo)</label>
-          <input
-            name="¿Te invitó alguien?"
-            id="invitedBy"
-            class="w-full border px-3 py-2 rounded"
-          />
-        </div>
-
-        <!-- Cómo te enteraste (hidden) -->
-        <input type="hidden" name="¿Cómo te enteraste?" value="" />
-
-        <!-- Enviar -->
-        <button
-          type="submit"
-          id="submitBtn"
-          class="w-full bg-brand-green text-white py-2 rounded hover:bg-brand-green-dark"
-        >
-          Enviar
-        </button>
-      </form>
-      <p id="msg" class="mt-4 text-center"></p>
-    </div>
-  </div>
-
-  <footer class="bg-gray-900 text-gray-400 py-8 mt-12">
+  <!-- FOOTER -->
+  <footer class="bg-gray-900 text-gray-400 py-6">
     <div class="container mx-auto text-center">
       © 2025 MiTempo.app — Todos los derechos reservados.
     </div>
   </footer>
 
-  <script>
-    // Mobile nav toggles
-    const btnMenu = document.getElementById('btnMenu'),
-          btnClose = document.getElementById('btnClose'),
-          mobileNav= document.getElementById('mobileNav');
-    btnMenu.onclick  = () => mobileNav.classList.remove('translate-x-full');
-    btnClose.onclick = () => mobileNav.classList.add('translate-x-full');
-
-    // Fade-in observer
-    document.querySelectorAll('.fade-in').forEach(el => {
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-          if (e.isIntersecting) {
-            e.target.classList.add('visible');
-            observer.unobserve(e.target);
-          }
-        });
-      }, {threshold:0.1});
-      observer.observe(el);
-    });
-
-    // FAQ accordion
-    const faqs = [
-      {q:'¿Funciona con cualquier WhatsApp?', a:'¡Sí! Cualquier número con WhatsApp.'},
-      {q:'¿Es seguro?', a:'Datos encriptados y privacidad total.'},
-      {q:'¿Instalo algo?', a:'Nada, funciona directo en WhatsApp.'},
-      {q:'¿Fin de prueba?', a:'Te avisamos antes de que termine.'}
-    ];
-    const acc = document.getElementById('accordion');
-    faqs.forEach((f,i) => {
-      const div = document.createElement('div');
-      div.className = 'border rounded bg-white';
-      div.innerHTML = `
-        <button class="w-full text-left p-4 flex justify-between" data-open="false" data-id="${i}">
-          ${f.q}<span>▾</span>
-        </button>
-        <div class="px-4 max-h-0 overflow-hidden transition-all" id="ans${i}">${f.a}</div>`;
-      acc.appendChild(div);
-    });
-    acc.querySelectorAll('button').forEach(btn => {
-      btn.onclick = () => {
-        const id = btn.dataset.id,
-              open = btn.dataset.open==='true',
-              ans  = document.getElementById('ans'+id);
-        acc.querySelectorAll('div[id^="ans"]').forEach(d => {
-          d.style.maxHeight = null;
-          d.previousElementSibling.dataset.open = 'false';
-        });
-        if (!open) {
-          ans.style.maxHeight = ans.scrollHeight+'px';
-          btn.dataset.open = 'true';
-        }
-      };
-    });
-
-    // Open modal
-    document.querySelectorAll('.openModal, #btnTrial, #btnTrial2, #btnHero').forEach(el => {
-      el.onclick = () => {
-        document.getElementById('modal').classList.add('show');
-        document.getElementById('plan').value = el.dataset.plan || 'Prueba';
-        resetForm();
-      };
-    });
-    document.getElementById('close').onclick = () => document.getElementById('modal').classList.remove('show');
-
-    // Form submission
-    const form = document.getElementById('form'),
-          errP = document.getElementById('errPhone'),
-          msg  = document.getElementById('msg'),
-          url  = form.action;
-
-    function resetForm(){
-      form.reset();
-      errP.classList.add('hidden');
-      msg.textContent = '';
-      msg.classList.remove('text-red-600','text-green-600');
-    }
-
-  form.onsubmit = async e => {
-    e.preventDefault();
-
-    // normalización del celular
-    let phone = form.phone.value.trim().replace(/\D/g,'').replace(/^0+/,'');
-    if (!/^\d{10}$/.test(phone)) {
-      errP.textContent = 'Ingresa 10 dígitos locales válidos.';
-      errP.classList.remove('hidden');
-      return;
-    }
-    errP.classList.add('hidden');
-    form.phone.value = phone;
-
-    msg.textContent = 'Enviando…';
-    msg.classList.remove('text-red-600','text-green-600');
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        body: new URLSearchParams(new FormData(form))
-      });
-
-      // primero leemos texto
-      const text = await response.text();
-      let data;
-      if (text) {
-        try {
-          data = JSON.parse(text);
-        } catch {
-          data = {};
-        }
-      } else {
-        data = {};
-      }
-
-      // determinamos éxito
-      const success = data.success === true || response.ok;
-      const message = data.message || (success
-        ? '¡Listo! Pronto pasaré tu registro.'
-        : 'Hubo un problema procesando tu solicitud.');
-
-      if (success) {
-        msg.innerHTML = `✅ ${message}<br>
-          👉 <a
-            href="https://wa.me/549${phone}?text=${encodeURIComponent('Hola MiTempo')}"
-            target="_blank"
-            class="text-blue-600 underline"
-          >
-            Abrir WhatsApp
-          </a>`;
-        msg.classList.add('text-green-600');
-        form.reset();
-      } else {
-        msg.textContent = message;
-        msg.classList.add('text-red-600');
-      }
-    } catch (err) {
-      console.error(err);
-      msg.textContent = 'Error de red. Intenta luego.';
-      msg.classList.add('text-red-600');
-    }
-  };
-</script>
+  <!-- SCRIPTS -->
+  <script src="main.js"></script>
 </body>
 </html>
