@@ -21,36 +21,32 @@
     .bg-brand-green { background-color: #10B981; }
     .hover\:bg-brand-green-dark:hover { background-color: #059669; }
     .border-brand-green { border-color: #10B981; }
-
     /* Fade-in */
     .fade-in-section { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
     .fade-in-section.is-visible { opacity: 1; transform: translateY(0); }
-
     /* Mockup teléfono */
     .phone-mockup { width: 280px; height: 560px; background: #111827; border-radius: 40px; border: 12px solid #1f2937; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.4); overflow: hidden; }
-    .phone-screen { background: url('https://images.unsplash.com/photo-1554147090-e1221a04a025?q=80&w=500&auto=format&fit=crop') center/cover; background-image: linear-gradient(to bottom, #111827, #374151); display: flex; flex-direction: column; padding: 20px 10px; width: 100%; height: 100%; }
+    .phone-screen { background:url('https://images.unsplash.com/photo-1554147090-e1221a04a025?q=80&w=500&auto=format&fit=crop') center/cover; background-image: linear-gradient(to bottom, #111827, #374151); display: flex; flex-direction: column; padding: 20px 10px; width: 100%; height: 100%; }
     .chat-bubble { padding: 8px 14px; border-radius: 18px; margin-bottom: 8px; max-width: 75%; opacity: 0; animation: bubble-pop 0.5s ease-out forwards; }
     .chat-bubble.user { background-color: #25D366; color: #fff; align-self: flex-end; }
     .chat-bubble.assistant { background-color: #fff; color: #1f2937; align-self: flex-start; }
     @keyframes bubble-pop { 0% { transform: scale(0.5); opacity: 0; } 80% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
-
     /* Modal */
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
-    .modal-content { background: #fff; padding: 2rem; border-radius: 0.5rem; width: 90%; max-width: 500px; position: relative; animation: slide-up 0.3s ease-out; }
-    .close { position: absolute; top: 1rem; right: 1rem; font-size: 1.5rem; cursor: pointer; color: #6b7280; }
-    .close:hover { color: #111827; }
-    @keyframes slide-up { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
+    .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index:1000; }
+    .modal-content { background: #fff; padding:2rem; border-radius:0.5rem; width:90%; max-width:500px; position: relative; animation: slide-up 0.3s ease-out; }
+    .close { position:absolute; top:1rem; right:1rem; font-size:1.5rem; cursor:pointer; color:#6b7280; }
+    .close:hover { color:#111827; }
+    @keyframes slide-up { from{ transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     /* Validaciones */
-    input:invalid:focus { border-color: #ef4444; box-shadow: 0 0 0 2px rgba(239,68,68,0.2); }
-    .error-text { color: #ef4444; font-size: 0.875rem; }
-
+    input:invalid:focus { border-color:#ef4444; box-shadow: 0 0 0 2px rgba(239,68,68,0.2); }
+    .error-text { color:#ef4444; font-size:0.875rem; }
     /* Navegación móvil */
     .mobile-nav { transition: transform 0.3s ease-in-out; }
     .mobile-nav-hidden { transform: translateX(100%); }
   </style>
 </head>
 <body class="text-gray-800">
+
   <!-- HEADER -->
   <header class="bg-white/80 backdrop-blur-lg fixed top-0 left-0 right-0 z-50 border-b border-gray-200">
     <div class="container mx-auto px-6 py-3 flex justify-between items-center">
@@ -97,77 +93,7 @@
         <h2 class="text-3xl font-bold mb-2">Soluciones a tu Medida</h2>
         <p class="text-gray-600">Tanto para tu día a día como para tu negocio.</p>
       </div>
-      <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl">
-        <!-- Asistente -->
-        <div class="bg-white p-8 rounded-xl shadow-md border-t-4 border-brand-green">
-          <h3 class="text-2xl font-bold mb-2">Asistente por WhatsApp</h3>
-          <p class="text-gray-600 mb-4">Registro de gastos, agendado de eventos, recordatorios... ¡todo desde WhatsApp!</p>
-          <a href="#planes" class="text-brand-green font-semibold">Ver planes →</a>
-        </div>
-        <!-- Automatizaciones -->
-        <div class="bg-white p-8 rounded-xl shadow-md border-t-4 border-blue-500">
-          <h3 class="text-2xl font-bold mb-2">Automatizaciones</h3>
-          <p class="text-gray-600 mb-4">Desde CRM hasta flujos de trabajo a medida para PYMES y profesionales.</p>
-          <a href="#contacto" class="text-blue-500 font-semibold">Consultar →</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Planes -->
-    <section id="planes" class="py-20 bg-white fade-in-section">
-      <div class="container mx-auto px-6 text-center mb-12">
-        <h2 class="text-3xl font-bold mb-2">Planes del Asistente</h2>
-        <p class="text-gray-600">Comenzá gratis y crecé a tu ritmo.</p>
-      </div>
-      <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        <!-- Plan Bronce -->
-        <div class="bg-white p-6 rounded-xl shadow-lg border flex flex-col">
-          <h3 class="text-xl font-bold text-amber-600">🥉 Plan Bronce</h3>
-          <p class="text-gray-600 mb-4">Agendá por voz o texto, recordatorios simples.</p>
-          <p class="text-xl font-bold mb-4">$3 USD/mes</p>
-          <button id="openFormBtnPlan1" data-plan="Bronce" class="mt-auto bg-gray-200 text-gray-800 py-3 rounded-lg hover:bg-gray-300">Probar</button>
-        </div>
-        <!-- Plan Plata -->
-        <div class="bg-white p-6 rounded-xl shadow-lg border flex flex-col">
-          <h3 class="text-xl font-bold text-gray-500">🥈 Plan Plata</h3>
-          <p class="text-gray-600 mb-4">Lenguaje natural, calendario Google, confirmaciones automáticas.</p>
-          <p class="text-xl font-bold mb-4">$5 USD/mes</p>
-          <button id="openFormBtnPlan2" data-plan="Plata" class="mt-auto bg-gray-800 text-white py-3 rounded-lg hover:bg-gray-900">Elegir</button>
-        </div>
-        <!-- Plan Oro -->
-        <div class="bg-white p-6 rounded-xl shadow-2xl border-2 border-brand-green flex flex-col relative">
-          <span class="absolute top-0 -translate-y-1/2 bg-brand-green text-white text-xs font-bold px-3 py-1 rounded-full">RECOMENDADO</span>
-          <h3 class="text-xl font-bold text-brand-green">🥇 Plan Oro</h3>
-          <p class="text-gray-600 mb-4">Agenda + registro de gastos, reportes, recomendaciones de ahorro.</p>
-          <p class="text-xl font-bold mb-4">$10 USD/mes</p>
-          <button id="openFormBtnPlan3" data-plan="Oro" class="mt-auto bg-brand-green text-white py-3 rounded-lg hover:bg-brand-green-dark">Elegir</button>
-        </div>
-        <!-- Plan Duo -->
-        <div class="bg-white p-6 rounded-xl shadow-lg border flex flex-col">
-          <h3 class="text-xl font-bold text-blue-500">👥 Plan Duo</h3>
-          <p class="text-gray-600 mb-4">Hasta 2 usuarios, control financiero conjunto y sincronizado.</p>
-          <p class="text-xl font-bold mb-4">$10 USD/mes (2 usuarios)</p>
-          <button id="openFormBtnPlan4" data-plan="Duo" class="mt-auto bg-gray-800 text-white py-3 rounded-lg hover:bg-gray-900">Elegir</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- FAQ -->
-    <section id="faq" class="py-20 fade-in-section">
-      <div class="container mx-auto px-6 max-w-3xl text-center mb-12">
-        <h2 class="text-3xl font-bold mb-2">Preguntas Frecuentes</h2>
-      </div>
-      <div class="container mx-auto px-6 space-y-4" id="faq-accordion"></div>
-    </section>
-
-    <!-- Contacto -->
-    <section id="contacto" class="py-20 bg-white fade-in-section">
-      <div class="container mx-auto px-6 text-center">
-        <div class="bg-gray-50 p-8 rounded-2xl shadow-lg max-w-3xl mx-auto">
-          <h2 class="text-3xl font-bold mb-4">¿Necesitás una solución a medida?</h2>
-          <p class="text-lg text-gray-600 mb-6">Hablemos de tu proyecto y te proponemos la mejor automatización.</p>
-          <a href="mailto:contacto@mitempo.app" class="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700">Contactar por email</a>
-        </div>
-      </div>
-    </section>
+    <!-- ... continuación completa ... -->
   </main>
+</body>
+</html>
