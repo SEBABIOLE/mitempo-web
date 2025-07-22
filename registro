@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registro • MiTempo.app</title>
+  <meta name="description" content="Regístrate para tu prueba gratis de MiTempo.app — tu asistente IA en WhatsApp.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #f8fafc; }
+    .brand-green { color: #10B981; }
+    .bg-brand-green { background: #10B981; }
+    .hover\:bg-brand-green-dark:hover { background: #059669; }
+    input:invalid:focus { border-color:#ef4444; box-shadow:0 0 0 2px rgba(239,68,68,0.2); }
+    .error { color: #ef4444; font-size: .875rem; }
+  </style>
+</head>
+<body class="text-gray-800">
+
+  <header class="bg-white shadow py-4">
+    <div class="container mx-auto px-6">
+      <h1 class="text-2xl font-bold">Prueba Gratis • MiTempo.app</h1>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-6 py-12 max-w-lg">
+    <h2 class="text-xl font-semibold mb-4">Regístrate y activa tu prueba</h2>
+
+    <form id="form" class="space-y-6 bg-white p-8 rounded-lg shadow">
+      <div>
+        <label for="fullName" class="block text-sm font-medium">Nombre y Apellido *</label>
+        <input id="fullName" name="fullName" required
+               class="w-full border px-3 py-2 rounded focus:ring-2 focus:ring-brand-green" />
+      </div>
+
+      <div>
+        <label for="phone" class="block text-sm font-medium">
+          WhatsApp (10 dígitos locales, sin 0 ni prefijo) *
+        </label>
+        <input id="phone" name="phone" required placeholder="3382416087"
+               class="w-full border px-3 py-2 rounded focus:ring-2 focus:ring-brand-green" />
+        <p id="errPhone" class="error hidden">Ingresa exactamente 10 dígitos numéricos.</p>
+      </div>
+
+      <div>
+        <label for="email" class="block text-sm font-medium">Email *</label>
+        <input id="email" name="email" type="email" required
+               class="w-full border px-3 py-2 rounded focus:ring-2 focus:ring-brand-green" />
+      </div>
+
+      <div>
+        <label for="plan" class="block text-sm font-medium">Plan *</label>
+        <select id="plan" name="plan" required
+                class="w-full border px-3 py-2 rounded focus:ring-2 focus:ring-brand-green">
+          <option value="Prueba">Prueba</option>
+          <option value="Bronce">Bronce</option>
+          <option value="Plata">Plata</option>
+          <option value="Oro">Oro</option>
+          <option value="Duo">Duo</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="invitedBy" class="block text-sm font-medium">
+          ¿Invitado por alguien? (solo Duo)
+        </label>
+        <input id="invitedBy" name="invitedBy"
+               class="w-full border px-3 py-2 rounded focus:ring-2 focus:ring-brand-green" />
+      </div>
+
+      <div>
+        <label for="source" class="block text-sm font-medium">
+          ¿Cómo te enteraste de MiTempo? (opcional)
+        </label>
+        <input id="source" name="source"
+               class="w-full border px-3 py-2 rounded focus:ring-2 focus:ring-brand-green" />
+      </div>
+
+      <button type="submit" id="submitBtn"
+              class="w-full bg-brand-green text-white py-2 rounded hover:bg-brand-green-dark">
+        Enviar Registro
+      </button>
+
+      <p id="msg" class="mt-4 text-center"></p>
+    </form>
+  </main>
+
+  <footer class="text-center py-6 text-gray-500">
+    © 2025 MiTempo.app. Todos los derechos reservados.
+  </footer>
+
+  <script>
+    const form   = document.getElementById('form'),
+          errP   = document.getElementById('errPhone'),
+          msg    = document.getElementById('msg'),
+          url    = 'https://sebabiole.app.n8n.cloud/webhook/registro-formulario';
+
+    function resetMessages() {
+      errP.classList.add('hidden');
+      msg.textContent = '';
+      msg.classList.remove('text-red-600','text-green-600');
+    }
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      resetMessages();
+
+      // validar teléfono local
+      let phone = form.phone.value.trim().replace(/\D/g,'').replace(/^0+/,'');
+      if (!/^\d{10}$/.test(phone)) {
+        errP.textContent = 'Ingresa exactamente 10 dígitos numéricos.';
+        errP.classList.remove('hidden');
+        return;
+      }
+      form.phone.value = phone;
+
+      msg.textContent = 'Enviando registro…';
+
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          body: new URLSearchParams(new FormData(form))
+        });
+        const { success, message } = await response.json();
+
+        if (success) {
+          msg.innerHTML = `
+            <span class="text-green-600">✅ ${message}</span><br>
+            <a href="https://wa.me/17432734544?text=Hola%20MiTempo" target="_blank"
+               class="text-blue-600 underline">
+              Abrir WhatsApp para continuar →
+            </a>`;
+          form.reset();
+        } else {
+          msg.textContent = message;
+          msg.classList.add('text-red-600');
+        }
+
+      } catch (err) {
+        msg.textContent = 'Error de red. Intenta nuevamente.';
+        msg.classList.add('text-red-600');
+      }
+    });
+  </script>
+</body>
+</html>
