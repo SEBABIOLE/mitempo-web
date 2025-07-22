@@ -170,87 +170,87 @@
 
   </main>
 
-<!-- MODAL FORM -->
-<div id="modal" class="modal">
-  <div class="modal-content">
-    <button id="close" class="close">✕</button>
-    <h4 class="text-2xl font-bold mb-4">Regístrate para tu prueba gratis</h4>
-    <<form id="registrationForm"
-       action="https://sebabiole.app.n8n.cloud/webhook/registro-formulario"
-       method="POST"
-       class="space-y-4"
->
-      <div class="mb-4">
-        <label class="block text-sm font-medium">Nombre y Apellido *</label>
-        <input
-          id="fullName"
-          name="fullName"
-          required
-          class="w-full border px-3 py-2 rounded"
-        />
-      </div>
-      <div class="mb-4">
-        <label class="block text-sm font-medium"
-          >WhatsApp (10 dígitos locales) *</label
-        >
-        <input
-          id="phone"
-          name="phone"
-          required
-          placeholder="3382416087"
-          class="w-full border px-3 py-2 rounded"
-        />
-        <p id="errPhone" class="error hidden">
-          Ingresa 10 dígitos locales válidos.
-        </p>
-      </div>
-      <div class="mb-4">
-        <label class="block text-sm font-medium">Email *</label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          required
-          class="w-full border px-3 py-2 rounded"
-        />
-      </div>
-      <div class="mb-4">
-        <label class="block text-sm font-medium">Plan *</label>
-        <select
-          id="plan"
-          name="plan"
-          required
-          class="w-full border px-3 py-2 rounded"
-        >
-          <option value="Prueba">Prueba</option>
-          <option value="Bronce">Bronce</option>
-          <option value="Plata">Plata</option>
-          <option value="Oro">Oro</option>
-          <option value="Duo">Duo</option>
-        </select>
-      </div>
-      <div class="mb-4">
-        <label class="block text-sm font-medium"
-          >¿Invitado por alguien? (solo Duo)</label
-        >
-        <input
-          id="invitedBy"
-          name="invitedBy"
-          class="w-full border px-3 py-2 rounded"
-        />
-      </div>
-      <button
-        type="submit"
-        id="submitBtn"
-        class="w-full bg-brand-green text-white py-2 rounded hover:bg-brand-green-dark"
+  <!-- MODAL FORM -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <button id="close" class="close">✕</button>
+      <h4 class="text-2xl font-bold mb-4">Regístrate para tu prueba gratis</h4>
+      <form
+        id="form"
+        action="https://sebabiole.app.n8n.cloud/webhook/registro-formulario"
+        method="POST"
+        class="space-y-4"
       >
-        Enviar
-      </button>
-    </form>
-    <p id="msg" class="mt-4 text-center"></p>
+        <div class="mb-4">
+          <label class="block text-sm font-medium">Nombre y Apellido *</label>
+          <input
+            id="fullName"
+            name="fullName"
+            required
+            class="w-full border px-3 py-2 rounded"
+          />
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium">
+            WhatsApp (10 dígitos locales) *
+          </label>
+          <input
+            id="phone"
+            name="phone"
+            required
+            placeholder="3382416087"
+            class="w-full border px-3 py-2 rounded"
+          />
+          <p id="errPhone" class="error hidden">
+            Ingresa 10 dígitos locales válidos.
+          </p>
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium">Email *</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            class="w-full border px-3 py-2 rounded"
+          />
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium">Plan *</label>
+          <select
+            id="plan"
+            name="plan"
+            required
+            class="w-full border px-3 py-2 rounded"
+          >
+            <option value="Prueba">Prueba</option>
+            <option value="Bronce">Bronce</option>
+            <option value="Plata">Plata</option>
+            <option value="Oro">Oro</option>
+            <option value="Duo">Duo</option>
+          </select>
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium">
+            ¿Invitado por alguien? (solo Duo)
+          </label>
+          <input
+            id="invitedBy"
+            name="invitedBy"
+            class="w-full border px-3 py-2 rounded"
+          />
+        </div>
+        <button
+          type="submit"
+          id="submitBtn"
+          class="w-full bg-brand-green text-white py-2 rounded hover:bg-brand-green-dark"
+        >
+          Enviar
+        </button>
+      </form>
+      <p id="msg" class="mt-4 text-center"></p>
+    </div>
   </div>
-</div>
-
 
   <footer class="bg-gray-900 text-gray-400 py-8 mt-12">
     <div class="container mx-auto text-center">
@@ -268,14 +268,15 @@
 
     // Fade in
     document.querySelectorAll('.fade-in').forEach(el=>{
-      new IntersectionObserver(entries=>{
+      const observer = new IntersectionObserver(entries=>{
         entries.forEach(e=>{
           if(e.isIntersecting){
             e.target.classList.add('visible');
             observer.unobserve(e.target);
           }
         });
-      },{threshold:0.1}).observe(el);
+      },{threshold:0.1});
+      observer.observe(el);
     });
 
     // FAQ accordion
@@ -327,7 +328,7 @@
     const form = document.getElementById('form'),
           errP = document.getElementById('errPhone'),
           msg  = document.getElementById('msg'),
-          url  = 'https://script.google.com/macros/s/AKfycbxDrHbDPFJ1hDhrYXJZ4Jts_9IRDxV52DNtrd62sEbZqdvxvGMB6xRLfXt9K4MGRvU48Q/exec';
+          url  = 'https://sebabiole.app.n8n.cloud/webhook/registro-formulario';
     function resetForm(){
       form.reset();
       errP.classList.add('hidden');
@@ -346,7 +347,10 @@
       form.phone.value = phone;
       msg.textContent='Enviando…';
       try {
-        const res = await fetch(url,{method:'POST',body:new URLSearchParams(new FormData(form))});
+        const res = await fetch(url,{
+          method:'POST',
+          body:new URLSearchParams(new FormData(form))
+        });
         const {success,message} = await res.json();
         if(success){
           msg.innerHTML = `✅ ${message}<br>
