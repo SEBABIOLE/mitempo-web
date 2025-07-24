@@ -75,7 +75,6 @@
     const msg    = document.getElementById('msg');
     const endpoint = 'https://sebabiole.app.n8n.cloud/webhook/registro-formulario';
 
-    // Reset de mensajes
     function resetForm() {
       errP.classList.add('hidden');
       msg.textContent = '';
@@ -95,17 +94,13 @@
       }
       form.phone.value = phone;
 
-      // Mostrar enviando
       msg.textContent = 'Enviando…';
-      msg.classList.remove('opacity-0');
 
-      // Preparar payload
       const data = new URLSearchParams(new FormData(form));
 
       try {
         const res = await fetch(endpoint, { method: 'POST', body: data });
         let payload;
-        // intenta parsear JSON, si no viene, asume éxito
         try {
           payload = await res.json();
         } catch (_) {
@@ -113,10 +108,9 @@
         }
 
         if (payload.success) {
-          msg.innerHTML = `✅ ${payload.message}<br>
-            <a href="https://wa.me/17432734544?text=Hola%20MiTempo" target="_blank"
-               class="text-green-700 underline">Abrir WhatsApp</a>`;
-          msg.classList.remove('error');
+          const plan = form.plan.value;
+          // Redireccionar a autorización
+          window.location.href = `autorizacion.html?phone=${phone}&plan=${plan}`;
         } else {
           msg.textContent = payload.message || 'Ocurrió un error. Intenta nuevamente.';
         }
