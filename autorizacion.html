@@ -3,29 +3,60 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Activá MiTempo</title>
+  <title>Activá tu asistente | MiTempo</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="icon" href="https://mitempo.app/favicon.ico" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to bottom right, #f0fdf4, #e0f2fe);
+    }
+  </style>
 </head>
-<body class="bg-gray-50 flex items-center justify-center min-h-screen p-4">
-  <div class="bg-white p-6 rounded-xl shadow-lg max-w-md w-full text-center space-y-6">
-    <h2 class="text-2xl font-bold text-gray-800">¡Ya casi terminás!</h2>
-    <p>Conectá tu cuenta de Google para usar el asistente MiTempo:</p>
-    <a id="btnGoogle" class="block bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
-       href="#">Conectar con Google</a>
-    <div>
-      <p class="mt-4 text-sm text-gray-500">Una vez conectado, mandá <strong>"Hola MiTempo"</strong> a WhatsApp:</p>
-      <a id="btnWsp" class="text-green-600 underline" href="#" target="_blank">Abrir WhatsApp</a>
+<body class="flex items-center justify-center min-h-screen p-4">
+  <div class="bg-white w-full max-w-md rounded-2xl shadow-xl p-6 space-y-6 text-center">
+    <img src="https://mitempo.app/logo-mitempo.png" alt="MiTempo" class="w-24 h-24 mx-auto rounded-full shadow" />
+
+    <h1 class="text-2xl font-bold text-gray-800">¡Ya casi estás!</h1>
+    <p class="text-gray-600">Completá los pasos siguientes para activar tu asistente:</p>
+
+    <!-- Paso 1: Google -->
+    <div id="googleSection" class="space-y-3 hidden">
+      <p class="font-medium">1. Conectá tu cuenta de Google</p>
+      <a id="btnGoogle"
+         class="inline-block bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition"
+         href="#">
+         Autorizar con Google
+      </a>
     </div>
+
+    <!-- Paso 2: WhatsApp -->
+    <div class="space-y-3">
+      <p class="font-medium">2. Mandanos <strong>"Hola MiTempo"</strong> al WhatsApp</p>
+      <a id="btnWsp"
+         class="inline-block bg-green-500 text-white px-5 py-2 rounded hover:bg-green-600 transition"
+         href="#" target="_blank">
+         Ir a WhatsApp
+      </a>
+    </div>
+
+    <p class="text-sm text-gray-400 mt-4">Gracias por registrarte 🙌</p>
   </div>
 
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const phone = urlParams.get('phone');
-    const gAuth = "https://mitempo.app/google/oauth/start?phone=" + phone;
-    const wspLink = "https://wa.me/5493382511421?text=Hola%20MiTempo";
+    const params = new URLSearchParams(window.location.search);
+    const phone = params.get('phone');
+    const plan  = params.get('plan');
+    const authUrl = "https://mitempo.app/google/oauth/start?phone=" + phone;
+    const wspUrl  = "https://wa.me/5493382511421?text=Hola%20MiTempo";
 
-    document.getElementById("btnGoogle").href = gAuth;
-    document.getElementById("btnWsp").href = wspLink;
+    if (plan === 'oro' || plan === 'duo') {
+      document.getElementById('googleSection').classList.remove('hidden');
+      document.getElementById('btnGoogle').href = authUrl;
+    }
+
+    document.getElementById('btnWsp').href = wspUrl;
   </script>
 </body>
 </html>
