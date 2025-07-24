@@ -10,20 +10,22 @@
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background: linear-gradient(to bottom right, #f0fdf4, #e0f2fe);
+      background: #f3f4f6;
     }
   </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
   <div class="bg-white w-full max-w-md rounded-2xl shadow-xl p-6 space-y-6 text-center">
-    <img src="https://mitempo.app/logo-mitempo.png" alt="MiTempo" class="w-24 h-24 mx-auto rounded-full shadow" />
+    <img src="https://mitempo.app/logo-mitempo.png" alt="MiTempo" class="w-20 h-20 mx-auto rounded-full shadow" />
 
-    <h1 class="text-2xl font-bold text-gray-800">¡Ya casi estás!</h1>
-    <p class="text-gray-600">Completá los pasos siguientes para activar tu asistente:</p>
+    <h1 class="text-2xl font-bold text-gray-800">¡Gracias por registrarte!</h1>
+    <p class="text-gray-600">Seguí estos 2 pasos para activar tu asistente:</p>
 
-    <!-- Paso 1: Google -->
-    <div id="googleSection" class="space-y-3 hidden">
-      <p class="font-medium">1. Conectá tu cuenta de Google</p>
+    <!-- Paso 1: Google (siempre obligatorio) -->
+    <div class="space-y-3">
+      <p class="text-sm text-gray-700 font-medium">
+        <span class="text-green-600 font-bold">Paso 1:</span> Conectá tu cuenta de Google (agenda y hojas)
+      </p>
       <a id="btnGoogle"
          class="inline-block bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition"
          href="#">
@@ -33,29 +35,26 @@
 
     <!-- Paso 2: WhatsApp -->
     <div class="space-y-3">
-      <p class="font-medium">2. Mandanos <strong>"Hola MiTempo"</strong> al WhatsApp</p>
+      <p class="text-sm text-gray-700 font-medium">
+        <span class="text-green-600 font-bold">Paso 2:</span> Mandá <strong>"Hola MiTempo"</strong> a nuestro WhatsApp
+      </p>
       <a id="btnWsp"
          class="inline-block bg-green-500 text-white px-5 py-2 rounded hover:bg-green-600 transition"
          href="#" target="_blank">
-         Ir a WhatsApp
+         Abrir WhatsApp
       </a>
     </div>
 
-    <p class="text-sm text-gray-400 mt-4">Gracias por registrarte 🙌</p>
+    <p class="text-xs text-gray-400 mt-4">Tu asistente se activará con el primer mensaje que envíes.</p>
   </div>
 
   <script>
     const params = new URLSearchParams(window.location.search);
     const phone = params.get('phone');
-    const plan  = params.get('plan');
     const authUrl = "https://mitempo.app/google/oauth/start?phone=" + phone;
     const wspUrl  = "https://wa.me/5493382511421?text=Hola%20MiTempo";
 
-    if (plan === 'oro' || plan === 'duo') {
-      document.getElementById('googleSection').classList.remove('hidden');
-      document.getElementById('btnGoogle').href = authUrl;
-    }
-
+    document.getElementById('btnGoogle').href = authUrl;
     document.getElementById('btnWsp').href = wspUrl;
   </script>
 </body>
