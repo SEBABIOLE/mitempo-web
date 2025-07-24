@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Activá MiTempo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen p-4">
+  <div class="bg-white p-6 rounded-xl shadow-lg max-w-md w-full text-center space-y-6">
+    <h2 class="text-2xl font-bold text-gray-800">¡Ya casi terminás!</h2>
+    <p>Conectá tu cuenta de Google para usar el asistente MiTempo:</p>
+    <a id="btnGoogle" class="block bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
+       href="#">Conectar con Google</a>
+    <div>
+      <p class="mt-4 text-sm text-gray-500">Una vez conectado, mandá <strong>"Hola MiTempo"</strong> a WhatsApp:</p>
+      <a id="btnWsp" class="text-green-600 underline" href="#" target="_blank">Abrir WhatsApp</a>
+    </div>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const phone = urlParams.get('phone');
+    const gAuth = "https://mitempo.app/google/oauth/start?phone=" + phone;
+    const wspLink = "https://wa.me/5493382511421?text=Hola%20MiTempo";
+
+    document.getElementById("btnGoogle").href = gAuth;
+    document.getElementById("btnWsp").href = wspLink;
+  </script>
+</body>
+</html>
