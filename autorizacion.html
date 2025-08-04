@@ -5,10 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Activa tu asistente | MiTiempo.app</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
-    rel="stylesheet"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     body { font-family: 'Inter', sans-serif; background: #f3f4f6; }
     a { text-decoration: none; }
@@ -19,64 +16,31 @@
     <h1 class="text-2xl font-semibold text-center">¡Gracias por registrarte!</h1>
     <p id="planPhone" class="text-center text-gray-700"></p>
 
-    <div class="space-y-4">
-      <div>
-        <p class="font-medium text-green-600">Paso 1:</p>
-        <a
-          id="authorizeBtn"
-          class="block text-center w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Autorizar con Google
-        </a>
-      </div>
-      <div>
-        <p class="font-medium text-green-600">Paso 2:</p>
-        <a
-          id="openWhatsApp"
-          class="block text-center w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Abrir WhatsApp
-        </a>
-      </div>
+    <div>
+      <a
+        id="openWhatsApp"
+        class="block text-center w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Abrir WhatsApp
+      </a>
     </div>
 
     <p class="text-xs text-gray-500 text-center">
-      Tu asistente se activará con el primer mensaje que envíes.
+      Te enviaremos un mensaje con el link para autorizar Google. ¡Abrí WhatsApp y escribí "Hola MiTiempo"!
     </p>
   </div>
 
   <script>
-    // 1) Parámetros de la URL
     const params = new URLSearchParams(window.location.search);
     const phone = params.get('phone') || '';
     const plan = params.get('plan') || '';
 
-    // 2) Mostrar Plan y Teléfono
     document.getElementById('planPhone').textContent =
       `Plan: ${plan.charAt(0).toUpperCase() + plan.slice(1)} | Teléfono: ${phone}`;
 
-    // 3) URL de OAuth2 Google (igual que antes)
-    const clientId = '395746584240-ue4uh3k5p0a24db69jkhsq7at95ns0gv.apps.googleusercontent.com';
-    const redirectUri = 'https://sebabiole.app.n8n.cloud/webhook/google-callback';
-    const scope = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/calendar';
-    const state = JSON.stringify({ phone, plan });
-    const authUrl =
-      'https://accounts.google.com/o/oauth2/v2/auth' +
-      '?response_type=code' +
-      '&client_id=' + encodeURIComponent(clientId) +
-      '&redirect_uri=' + encodeURIComponent(redirectUri) +
-      '&scope=' + encodeURIComponent(scope) +
-      '&access_type=offline' +
-      '&prompt=consent' +
-      '&state=' + encodeURIComponent(state);
-    document.getElementById('authorizeBtn').href = authUrl;
-
-    // 4) Link Click-to-Chat apuntando al NÚMERO DE TWILIO
-    const twilioNumber = '17432734544'; // <-- tu número Twilio sin "+", ni espacios
+    const twilioNumber = '17432734544';
     const prebuiltMessage = 'Hola MiTiempo';
     document.getElementById('openWhatsApp').href =
       `https://wa.me/${twilioNumber}?text=${encodeURIComponent(prebuiltMessage)}`;
