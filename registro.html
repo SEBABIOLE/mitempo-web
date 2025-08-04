@@ -5,10 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Registro | MiTempo.app</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
-    rel="stylesheet"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     body { font-family: 'Inter', sans-serif; background: #f3f4f6; }
     .error { color: #dc2626; font-size: .875rem; }
@@ -111,7 +108,7 @@
     const invitedWrapper = document.getElementById('invitedWrapper');
     const endpoint = 'https://sebabiole.app.n8n.cloud/webhook/registro-formulario';
 
-    // Mostrar/ocultar "Invitado por" sólo cuando plan===duo
+    // Mostrar/ocultar "Invitado por" sólo cuando plan === "duo"
     function toggleInvited() {
       invitedWrapper.style.display = planEl.value === 'duo' ? 'block' : 'none';
     }
@@ -127,20 +124,16 @@
       e.preventDefault();
       resetForm();
 
-      // Validación teléfono
-      let phone = form.phone.value
-        .trim()
-        .replace(/\D/g, '')
-        .replace(/^0+/, '');
+      let phone = form.phone.value.trim().replace(/\D/g, '').replace(/^0+/, '');
       if (!/^\d{10}$/.test(phone)) {
         errPhone.textContent = 'Ingresa 10 dígitos locales válidos.';
         errPhone.classList.remove('hidden');
         return;
       }
+
       form.phone.value = phone;
       const plan = form.plan.value;
 
-      // Feedback de envío
       msg.textContent = 'Enviando…';
       submitBtn.disabled = true;
       submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
@@ -156,12 +149,8 @@
         }
 
         if (payload.success) {
-          // Redirigir a la página de OAuth
-          const base = window.location.origin;
-          window.location.href =
-            `${base}/autorizacion.html?` +
-            `phone=${encodeURIComponent(phone)}` +
-            `&plan=${encodeURIComponent(plan)}`;
+          // 👉 Redirigir al webhook /iniciar
+          window.location.href = `https://mitempo.app/iniciar?u=${encodeURIComponent(phone)}`;
         } else {
           msg.textContent = payload.message || 'Ocurrió un error. Intenta nuevamente.';
         }
