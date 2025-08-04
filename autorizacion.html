@@ -1,89 +1,55 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Activá tu asistente | MiTempo</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-  <link rel="icon" href="https://mitempo.app/favicon.ico" />
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #f3f4f6;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autorizar MiTiempo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="flex items-center justify-center min-h-screen p-4">
-  <div class="bg-white w-full max-w-md rounded-2xl shadow-xl p-6 space-y-6 text-center">
-    <img src="https://mitempo.app/logo-mitempo.png" alt="MiTempo" class="w-20 h-20 mx-auto rounded-full shadow" />
-    <h1 class="text-2xl font-bold text-gray-800">¡Gracias por registrarte!</h1>
-    
-    <!-- Mostrar información del plan -->
-    <div id="planInfo" class="bg-blue-50 p-3 rounded-lg">
-      <p class="text-sm text-blue-800">
-        <strong>Plan:</strong> <span id="planName"></span> | 
-        <strong>Teléfono:</strong> <span id="phoneDisplay"></span>
-      </p>
+<body>
+  <div class="container mt-5">
+    <div class="card mx-auto" style="max-width: 400px;">
+      <div class="card-body text-center">
+        <h5 class="card-title">¡Gracias por registrarte!</h5>
+        <p class="card-text" id="info"></p>
+        <a id="btnAuthorize" class="btn btn-primary">Autorizar con Google</a>
+      </div>
     </div>
-    
-    <p class="text-gray-600">Seguí estos 2 pasos para activar tu asistente:</p>
-    
-    <!-- Paso 1: Google (siempre obligatorio) -->
-    <div class="space-y-3">
-      <p class="text-sm text-gray-700 font-medium">
-        <span class="text-green-600 font-bold">Paso 1:</span> Conectá tu cuenta de Google (agenda y hojas)
-      </p>
-      <a id="btnGoogle"
-         class="inline-block bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition"
-         href="#" target="_self">
-         Autorizar con Google
-      </a>
-      <p id="errorMsg" class="text-red-500 text-sm hidden"></p>
-    </div>
-    
-    <!-- Paso 2: WhatsApp -->
-    <div class="space-y-3">
-      <p class="text-sm text-gray-700 font-medium">
-        <span class="text-green-600 font-bold">Paso 2:</span> Mandá <strong>"Hola MiTempo"</strong> a nuestro WhatsApp
-      </p>
-      <a id="btnWsp"
-         class="inline-block bg-green-500 text-white px-5 py-2 rounded hover:bg-green-600 transition"
-         href="#" target="_blank">
-         Abrir WhatsApp
-      </a>
-    </div>
-    
-    <p class="text-xs text-gray-400 mt-4">Tu asistente se activará con el primer mensaje que envíes.</p>
   </div>
-  
+
   <script>
+    // 1. Leer parámetros de URL
     const params = new URLSearchParams(window.location.search);
-    const phone = params.get('phone');
-    const plan = params.get('plan') || 'prueba';
-    
-    // Mostrar información del plan
-    const planNames = {
-      'prueba': 'Prueba',
-      'bronce': 'Bronce', 
-      'plata': 'Plata',
-      'oro': 'Oro',
-      'duo': 'Duo'
-    };
-    
-    document.getElementById('planName').textContent = planNames[plan] || plan;
-    document.getElementById('phoneDisplay').textContent = phone;
-    
-    // URLs corregidas - USAR EL WEBHOOK CORRECTO
-    const authUrl = `https://sebabiole.app.n8n.cloud/webhook/google-callback?phone=${phone}&plan=${plan}`;
-    const wspUrl = "https://wa.me/5493382511421?text=Hola%20MiTempo";
-    
-    document.getElementById('btnGoogle').href = authUrl;
-    document.getElementById('btnWsp').href = wspUrl;
-    
-    // Debug
-    console.log('Parámetros recibidos:', { phone, plan });
-    console.log('URL de autorización:', authUrl);
+    const phone = params.get('phone') || '';
+    const plan  = params.get('plan')  || '';
+
+    // Mostrar información al usuario
+    const infoEl = document.getElementById('info');
+    infoEl.textContent = `Plan: ${plan}  |  Teléfono: ${phone}`;
+
+    // 2. Construir URL de OAuth2
+    const clientId    = '395746584240-ue4uh3k5p0a24db69jkhsq7at95ns0gv.apps.googleusercontent.com';
+    const redirectUri = encodeURIComponent('https://sebabiole.app.n8n.cloud/webhook/google-callback');
+    const scope       = encodeURIComponent(
+      'https://www.googleapis.com/auth/calendar ' +
+      'https://www.googleapis.com/auth/spreadsheets'
+    );
+    const state       = encodeURIComponent(JSON.stringify({ phone, plan }));
+
+    const oauthUrl =
+      `https://accounts.google.com/o/oauth2/v2/auth` +
+      `?client_id=${clientId}` +
+      `&redirect_uri=${redirectUri}` +
+      `&response_type=code` +
+      `&scope=${scope}` +
+      `&access_type=offline` +
+      `&prompt=consent` +
+      `&state=${state}`;
+
+    // 3. Asignar URL al botón
+    const btn = document.getElementById('btnAuthorize');
+    btn.setAttribute('href', oauthUrl);
   </script>
+
 </body>
 </html>
