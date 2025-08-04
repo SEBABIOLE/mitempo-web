@@ -8,28 +8,32 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <link rel="icon" href="https://mitempo.app/favicon.ico" />
   <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #f3f4f6;
-    }
+    body { font-family: 'Inter', sans-serif; background: #f3f4f6; }
+    .error { color: #dc2626; }
+    .hidden { display: none; }
   </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
   <div class="bg-white w-full max-w-md rounded-2xl shadow-xl p-6 space-y-6 text-center">
     <img src="https://mitempo.app/logo-mitempo.png" alt="MiTempo" class="w-20 h-20 mx-auto rounded-full shadow" />
     <h1 class="text-2xl font-bold text-gray-800">¡Gracias por registrarte!</h1>
-    
+
+    <!-- Parámetros faltantes -->
+    <p id="errorParams" class="text-red-500 text-sm hidden">
+      Faltan datos de registro. Por favor, vuelve a completar el formulario.
+    </p>
+
     <!-- Mostrar información del plan -->
     <div id="planInfo" class="bg-blue-50 p-3 rounded-lg">
       <p class="text-sm text-blue-800">
-        <strong>Plan:</strong> <span id="planName"></span> | 
+        <strong>Plan:</strong> <span id="planName"></span> |
         <strong>Teléfono:</strong> <span id="phoneDisplay"></span>
       </p>
     </div>
-    
+
     <p class="text-gray-600">Seguí estos 2 pasos para activar tu asistente:</p>
-    
-    <!-- Paso 1: Google (siempre obligatorio) -->
+
+    <!-- Paso 1: Google -->
     <div class="space-y-3">
       <p class="text-sm text-gray-700 font-medium">
         <span class="text-green-600 font-bold">Paso 1:</span> Conectá tu cuenta de Google (agenda y hojas)
@@ -41,7 +45,7 @@
       </a>
       <p id="errorMsg" class="text-red-500 text-sm hidden"></p>
     </div>
-    
+
     <!-- Paso 2: WhatsApp -->
     <div class="space-y-3">
       <p class="text-sm text-gray-700 font-medium">
@@ -53,37 +57,62 @@
          Abrir WhatsApp
       </a>
     </div>
-    
+
     <p class="text-xs text-gray-400 mt-4">Tu asistente se activará con el primer mensaje que envíes.</p>
   </div>
-  
+
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const phone = params.get('phone');
-    const plan = params.get('plan') || 'prueba';
-    
-    // Mostrar información del plan
+    // Leer parámetros de URL
+    const params    = new URLSearchParams(window.location.search);
+    const phone     = params.get('phone');
+    const plan      = params.get('plan')   || 'prueba';
+    const invitedBy = params.get('invitedBy');
+
+    // Referencias DOM
+    const planInfo    = document.getElementById('planInfo');
+    const errParams   = document.getElementById('errorParams');
+    const planNameEl  = document.getElementById('planName');
+    const phoneEl     = document.getElementById('phoneDisplay');
+    const btnGoogle   = document.getElementById('btnGoogle');
+    const btnWsp      = document.getElementById('btnWsp');
+
+    // Planes descriptivos
     const planNames = {
-      'prueba': 'Prueba',
-      'bronce': 'Bronce', 
-      'plata': 'Plata',
-      'oro': 'Oro',
-      'duo': 'Duo'
+      prueba: 'Prueba', bronce: 'Bronce', plata: 'Plata', oro: 'Oro', duo: 'Duo'
     };
-    
-    document.getElementById('planName').textContent = planNames[plan] || plan;
-    document.getElementById('phoneDisplay').textContent = phone;
-    
-    // URLs corregidas - USAR EL NUEVO WEBHOOK
-    const authUrl = `https://sebabiole.app.n8n.cloud/webhook/google-auth-start?phone=${phone}&plan=${plan}`;
-    const wspUrl = "https://wa.me/5493382511421?text=Hola%20MiTempo";
-    
-    document.getElementById('btnGoogle').href = authUrl;
-    document.getElementById('btnWsp').href = wspUrl;
-    
+
+    // Validar parámetros mínimos
+    if (!phone) {
+      planInfo.classList.add('hidden');
+      errParams.classList.remove('hidden');
+      btnGoogle.classList.add('hidden');
+      btnWsp.classList.add('hidden');
+      throw new Error('Faltan parámetros');
+    }
+
+    // Mostrar plan y teléfono
+    planNameEl.textContent = planNames[plan] || plan;
+    phoneEl.textContent    = phone;
+
+    // Construir URL de autorización OAuth
+    let authUrl = `https://sebabiole.app.n8n.cloud/webhook/google-auth-start`;
+    authUrl += `?phone=${encodeURIComponent(phone)}`;
+    authUrl += `&plan=${encodeURIComponent(plan)}`;
+    if (invitedBy) {
+      authUrl += `&invitedBy=${encodeURIComponent(invitedBy)}`;
+    }
+
+    // WhatsApp (igual) 
+    const wspUrl = `https://wa.me/5493382511421?text=${encodeURIComponent('Hola MiTempo')}`;
+
+    // Asignar enlaces
+    btnGoogle.href = authUrl;
+    btnWsp.href    = wspUrl;
+
     // Debug
-    console.log('Parámetros recibidos:', { phone, plan });
-    console.log('URL de autorización:', authUrl);
+    console.log('Params:', { phone, plan, invitedBy });
+    console.log('OAuth URL:', authUrl);
   </script>
 </body>
 </html>
+
