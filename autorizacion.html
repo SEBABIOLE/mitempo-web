@@ -17,22 +17,38 @@
 <body class="flex items-center justify-center min-h-screen p-4">
   <div class="bg-white w-full max-w-md rounded-2xl shadow-xl p-6 space-y-6 text-center">
     <img src="https://mitempo.app/logo-mitempo.png" alt="MiTempo" class="w-20 h-20 mx-auto rounded-full shadow" />
-
     <h1 class="text-2xl font-bold text-gray-800">¡Gracias por registrarte!</h1>
+    
+    <!-- Mostrar información del plan -->
+    <div id="planInfo" class="bg-blue-50 p-3 rounded-lg">
+      <p class="text-sm text-blue-800">
+        <strong>Plan:</strong> <span id="planName"></span> | 
+        <strong>Teléfono:</strong> <span id="phoneDisplay"></span>
+      </p>
+    </div>
+    
     <p class="text-gray-600">Seguí estos 2 pasos para activar tu asistente:</p>
-
-    <!-- Paso 1: Google (siempre obligatorio) -->
+    
+    <!-- Paso 1: Autorización Google -->
     <div class="space-y-3">
       <p class="text-sm text-gray-700 font-medium">
-        <span class="text-green-600 font-bold">Paso 1:</span> Conectá tu cuenta de Google (agenda y hojas)
+        <span class="text-green-600 font-bold">Paso 1:</span> Conectá tu cuenta de Google
       </p>
-      <a id="btnGoogle"
-         class="inline-block bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition"
-         href="#">
-         Autorizar con Google
-      </a>
+      
+      <form id="googleForm" class="space-y-3">
+        <input type="hidden" id="hiddenPhone" name="phone">
+        <input type="hidden" id="hiddenPlan" name="plan">
+        <input type="hidden" name="action" value="google_auth">
+        
+        <button type="submit" id="btnGoogle"
+           class="inline-block bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition">
+           Autorizar con Google
+        </button>
+      </form>
+      
+      <p id="googleStatus" class="text-sm hidden"></p>
     </div>
-
+    
     <!-- Paso 2: WhatsApp -->
     <div class="space-y-3">
       <p class="text-sm text-gray-700 font-medium">
@@ -44,18 +60,76 @@
          Abrir WhatsApp
       </a>
     </div>
-
+    
     <p class="text-xs text-gray-400 mt-4">Tu asistente se activará con el primer mensaje que envíes.</p>
   </div>
-
+  
   <script>
     const params = new URLSearchParams(window.location.search);
     const phone = params.get('phone');
-    const authUrl = "https://mitempo.app/google/oauth/start?phone=" + phone;
-    const wspUrl  = "https://wa.me/5493382511421?text=Hola%20MiTempo";
-
-    document.getElementById('btnGoogle').href = authUrl;
+    const plan = params.get('plan') || 'prueba';
+    
+    // Mostrar información
+    const planNames = {
+      'prueba': 'Prueba',
+      'bronce': 'Bronce', 
+      'plata': 'Plata',
+      'oro': 'Oro',
+      'duo': 'Duo'
+    };
+    
+    document.getElementById('planName').textContent = planNames[plan] || plan;
+    document.getElementById('phoneDisplay').textContent = phone;
+    document.getElementById('hiddenPhone').value = phone;
+    document.getElementById('hiddenPlan').value = plan;
+    
+    // WhatsApp URL
+    const wspUrl = "https://wa.me/5493382511421?text=Hola%20MiTempo";
     document.getElementById('btnWsp').href = wspUrl;
+    
+    // Manejar formulario de Google
+    const googleForm = document.getElementById('googleForm');
+    const googleStatus = document.getElementById('googleStatus');
+    
+    googleForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      googleStatus.textContent = 'Procesando autorización...';
+      googleStatus.className = 'text-sm text-blue-600';
+      googleStatus.classList.remove('hidden');
+      
+      try {
+        // Enviar a tu webhook de n8n
+        const formData = new FormData(googleForm);
+        const response = await fetch('https://sebabiole.app.n8n.cloud/webhook/google-auth', {
+          method: 'POST',
+          body: new URLSearchParams(formData)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          if (result.authUrl) {
+            // Si n8n devuelve una URL de autorización, redirigir
+            window.location.href = result.authUrl;
+          } else {
+            googleStatus.textContent = '✅ Autorización completada';
+            googleStatus.className = 'text-sm text-green-600';
+          }
+        } else {
+          googleStatus.textContent = result.message || 'Error en la autorización';
+          googleStatus.className = 'text-sm text-red-600';
+        }
+        
+      } catch (error) {
+        console.error('Error:', error);
+        googleStatus.textContent = 'Error de conexión. Intenta nuevamente.';
+        googleStatus.className = 'text-sm text-red-600';
+      }
+    });
+    
+    // Debug
+    console.log('Parámetros:', { phone, plan });
   </script>
 </body>
 </html>
