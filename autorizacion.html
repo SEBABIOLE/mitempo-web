@@ -16,34 +16,38 @@
     <h1 class="text-2xl font-semibold text-center">¡Gracias por registrarte!</h1>
     <p id="planPhone" class="text-center text-gray-700"></p>
 
-    <div>
-      <a
-        id="openWhatsApp"
-        class="block text-center w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Abrir WhatsApp
-      </a>
+    <div class="space-y-4">
+      <div>
+        <p class="font-medium text-green-600">Paso único:</p>
+        <a
+          id="openWhatsApp"
+          class="block text-center w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Abrir WhatsApp
+        </a>
+      </div>
     </div>
 
     <p class="text-xs text-gray-500 text-center">
-      Te enviaremos un mensaje con el link para autorizar Google. ¡Abrí WhatsApp y escribí "Hola MiTiempo"!
+      Tu asistente se activará cuando envíes el primer mensaje.
     </p>
   </div>
 
   <script>
+    // Obtener parámetros de la URL
     const params = new URLSearchParams(window.location.search);
     const phone = params.get('phone') || '';
     const plan = params.get('plan') || '';
 
+    // Mostrar info del plan y teléfono
     document.getElementById('planPhone').textContent =
       `Plan: ${plan.charAt(0).toUpperCase() + plan.slice(1)} | Teléfono: ${phone}`;
 
-    const twilioNumber = '17432734544';
-    const prebuiltMessage = 'Hola MiTiempo';
-    document.getElementById('openWhatsApp').href =
-      `https://wa.me/${twilioNumber}?text=${encodeURIComponent(prebuiltMessage)}`;
+    // Preparar link al webhook /iniciar
+    const openUrl = `https://sebabiole.app.n8n.cloud/webhook/iniciar?u=549${phone}`;
+    document.getElementById('openWhatsApp').href = openUrl;
   </script>
 </body>
 </html>
