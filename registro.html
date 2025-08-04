@@ -5,7 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Registro | MiTempo.app</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
   <style>
     body { font-family: 'Inter', sans-serif; background: #f3f4f6; }
     .error { color: #dc2626; font-size: .875rem; }
@@ -14,32 +17,53 @@
 <body class="min-h-screen flex items-center justify-center p-4">
 
   <div class="bg-white w-full max-w-md rounded-xl shadow-lg p-6">
-    <h1 class="text-2xl font-semibold mb-6 text-center">Regístrate y activa tu prueba</h1>
+    <h1 class="text-2xl font-semibold mb-6 text-center">
+      Regístrate y activa tu prueba
+    </h1>
     <form id="form" class="space-y-4">
       <!-- Nombre -->
       <div>
-        <label class="block text-sm font-medium mb-1">Nombre y Apellido <span class="text-red-500">*</span></label>
-        <input type="text" name="fullName" id="fullName" required
-               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
+        <label class="block text-sm font-medium mb-1">
+          Nombre y Apellido <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="text" name="fullName" id="fullName" required
+          class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+        />
       </div>
       <!-- WhatsApp -->
       <div>
-        <label class="block text-sm font-medium mb-1">WhatsApp (10 dígitos locales, sin 0 ni prefijo) <span class="text-red-500">*</span></label>
-        <input type="text" name="phone" id="phone" required placeholder="0000000000"
-               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
-        <p id="errPhone" class="error hidden">Ingresa 10 dígitos locales válidos.</p>
+        <label class="block text-sm font-medium mb-1">
+          WhatsApp (10 dígitos locales, sin 0 ni prefijo)
+          <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="text" name="phone" id="phone" required placeholder="0000000000"
+          class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+        />
+        <p id="errPhone" class="error hidden">
+          Ingresa 10 dígitos locales válidos.
+        </p>
       </div>
       <!-- Email -->
       <div>
-        <label class="block text-sm font-medium mb-1">Email <span class="text-red-500">*</span></label>
-        <input type="email" name="email" id="email" required
-               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
+        <label class="block text-sm font-medium mb-1">
+          Email <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="email" name="email" id="email" required
+          class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+        />
       </div>
       <!-- Plan -->
       <div>
-        <label class="block text-sm font-medium mb-1">Plan <span class="text-red-500">*</span></label>
-        <select name="plan" id="plan" required
-                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400">
+        <label class="block text-sm font-medium mb-1">
+          Plan <span class="text-red-500">*</span>
+        </label>
+        <select
+          name="plan" id="plan" required
+          class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+        >
           <option value="prueba">Prueba</option>
           <option value="bronce">Bronce</option>
           <option value="plata">Plata</option>
@@ -47,75 +71,105 @@
           <option value="duo">Duo</option>
         </select>
       </div>
-      <!-- Invitado por -->
-      <div>
-        <label class="block text-sm font-medium mb-1">¿Invitado por alguien? (solo Duo)</label>
-        <input type="text" name="invitedBy" id="invitedBy"
-               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
+      <!-- Invitado por (sólo Duo) -->
+      <div id="invitedWrapper" style="display: none;">
+        <label class="block text-sm font-medium mb-1">
+          ¿Invitado por alguien? (solo Duo)
+        </label>
+        <input
+          type="text" name="invitedBy" id="invitedBy"
+          class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+        />
       </div>
       <!-- Cómo te enteraste -->
       <div>
-        <label class="block text-sm font-medium mb-1">¿Cómo te enteraste de MiTempo? (opcional)</label>
-        <input type="text" name="howHeard" id="howHeard"
-               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
+        <label class="block text-sm font-medium mb-1">
+          ¿Cómo te enteraste de MiTempo? (opcional)
+        </label>
+        <input
+          type="text" name="howHeard" id="howHeard"
+          class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+        />
       </div>
       <!-- Submit -->
-      <button type="submit" id="submitBtn"
-              class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition">
+      <button
+        type="submit" id="submitBtn"
+        class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition"
+      >
         Enviar Registro
       </button>
-
       <p id="msg" class="mt-4 text-center error"></p>
     </form>
   </div>
 
   <script>
-    const form   = document.getElementById('form');
-    const errP   = document.getElementById('errPhone');
-    const msg    = document.getElementById('msg');
+    const form = document.getElementById('form');
+    const errPhone = document.getElementById('errPhone');
+    const msg = document.getElementById('msg');
+    const submitBtn = document.getElementById('submitBtn');
+    const planEl = document.getElementById('plan');
+    const invitedWrapper = document.getElementById('invitedWrapper');
     const endpoint = 'https://sebabiole.app.n8n.cloud/webhook/registro-formulario';
 
+    // Mostrar/ocultar "Invitado por" sólo cuando plan===duo
+    function toggleInvited() {
+      invitedWrapper.style.display = planEl.value === 'duo' ? 'block' : 'none';
+    }
+    planEl.addEventListener('change', toggleInvited);
+    toggleInvited();
+
     function resetForm() {
-      errP.classList.add('hidden');
+      errPhone.classList.add('hidden');
       msg.textContent = '';
-      msg.classList.remove('opacity-0');
     }
 
-    form.addEventListener('submit', async e => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       resetForm();
 
       // Validación teléfono
-      let phone = form.phone.value.trim().replace(/\D/g, '').replace(/^0+/, '');
+      let phone = form.phone.value
+        .trim()
+        .replace(/\D/g, '')
+        .replace(/^0+/, '');
       if (!/^\d{10}$/.test(phone)) {
-        errP.textContent = 'Ingresa 10 dígitos locales válidos.';
-        errP.classList.remove('hidden');
+        errPhone.textContent = 'Ingresa 10 dígitos locales válidos.';
+        errPhone.classList.remove('hidden');
         return;
       }
       form.phone.value = phone;
+      const plan = form.plan.value;
 
+      // Feedback de envío
       msg.textContent = 'Enviando…';
-
-      const data = new URLSearchParams(new FormData(form));
+      submitBtn.disabled = true;
+      submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
       try {
+        const data = new URLSearchParams(new FormData(form));
         const res = await fetch(endpoint, { method: 'POST', body: data });
         let payload;
         try {
           payload = await res.json();
-        } catch (_) {
-          payload = { success: true, message: 'Registro enviado. ¡Revisa tu WhatsApp!' };
+        } catch {
+          payload = { success: true };
         }
 
         if (payload.success) {
-          const plan = form.plan.value;
-          // Redireccionar a autorización
-          window.location.href = `autorizacion.html?phone=${phone}&plan=${plan}`;
+          // Redirigir a la página de OAuth
+          const base = window.location.origin;
+          window.location.href =
+            `${base}/autorizacion.html?` +
+            `phone=${encodeURIComponent(phone)}` +
+            `&plan=${encodeURIComponent(plan)}`;
         } else {
           msg.textContent = payload.message || 'Ocurrió un error. Intenta nuevamente.';
         }
       } catch (err) {
         msg.textContent = 'Error de red. Intenta nuevamente.';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
       }
     });
   </script>
