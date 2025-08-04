@@ -94,7 +94,7 @@
     planNameEl.textContent = planNames[plan] || plan;
     phoneEl.textContent    = phone;
 
-    // Construir URL de autorización OAuth
+    // Construir URL de autorización OAuth (producción)
     let authUrl = `https://sebabiole.app.n8n.cloud/webhook/google-auth-start`;
     authUrl += `?phone=${encodeURIComponent(phone)}`;
     authUrl += `&plan=${encodeURIComponent(plan)}`;
@@ -102,7 +102,7 @@
       authUrl += `&invitedBy=${encodeURIComponent(invitedBy)}`;
     }
 
-    // WhatsApp (igual) 
+    // WhatsApp (igual)
     const wspUrl = `https://wa.me/5493382511421?text=${encodeURIComponent('Hola MiTempo')}`;
 
     // Asignar enlaces
@@ -115,4 +115,3 @@
   </script>
 </body>
 </html>
-
