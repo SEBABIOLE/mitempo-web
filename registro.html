@@ -12,14 +12,17 @@
     #activarLink { display: none; margin-top: 10px; text-decoration: none; color: #10b981; font-weight: bold; }
     #activarLink:hover { text-decoration: underline; }
     #msg { text-align: center; margin-bottom: 1rem; font-size: 1rem; }
+    #joinCodeMsg { white-space: pre-wrap; text-align: center; margin-top: .5rem; color: #374151; font-size: .875rem; display: none; }
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
 
   <div class="bg-white w-full max-w-md rounded-xl shadow-lg p-6">
     <h1 class="text-2xl font-semibold mb-4 text-center">Regístrate y activa tu prueba</h1>
+
+    <!-- Mensajes de estado y join-code -->
     <div id="msg"></div>
-    <div id="joinCodeMsg" class="text-center mt-2 text-sm text-gray-700 hidden"></div>
+    <div id="joinCodeMsg"></div>
     <a id="activarLink" href="#" target="_blank">Ir a activar tu cuenta</a>
 
     <form id="form" class="space-y-4">
@@ -28,17 +31,20 @@
         <input type="text" name="fullName" id="fullName" required
                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
       </div>
+
       <div>
         <label class="block text-sm font-medium mb-1">WhatsApp (10 dígitos locales, sin 0 ni prefijo) <span class="text-red-500">*</span></label>
         <input type="text" name="phone" id="phone" required placeholder="3382416087"
                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
         <p id="errPhone" class="error hidden">Ingresa 10 dígitos locales válidos.</p>
       </div>
+
       <div>
         <label class="block text-sm font-medium mb-1">Email <span class="text-red-500">*</span></label>
         <input type="email" name="email" id="email" required
                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
       </div>
+
       <div>
         <label class="block text-sm font-medium mb-1">Plan <span class="text-red-500">*</span></label>
         <select name="plan" id="plan" required
@@ -50,16 +56,19 @@
           <option value="duo">Duo</option>
         </select>
       </div>
+
       <div>
         <label class="block text-sm font-medium mb-1">¿Invitado por alguien? (solo Duo)</label>
         <input type="text" name="invitedBy" id="invitedBy"
                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
       </div>
+
       <div>
         <label class="block text-sm font-medium mb-1">¿Cómo te enteraste de MiTempo? (opcional)</label>
         <input type="text" name="howHeard" id="howHeard"
                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
       </div>
+
       <button type="submit" id="submitBtn"
               class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition">
         Enviar Registro
@@ -71,12 +80,14 @@
     const form        = document.getElementById('form');
     const errP        = document.getElementById('errPhone');
     const msg         = document.getElementById('msg');
+    const joinCodeMsg = document.getElementById('joinCodeMsg');
     const activarLink = document.getElementById('activarLink');
     const endpoint    = 'https://sebabiole.app.n8n.cloud/webhook/registro-formulario';
 
     function resetForm() {
       errP.classList.add('hidden');
       msg.textContent = '';
+      joinCodeMsg.style.display = 'none';
       activarLink.style.display = 'none';
       console.clear();
     }
@@ -99,28 +110,25 @@
 
       // Preparar datos a enviar
       const data = {
-        fullName:     form.fullName.value.trim(),
-        phoneRaw:     phone,
-        whatsappId:   whatsappAddress,
-        email:        form.email.value.trim(),
-        plan:         form.plan.value,
-        invitedBy:    form.invitedBy.value.trim(),
-        howHeard:     form.howHeard.value.trim()
+        fullName:   form.fullName.value.trim(),
+        phoneRaw:   phone,
+        whatsappId: whatsappAddress,
+        email:      form.email.value.trim(),
+        plan:       form.plan.value,
+        invitedBy:  form.invitedBy.value.trim(),
+        howHeard:   form.howHeard.value.trim()
       };
       const params = new URLSearchParams(window.location.search);
       if (params.has('id_token')) data.id_token = params.get('id_token');
       if (params.has('expired'))  data.expired  = params.get('expired');
 
+      // Mostrar estado y join-code
       msg.textContent = 'Enviando…';
-      // Mostrar join-code para sandbox
-      const joinCodeMsg = document.getElementById('joinCodeMsg');
-      joinCodeMsg.textContent = 'Para activar tu prueba, responde en WhatsApp con:
-join myAwesomeSandbox';
-      joinCodeMsg.classList.remove('hidden');
+      joinCodeMsg.textContent = 'Para activar tu prueba, responde en WhatsApp con:\njoin myAwesomeSandbox';
+      joinCodeMsg.style.display = 'block';
 
       // Simulación en preview de ChatGPT
       if (window.location.host.includes('chatgpt.com')) {
-        console.log('Modo preview: simulando registro exitoso');
         msg.textContent = '✅ Registro exitoso (simulado).';
         activarLink.href = '#';
         activarLink.style.display = 'block';
