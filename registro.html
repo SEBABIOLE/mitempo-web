@@ -1,130 +1,73 @@
-ahora adapta el formato visual a este que tenemos actualmente
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Registro | MiTempo.app</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-  <style>
-    body { font-family: 'Inter', sans-serif; background: #f3f4f6; }
-    .error { color: #dc2626; font-size: .875rem; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - MiTempo</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 500px; margin: 20px auto; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; }
+        input { width: 100%; padding: 8px; box-sizing: border-box; }
+        button { background-color: #4CAF50; color: white; padding: 10px 15px; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+        #mensaje { margin-top: 10px; color: green; display: none; }
+    </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
-
-  <div class="bg-white w-full max-w-md rounded-xl shadow-lg p-6">
-    <h1 class="text-2xl font-semibold mb-6 text-center">Regístrate y activa tu prueba</h1>
-    <form id="form" class="space-y-4">
-      <!-- Nombre -->
-      <div>
-        <label class="block text-sm font-medium mb-1">Nombre y Apellido <span class="text-red-500">*</span></label>
-        <input type="text" name="fullName" id="fullName" required
-               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
-      </div>
-      <!-- WhatsApp -->
-      <div>
-        <label class="block text-sm font-medium mb-1">WhatsApp (10 dígitos locales, sin 0 ni prefijo) <span class="text-red-500">*</span></label>
-        <input type="text" name="phone" id="phone" required placeholder="3382416087"
-               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
-        <p id="errPhone" class="error hidden">Ingresa 10 dígitos locales válidos.</p>
-      </div>
-      <!-- Email -->
-      <div>
-        <label class="block text-sm font-medium mb-1">Email <span class="text-red-500">*</span></label>
-        <input type="email" name="email" id="email" required
-               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
-      </div>
-      <!-- Plan -->
-      <div>
-        <label class="block text-sm font-medium mb-1">Plan <span class="text-red-500">*</span></label>
-        <select name="plan" id="plan" required
-                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400">
-          <option value="prueba">Prueba</option>
-          <option value="bronce">Bronce</option>
-          <option value="plata">Plata</option>
-          <option value="oro">Oro</option>
-          <option value="duo">Duo</option>
-        </select>
-      </div>
-      <!-- Invitado por -->
-      <div>
-        <label class="block text-sm font-medium mb-1">¿Invitado por alguien? (solo Duo)</label>
-        <input type="text" name="invitedBy" id="invitedBy"
-               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
-      </div>
-      <!-- Cómo te enteraste -->
-      <div>
-        <label class="block text-sm font-medium mb-1">¿Cómo te enteraste de MiTempo? (opcional)</label>
-        <input type="text" name="howHeard" id="howHeard"
-               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
-      </div>
-      <!-- Submit -->
-      <button type="submit" id="submitBtn"
-              class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition">
-        Enviar Registro
-      </button>
-
-      <p id="msg" class="mt-4 text-center error"></p>
+<body>
+    <h2>Registro de Usuario</h2>
+    <form id="registroForm">
+        <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required>
+        </div>
+        <div class="form-group">
+            <label for="telefono">Teléfono (sin +):</label>
+            <input type="tel" id="telefono" name="telefono" pattern="[0-9]{10}" placeholder="1234567890" required>
+        </div>
+        <button type="submit">Enviar Registro</button>
     </form>
-  </div>
+    <div id="mensaje"></div>
+    <p>¿Ya te registraste? <a href="#" id="activarLink" style="display: none;">Activar mi cuenta por WhatsApp</a></p>
 
-  <script>
-    const form   = document.getElementById('form');
-    const errP   = document.getElementById('errPhone');
-    const msg    = document.getElementById('msg');
-    const endpoint = 'https://sebabiole.app.n8n.cloud/webhook/registro-formulario';
+    <script>
+        document.getElementById('registroForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const nombre = document.getElementById('nombre').value;
+            const telefono = document.getElementById('telefono').value;
 
-    // Reset de mensajes
-    function resetForm() {
-      errP.classList.add('hidden');
-      msg.textContent = '';
-      msg.classList.remove('opacity-0');
-    }
+            // Simulación de envío a n8n (reemplaza con tu webhook real)
+            fetch('https://sebabiole.app.n8n.cloud/webhook/registro-formulario', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nombre: nombre, telefono: telefono })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('mensaje').style.display = 'block';
+                document.getElementById('mensaje').textContent = 'Registro enviado con éxito!';
+                document.getElementById('activarLink').style.display = 'inline';
+                document.getElementById('activarLink').setAttribute('onclick', `activarWhatsapp('${telefono}')`);
+            })
+            .catch(error => {
+                document.getElementById('mensaje').style.display = 'block';
+                document.getElementById('mensaje').textContent = 'Error al enviar el registro.';
+                console.error('Error:', error);
+            });
+        });
 
-    form.addEventListener('submit', async e => {
-      e.preventDefault();
-      resetForm();
-
-      // Validación teléfono
-      let phone = form.phone.value.trim().replace(/\D/g, '').replace(/^0+/, '');
-      if (!/^\d{10}$/.test(phone)) {
-        errP.textContent = 'Ingresa 10 dígitos locales válidos.';
-        errP.classList.remove('hidden');
-        return;
-      }
-      form.phone.value = phone;
-
-      // Mostrar enviando
-      msg.textContent = 'Enviando…';
-      msg.classList.remove('opacity-0');
-
-      // Preparar payload
-      const data = new URLSearchParams(new FormData(form));
-
-      try {
-        const res = await fetch(endpoint, { method: 'POST', body: data });
-        let payload;
-        // intenta parsear JSON, si no viene, asume éxito
-        try {
-          payload = await res.json();
-        } catch (_) {
-          payload = { success: true, message: 'Registro enviado. ¡Revisa tu WhatsApp!' };
+        function activarWhatsapp(telefono) {
+            // Abre WhatsApp y notifica a n8n
+            window.open('https://wa.me/17432734544?text=Hola,%20quiero%20activar%20mi%20cuenta', '_blank');
+            fetch('https://sebabiole.app.n8n.cloud/webhook/activar-whatsapp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ telefono: telefono })
+            })
+            .then(response => response.json())
+            .then(data => console.log('Flujo iniciado:', data))
+            .catch(error => console.error('Error al iniciar flujo:', error));
         }
-
-        if (payload.success) {
-          msg.innerHTML = `✅ ${payload.message}<br>
-            <a href="https://wa.me/17432734544?text=Hola%20MiTempo" target="_blank"
-               class="text-green-700 underline">Abrir WhatsApp</a>`;
-          msg.classList.remove('error');
-        } else {
-          msg.textContent = payload.message || 'Ocurrió un error. Intenta nuevamente.';
-        }
-      } catch (err) {
-        msg.textContent = 'Error de red. Intenta nuevamente.';
-      }
-    });
-  </script>
+    </script>
 </body>
 </html>
