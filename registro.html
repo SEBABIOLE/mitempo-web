@@ -5,13 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - MiTempo</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 500px; margin: 20px auto; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; }
-        input { width: 100%; padding: 8px; box-sizing: border-box; }
-        button { background-color: #4CAF50; color: white; padding: 10px 15px; border: none; cursor: pointer; }
-        button:hover { background-color: #45a049; }
-        #mensaje { margin-top: 10px; color: green; display: none; }
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 0 10px;
+            background-color: #f9f9f9;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #mensaje {
+            margin-top: 10px;
+            color: #d32f2f;
+            display: none;
+        }
+        #success {
+            margin-top: 10px;
+            color: #2e7d32;
+            display: none;
+        }
+        #activarLink {
+            display: none;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #1976d2;
+            font-weight: bold;
+        }
+        #activarLink:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 480px) {
+            body { margin: 10px; }
+            button { padding: 8px; }
+        }
     </style>
 </head>
 <body>
@@ -19,46 +70,62 @@
     <form id="registroForm">
         <div class="form-group">
             <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" required>
+            <input type="text" id="nombre" name="nombre" required placeholder="Ej: Juan Pérez">
         </div>
         <div class="form-group">
-            <label for="telefono">Teléfono (sin +):</label>
-            <input type="tel" id="telefono" name="telefono" pattern="[0-9]{10}" placeholder="1234567890" required>
+            <label for="telefono">Teléfono (10 dígitos, sin +):</label>
+            <input type="tel" id="telefono" name="telefono" pattern="[0-9]{10}" placeholder="Ej: 1234567890" required>
         </div>
         <button type="submit">Enviar Registro</button>
     </form>
     <div id="mensaje"></div>
-    <p>¿Ya te registraste? <a href="#" id="activarLink" style="display: none;">Activar mi cuenta por WhatsApp</a></p>
+    <div id="success"></div>
+    <p>¿Ya te registraste? <a href="#" id="activarLink">Activar mi cuenta por WhatsApp</a></p>
 
     <script>
         document.getElementById('registroForm').addEventListener('submit', function(event) {
             event.preventDefault();
-            const nombre = document.getElementById('nombre').value;
-            const telefono = document.getElementById('telefono').value;
+            const nombre = document.getElementById('nombre').value.trim();
+            const telefono = document.getElementById('telefono').value.trim();
 
-            // Simulación de envío a n8n (reemplaza con tu webhook real)
+            if (!nombre || !telefono || !/^[0-9]{10}$/.test(telefono)) {
+                document.getElementById('mensaje').style.display = 'block';
+                document.getElementById('mensaje').textContent = 'Por favor, ingresa un nombre y un teléfono válido de 10 dígitos.';
+                return;
+            }
+
+            document.getElementById('mensaje').style.display = 'none';
+            document.getElementById('success').style.display = 'none';
+
             fetch('https://sebabiole.app.n8n.cloud/webhook/registro-formulario', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ nombre: nombre, telefono: telefono })
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) throw new Error('Error en el servidor');
+                return response.json();
+            })
             .then(data => {
-                document.getElementById('mensaje').style.display = 'block';
-                document.getElementById('mensaje').textContent = 'Registro enviado con éxito!';
+                document.getElementById('success').style.display = 'block';
+                document.getElementById('success').textContent = 'Registro enviado con éxito!';
                 document.getElementById('activarLink').style.display = 'inline';
                 document.getElementById('activarLink').setAttribute('onclick', `activarWhatsapp('${telefono}')`);
             })
             .catch(error => {
                 document.getElementById('mensaje').style.display = 'block';
-                document.getElementById('mensaje').textContent = 'Error al enviar el registro.';
+                document.getElementById('mensaje').textContent = 'Error al enviar el registro. Intenta de nuevo.';
                 console.error('Error:', error);
             });
         });
 
         function activarWhatsapp(telefono) {
+            if (!telefono || !/^[0-9]{10}$/.test(telefono)) {
+                alert('Teléfono no válido. Por favor, regístrate nuevamente.');
+                return;
+            }
             // Abre WhatsApp y notifica a n8n
-            window.open('https://wa.me/17432734544?text=Hola,%20quiero%20activar%20mi%20cuenta', '_blank');
+            window.open('https://wa.me/17432734544?text=Hola,%20quiero%20activar%20mi%20cuenta%20(nombre:%20' + encodeURIComponent(document.getElementById('nombre').value) + ')', '_blank');
             fetch('https://sebabiole.app.n8n.cloud/webhook/activar-whatsapp', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
