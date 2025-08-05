@@ -18,32 +18,29 @@
 
   <div class="bg-white w-full max-w-md rounded-xl shadow-lg p-6">
     <h1 class="text-2xl font-semibold mb-4 text-center">Regístrate y activa tu prueba</h1>
-    <!-- Mensajes de estado -->
     <div id="msg"></div>
-    <!-- Link de activación -->
     <a id="activarLink" href="#" target="_blank">Ir a activar tu cuenta</a>
 
     <form id="form" class="space-y-4">
-      <!-- Nombre -->
       <div>
         <label class="block text-sm font-medium mb-1">Nombre y Apellido <span class="text-red-500">*</span></label>
         <input type="text" name="fullName" id="fullName" required
                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
       </div>
-      <!-- WhatsApp -->
+
       <div>
         <label class="block text-sm font-medium mb-1">WhatsApp (10 dígitos locales, sin 0 ni prefijo) <span class="text-red-500">*</span></label>
         <input type="text" name="phone" id="phone" required placeholder="3382416087"
                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
         <p id="errPhone" class="error hidden">Ingresa 10 dígitos locales válidos.</p>
       </div>
-      <!-- Email -->
+
       <div>
         <label class="block text-sm font-medium mb-1">Email <span class="text-red-500">*</span></label>
         <input type="email" name="email" id="email" required
                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
       </div>
-      <!-- Plan -->
+
       <div>
         <label class="block text-sm font-medium mb-1">Plan <span class="text-red-500">*</span></label>
         <select name="plan" id="plan" required
@@ -55,19 +52,19 @@
           <option value="duo">Duo</option>
         </select>
       </div>
-      <!-- Invitado por -->
+
       <div>
         <label class="block text-sm font-medium mb-1">¿Invitado por alguien? (solo Duo)</label>
         <input type="text" name="invitedBy" id="invitedBy"
                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
       </div>
-      <!-- Cómo te enteraste -->
+
       <div>
         <label class="block text-sm font-medium mb-1">¿Cómo te enteraste de MiTempo? (opcional)</label>
         <input type="text" name="howHeard" id="howHeard"
                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
       </div>
-      <!-- Submit -->
+
       <button type="submit" id="submitBtn"
               class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition">
         Enviar Registro
@@ -76,23 +73,24 @@
   </div>
 
   <script>
-    const form         = document.getElementById('form');
-    const errP         = document.getElementById('errPhone');
-    const msg          = document.getElementById('msg');
-    const activarLink  = document.getElementById('activarLink');
-    const endpoint     = 'https://sebabiole.app.n8n.cloud/webhook/registro-formulario';
+    const form        = document.getElementById('form');
+    const errP        = document.getElementById('errPhone');
+    const msg         = document.getElementById('msg');
+    const activarLink = document.getElementById('activarLink');
+    const endpoint    = 'https://sebabiole.app.n8n.cloud/webhook/registro-formulario';
 
     function resetForm() {
       errP.classList.add('hidden');
       msg.textContent = '';
       activarLink.style.display = 'none';
+      console.clear();
     }
 
     form.addEventListener('submit', async e => {
       e.preventDefault();
       resetForm();
 
-      // Validación teléfono
+      // Validación de teléfono
       let phone = form.phone.value.trim().replace(/\D/g, '').replace(/^0+/, '');
       if (!/^\d{10}$/.test(phone)) {
         errP.textContent = 'Ingresa 10 dígitos locales válidos.';
@@ -101,7 +99,7 @@
       }
       form.phone.value = phone;
 
-      // Arma datos
+      // Preparar datos
       const data = {
         fullName:  form.fullName.value.trim(),
         phone:     phone,
@@ -110,31 +108,44 @@
         invitedBy: form.invitedBy.value.trim(),
         howHeard:  form.howHeard.value.trim()
       };
-      // Si hay id_token/expired en URL:
       const params = new URLSearchParams(window.location.search);
       if (params.has('id_token')) data.id_token = params.get('id_token');
       if (params.has('expired'))  data.expired  = params.get('expired');
 
-      try {
-        msg.textContent = 'Enviando…';
-        const res = await fetch(endpoint, {
-          method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify(data)
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
+      msg.textContent = 'Enviando…';
 
-        // Éxito
+      // En modo preview (sandbox de ChatGPT), simulamos éxito
+      if (window.location.host.includes('chatgpt.com')) {
+        console.log('Modo preview: simulando registro exitoso');
+        msg.textContent = '✅ Registro exitoso (simulado).';
+        activarLink.href = '#';
+        activarLink.style.display = 'block';
+        form.reset();
+        return;
+      }
+
+      // En entorno real, intentamos POST al webhook
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          mode: 'cors',
+          cache: 'no-cache',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        console.log('Fetch response:', response);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const json = await response.json();
+
         msg.textContent = '✅ Registro exitoso.';
         if (json.activateUrl) {
           activarLink.href = json.activateUrl;
           activarLink.style.display = 'block';
         }
         form.reset();
-      } catch (err) {
-        console.error(err);
-        msg.textContent = '⚠️ Error al enviar: ' + err.message;
+      } catch (error) {
+        console.error('Error en fetch real:', error);
+        msg.textContent = '⚠️ No se pudo enviar al servidor. Verifica consola o CORS.';
       }
     });
   </script>
