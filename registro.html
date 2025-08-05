@@ -50,32 +50,36 @@
   <script>
     document.getElementById('regForm').addEventListener('submit', async e => {
       e.preventDefault();
-      const f = e.target;
-      const err = document.getElementById('errorMsg');
-      err.classList.add('hidden');
+      const form    = e.target;
+      const errMsg  = document.getElementById('errorMsg');
+      errMsg.classList.add('hidden');
+
       const payload = {
-        fullName: f.fullName.value.trim(),
-        phone:    f.phone.value.replace(/\D/g,''),   // sólo dígitos
-        email:    f.email.value.trim().toLowerCase(),
-        plan:     f.plan.value.toLowerCase(),
+        fullName: form.fullName.value.trim(),
+        phone:    form.phone.value.replace(/\D/g, ''),   // sólo dígitos
+        email:    form.email.value.trim().toLowerCase(),
+        plan:     form.plan.value.toLowerCase()
       };
+
       try {
         const res = await fetch('https://sebabiole.app.n8n.cloud/webhook/registro-formulario', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
+
         if (!res.ok) {
           const text = await res.text();
           throw new Error(text || `Status ${res.status}`);
         }
-        const json = await res.json();
+
+        const data = await res.json();
         // Redirige al usuario al OAuth de Google
-        window.location.href = json.auth_url;
-      } catch(err) {
-        console.error(err);
-        err.textContent = 'Error al registrar: ' + err.message;
-        err.classList.remove('hidden');
+        window.location.href = data.auth_url;
+      } catch (error) {
+        console.error(error);
+        errMsg.textContent = 'Error al registrar: ' + error.message;
+        errMsg.classList.remove('hidden');
       }
     });
   </script>
