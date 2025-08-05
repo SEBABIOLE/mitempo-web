@@ -34,8 +34,7 @@
       <!-- WhatsApp -->
       <div>
         <label class="block text-sm font-medium mb-1">
-          WhatsApp (10 dígitos locales, sin 0 ni prefijo)
-          <span class="text-red-500">*</span>
+          WhatsApp (10 dígitos locales, sin 0 ni prefijo) <span class="text-red-500">*</span>
         </label>
         <input
           type="text" name="phone" id="phone" required placeholder="0000000000"
@@ -81,7 +80,7 @@
           class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
         />
       </div>
-      <!-- Cómo te enteraste -->
+      <!-- Cómo te enteraste (opcional) -->
       <div>
         <label class="block text-sm font-medium mb-1">
           ¿Cómo te enteraste de MiTempo? (opcional)
@@ -105,14 +104,15 @@
   <script>
     const form = document.getElementById('form');
     const errPhone = document.getElementById('errPhone');
-    const msg = document.getElementById('msg');
+    const msg       = document.getElementById('msg');
     const submitBtn = document.getElementById('submitBtn');
-    const planEl = document.getElementById('plan');
+    const planEl    = document.getElementById('plan');
     const invitedWrapper = document.getElementById('invitedWrapper');
-    // Tu webhook de registro:
-    const endpoint = 'https://sebabiole.app.n8n.cloud/webhook/registro-formulario';
 
-    // Mostrar/ocultar "Invitado por" sólo cuando plan === "duo"
+    // Endpoint relativo para evitar CORS
+    const endpoint = '/webhook/registro-formulario';
+
+    // Mostrar/ocultar invitadoBy solo para Duo
     function toggleInvited() {
       invitedWrapper.style.display = planEl.value === 'duo' ? 'block' : 'none';
     }
@@ -128,7 +128,7 @@
       e.preventDefault();
       resetForm();
 
-      // Validación teléfono
+      // Validar teléfono
       let phone = form.phone.value.trim().replace(/\D/g, '').replace(/^0+/, '');
       if (!/^\d{10}$/.test(phone)) {
         errPhone.textContent = 'Ingresa 10 dígitos locales válidos.';
@@ -138,26 +138,32 @@
       form.phone.value = phone;
       const plan = form.plan.value;
 
-      // Feedback de envío
+      // Feedback
       msg.textContent = 'Enviando…';
       submitBtn.disabled = true;
       submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
       try {
+        // Preparamos los datos
         const data = new URLSearchParams(new FormData(form));
+        // Si es Duo, copiamos invitedBy -> howHeard (que n8n usará como “Referido”)
+        if (plan === 'duo') {
+          data.set('howHeard', form.invitedBy.value.trim());
+        }
+        // Enviamos al webhook
         const res = await fetch(endpoint, { method: 'POST', body: data });
         if (res.ok) {
-          // Redirigir a autorizacion.html (misma carpeta)
+          // Redirigimos a autorizacion.html con params
           const base = window.location.origin;
-          window.location.href = `${base}/autorizacion.html?phone=${encodeURIComponent(phone)}&plan=${encodeURIComponent(plan)}`;
+          window.location.href =
+            `${base}/autorizacion.html?phone=${encodeURIComponent(phone)}&plan=${encodeURIComponent(plan)}`;
         } else {
-          // Si el servidor devuelve error JSON, mostrarlo
-          let err = 'Ocurrió un error. Intenta nuevamente.';
-          try { 
-            const body = await res.json(); 
-            err = body.message || err;
+          let errMsg = 'Ocurrió un error. Intenta nuevamente.';
+          try {
+            const json = await res.json();
+            errMsg = json.message || errMsg;
           } catch {}
-          msg.textContent = err;
+          msg.textContent = errMsg;
         }
       } catch (err) {
         msg.textContent = 'Error de red. Intenta nuevamente.';
