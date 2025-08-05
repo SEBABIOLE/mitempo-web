@@ -5,7 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Registro | MiTempo.app</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
   <style>
     body { font-family: 'Inter', sans-serif; background: #f3f4f6; }
     .error { color: #dc2626; font-size: .875rem; }
@@ -68,14 +71,13 @@
           <option value="duo">Duo</option>
         </select>
       </div>
-      <!-- Invitado por (solo Duo) -->
+      <!-- Invitado por (sólo Duo) -->
       <div id="invitedWrapper" style="display: none;">
         <label class="block text-sm font-medium mb-1">
           ¿Invitado por alguien? (solo Duo)
         </label>
         <input
           type="text" name="invitedBy" id="invitedBy"
-          placeholder="WhatsApp de quien te invitó"
           class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
         />
       </div>
@@ -107,9 +109,10 @@
     const submitBtn = document.getElementById('submitBtn');
     const planEl = document.getElementById('plan');
     const invitedWrapper = document.getElementById('invitedWrapper');
+    // Tu webhook de registro:
     const endpoint = 'https://sebabiole.app.n8n.cloud/webhook/registro-formulario';
 
-    // Mostrar/ocultar "Invitado por" solo cuando plan === "duo"
+    // Mostrar/ocultar "Invitado por" sólo cuando plan === "duo"
     function toggleInvited() {
       invitedWrapper.style.display = planEl.value === 'duo' ? 'block' : 'none';
     }
@@ -125,18 +128,15 @@
       e.preventDefault();
       resetForm();
 
-      // Validar teléfono
+      // Validación teléfono
       let phone = form.phone.value.trim().replace(/\D/g, '').replace(/^0+/, '');
       if (!/^\d{10}$/.test(phone)) {
         errPhone.textContent = 'Ingresa 10 dígitos locales válidos.';
         errPhone.classList.remove('hidden');
         return;
       }
-
       form.phone.value = phone;
       const plan = form.plan.value;
-      const invitedBy = form.invitedBy.value.trim();
-      const howHeard = form.howHeard.value.trim();
 
       // Feedback de envío
       msg.textContent = 'Enviando…';
@@ -144,29 +144,20 @@
       submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
       try {
-        // Enviar como application/x-www-form-urlencoded
-        const payload = new URLSearchParams({
-          fullName: form.fullName.value.trim(),
-          phone,
-          email: form.email.value.trim(),
-          plan,
-          invitedBy,
-          howHeard,
-        });
-        const res = await fetch(endpoint, {
-          method: 'POST',
-          body: payload,
-        });
-        const data = await res.json();
-
-        if (data.success) {
-          // Redirige a autorización
+        const data = new URLSearchParams(new FormData(form));
+        const res = await fetch(endpoint, { method: 'POST', body: data });
+        if (res.ok) {
+          // Redirigir a autorizacion.html (misma carpeta)
           const base = window.location.origin;
-          window.location.href = 
-            `${base}/autorizacion.html?phone=${encodeURIComponent(phone)}` +
-            `&plan=${encodeURIComponent(plan)}`;
+          window.location.href = `${base}/autorizacion.html?phone=${encodeURIComponent(phone)}&plan=${encodeURIComponent(plan)}`;
         } else {
-          msg.textContent = data.message || 'Ocurrió un error. Intenta nuevamente.';
+          // Si el servidor devuelve error JSON, mostrarlo
+          let err = 'Ocurrió un error. Intenta nuevamente.';
+          try { 
+            const body = await res.json(); 
+            err = body.message || err;
+          } catch {}
+          msg.textContent = err;
         }
       } catch (err) {
         msg.textContent = 'Error de red. Intenta nuevamente.';
