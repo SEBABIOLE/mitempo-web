@@ -23,7 +23,6 @@
     <!-- Mensajes de estado y join-code -->
     <div id="msg"></div>
     <div id="joinCodeMsg"></div>
-    <a id="openWhatsApp" href="#" target="_blank" class="block mt-2 text-center text-green-600 font-medium hidden">Abrir WhatsApp</a>
     <a id="activarLink" href="#" target="_blank">Ir a activar tu cuenta</a>
 
     <form id="form" class="space-y-4">
@@ -106,10 +105,25 @@
       }
       form.phone.value = phone;
 
-      // Formatear para WhatsApp (E.164)
-      const whatsappAddress = `whatsapp:+549${phone}`;
+      // Mostrar estado y abrir WhatsApp con mensaje de sandbox
+      msg.textContent = 'Enviando…';
+      const waText = 'join myAwesomeSandbox';
+      const waUrl = `https://api.whatsapp.com/send?phone=549${phone}&text=${encodeURIComponent(waText)}`;
+      joinCodeMsg.textContent = `Para activar tu prueba, se abrirá WhatsApp con el mensaje:\n${waText}`;
+      joinCodeMsg.style.display = 'block';
+      window.open(waUrl, '_blank');
+
+      // Simulación en preview de ChatGPT
+      if (window.location.host.includes('chatgpt.com')) {
+        msg.textContent = '✅ Registro exitoso (simulado).';
+        activarLink.href = '#';
+        activarLink.style.display = 'block';
+        form.reset();
+        return;
+      }
 
       // Preparar datos a enviar
+      const whatsappAddress = `whatsapp:+549${phone}`;
       const data = {
         fullName:   form.fullName.value.trim(),
         phoneRaw:   phone,
@@ -122,21 +136,6 @@
       const params = new URLSearchParams(window.location.search);
       if (params.has('id_token')) data.id_token = params.get('id_token');
       if (params.has('expired'))  data.expired  = params.get('expired');
-
-      // Mostrar estado y join-code
-      msg.textContent = 'Enviando…';
-      joinCodeMsg.textContent = `Para activar tu prueba, responde en WhatsApp con:
-join myAwesomeSandbox`;
-      joinCodeMsg.style.display = 'block';
-
-      // Simulación en preview de ChatGPT
-      if (window.location.host.includes('chatgpt.com')) {
-        msg.textContent = '✅ Registro exitoso (simulado).';
-        activarLink.href = '#';
-        activarLink.style.display = 'block';
-        form.reset();
-        return;
-      }
 
       // Intentar POST real al webhook de n8n
       try {
