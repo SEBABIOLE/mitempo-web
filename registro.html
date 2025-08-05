@@ -27,20 +27,17 @@
         <input type="text" name="fullName" id="fullName" required
                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
       </div>
-
       <div>
         <label class="block text-sm font-medium mb-1">WhatsApp (10 dígitos locales, sin 0 ni prefijo) <span class="text-red-500">*</span></label>
         <input type="text" name="phone" id="phone" required placeholder="3382416087"
                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
         <p id="errPhone" class="error hidden">Ingresa 10 dígitos locales válidos.</p>
       </div>
-
       <div>
         <label class="block text-sm font-medium mb-1">Email <span class="text-red-500">*</span></label>
         <input type="email" name="email" id="email" required
                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
       </div>
-
       <div>
         <label class="block text-sm font-medium mb-1">Plan <span class="text-red-500">*</span></label>
         <select name="plan" id="plan" required
@@ -52,19 +49,16 @@
           <option value="duo">Duo</option>
         </select>
       </div>
-
       <div>
         <label class="block text-sm font-medium mb-1">¿Invitado por alguien? (solo Duo)</label>
         <input type="text" name="invitedBy" id="invitedBy"
                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
       </div>
-
       <div>
         <label class="block text-sm font-medium mb-1">¿Cómo te enteraste de MiTempo? (opcional)</label>
         <input type="text" name="howHeard" id="howHeard"
                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
       </div>
-
       <button type="submit" id="submitBtn"
               class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition">
         Enviar Registro
@@ -99,14 +93,18 @@
       }
       form.phone.value = phone;
 
-      // Preparar datos
+      // Formatear para WhatsApp (E.164)
+      const whatsappAddress = `whatsapp:+549${phone}`;
+
+      // Preparar datos a enviar
       const data = {
-        fullName:  form.fullName.value.trim(),
-        phone:     phone,
-        email:     form.email.value.trim(),
-        plan:      form.plan.value,
-        invitedBy: form.invitedBy.value.trim(),
-        howHeard:  form.howHeard.value.trim()
+        fullName:     form.fullName.value.trim(),
+        phoneRaw:     phone,
+        whatsappId:   whatsappAddress,
+        email:        form.email.value.trim(),
+        plan:         form.plan.value,
+        invitedBy:    form.invitedBy.value.trim(),
+        howHeard:     form.howHeard.value.trim()
       };
       const params = new URLSearchParams(window.location.search);
       if (params.has('id_token')) data.id_token = params.get('id_token');
@@ -114,7 +112,7 @@
 
       msg.textContent = 'Enviando…';
 
-      // En modo preview (sandbox de ChatGPT), simulamos éxito
+      // Simulación en preview de ChatGPT
       if (window.location.host.includes('chatgpt.com')) {
         console.log('Modo preview: simulando registro exitoso');
         msg.textContent = '✅ Registro exitoso (simulado).';
@@ -124,7 +122,7 @@
         return;
       }
 
-      // En entorno real, intentamos POST al webhook
+      // Intentar POST real al webhook de n8n
       try {
         const response = await fetch(endpoint, {
           method: 'POST',
