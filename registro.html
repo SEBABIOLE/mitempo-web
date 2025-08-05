@@ -34,7 +34,8 @@
       <!-- WhatsApp -->
       <div>
         <label class="block text-sm font-medium mb-1">
-          WhatsApp (10 dígitos locales, sin 0 ni prefijo) <span class="text-red-500">*</span>
+          WhatsApp (10 dígitos locales, sin 0 ni prefijo)
+          <span class="text-red-500">*</span>
         </label>
         <input
           type="text" name="phone" id="phone" required placeholder="0000000000"
@@ -80,7 +81,7 @@
           class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
         />
       </div>
-      <!-- Cómo te enteraste (opcional) -->
+      <!-- Cómo te enteraste -->
       <div>
         <label class="block text-sm font-medium mb-1">
           ¿Cómo te enteraste de MiTempo? (opcional)
@@ -104,15 +105,15 @@
   <script>
     const form = document.getElementById('form');
     const errPhone = document.getElementById('errPhone');
-    const msg       = document.getElementById('msg');
+    const msg = document.getElementById('msg');
     const submitBtn = document.getElementById('submitBtn');
-    const planEl    = document.getElementById('plan');
+    const planEl = document.getElementById('plan');
     const invitedWrapper = document.getElementById('invitedWrapper');
 
-    // Endpoint relativo para evitar CORS
-    const endpoint = '/webhook/registro-formulario';
+    // URL absoluto de tu webhook en n8n (con CORS habilitado)
+    const endpoint = 'https://sebabiole.app.n8n.cloud/webhook/registro-formulario';
 
-    // Mostrar/ocultar invitadoBy solo para Duo
+    // Mostrar/ocultar "Invitado por" sólo cuando plan === "duo"
     function toggleInvited() {
       invitedWrapper.style.display = planEl.value === 'duo' ? 'block' : 'none';
     }
@@ -128,7 +129,7 @@
       e.preventDefault();
       resetForm();
 
-      // Validar teléfono
+      // Normalizar y validar teléfono
       let phone = form.phone.value.trim().replace(/\D/g, '').replace(/^0+/, '');
       if (!/^\d{10}$/.test(phone)) {
         errPhone.textContent = 'Ingresa 10 dígitos locales válidos.';
@@ -136,34 +137,33 @@
         return;
       }
       form.phone.value = phone;
-      const plan = form.plan.value;
 
-      // Feedback
       msg.textContent = 'Enviando…';
       submitBtn.disabled = true;
       submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
       try {
-        // Preparamos los datos
+        // Construir payload
         const data = new URLSearchParams(new FormData(form));
-        // Si es Duo, copiamos invitedBy -> howHeard (que n8n usará como “Referido”)
-        if (plan === 'duo') {
-          data.set('howHeard', form.invitedBy.value.trim());
+        if (form.plan.value === 'duo') {
+          data.set('invitedBy', form.invitedBy.value.trim());
         }
-        // Enviamos al webhook
-        const res = await fetch(endpoint, { method: 'POST', body: data });
+
+        // Petición al webhook de n8n
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          mode: 'cors',
+          body: data
+        });
+
         if (res.ok) {
-          // Redirigimos a autorizacion.html con params
+          // Redirigir a autorizacion.html
           const base = window.location.origin;
           window.location.href =
-            `${base}/autorizacion.html?phone=${encodeURIComponent(phone)}&plan=${encodeURIComponent(plan)}`;
+            `${base}/autorizacion.html?phone=${encodeURIComponent(phone)}&plan=${encodeURIComponent(form.plan.value)}`;
         } else {
-          let errMsg = 'Ocurrió un error. Intenta nuevamente.';
-          try {
-            const json = await res.json();
-            errMsg = json.message || errMsg;
-          } catch {}
-          msg.textContent = errMsg;
+          const payload = await res.json().catch(() => ({}));
+          msg.textContent = payload.message || 'Ocurrió un error. Intenta nuevamente.';
         }
       } catch (err) {
         msg.textContent = 'Error de red. Intenta nuevamente.';
