@@ -19,6 +19,7 @@
   <div class="bg-white w-full max-w-md rounded-xl shadow-lg p-6">
     <h1 class="text-2xl font-semibold mb-4 text-center">Regístrate y activa tu prueba</h1>
     <div id="msg"></div>
+    <div id="joinCodeMsg" class="text-center mt-2 text-sm text-gray-700 hidden"></div>
     <a id="activarLink" href="#" target="_blank">Ir a activar tu cuenta</a>
 
     <form id="form" class="space-y-4">
@@ -111,6 +112,11 @@
       if (params.has('expired'))  data.expired  = params.get('expired');
 
       msg.textContent = 'Enviando…';
+      // Mostrar join-code para sandbox
+      const joinCodeMsg = document.getElementById('joinCodeMsg');
+      joinCodeMsg.textContent = 'Para activar tu prueba, responde en WhatsApp con:
+join myAwesomeSandbox';
+      joinCodeMsg.classList.remove('hidden');
 
       // Simulación en preview de ChatGPT
       if (window.location.host.includes('chatgpt.com')) {
