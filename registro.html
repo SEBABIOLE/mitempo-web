@@ -11,12 +11,18 @@
     .error { color: #dc2626; font-size: .875rem; }
     #activarLink { display: none; margin-top: 10px; text-decoration: none; color: #10b981; font-weight: bold; }
     #activarLink:hover { text-decoration: underline; }
+    #msg { text-align: center; margin-bottom: 1rem; font-size: 1rem; }
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
 
   <div class="bg-white w-full max-w-md rounded-xl shadow-lg p-6">
-    <h1 class="text-2xl font-semibold mb-6 text-center">Regístrate y activa tu prueba</h1>
+    <h1 class="text-2xl font-semibold mb-4 text-center">Regístrate y activa tu prueba</h1>
+    <!-- Mensajes de estado -->
+    <div id="msg"></div>
+    <!-- Link de activación -->
+    <a id="activarLink" href="#" target="_blank">Ir a activar tu cuenta</a>
+
     <form id="form" class="space-y-4">
       <!-- Nombre -->
       <div>
@@ -66,18 +72,16 @@
               class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition">
         Enviar Registro
       </button>
-      <!-- ← Aquí terminaba tu formulario, todo lo siguiente fue eliminado -->
     </form>
   </div>
 
   <script>
-    const form   = document.getElementById('form');
-    const errP   = document.getElementById('errPhone');
-    const msg    = document.getElementById('msg');
-    const activarLink = document.getElementById('activarLink');
-    const endpoint = 'https://sebabiole.app.n8n.cloud/webhook/registro-formulario';
+    const form         = document.getElementById('form');
+    const errP         = document.getElementById('errPhone');
+    const msg          = document.getElementById('msg');
+    const activarLink  = document.getElementById('activarLink');
+    const endpoint     = 'https://sebabiole.app.n8n.cloud/webhook/registro-formulario';
 
-    // Reset de mensajes
     function resetForm() {
       errP.classList.add('hidden');
       msg.textContent = '';
@@ -97,10 +101,41 @@
       }
       form.phone.value = phone;
 
-      // Mostrar enviando (puedes mantener o quitar este bloque si ya no lo usas)
-      // ...
+      // Arma datos
+      const data = {
+        fullName:  form.fullName.value.trim(),
+        phone:     phone,
+        email:     form.email.value.trim(),
+        plan:      form.plan.value,
+        invitedBy: form.invitedBy.value.trim(),
+        howHeard:  form.howHeard.value.trim()
+      };
+      // Si hay id_token/expired en URL:
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('id_token')) data.id_token = params.get('id_token');
+      if (params.has('expired'))  data.expired  = params.get('expired');
 
-      // Aquí iría el resto de tu lógica de fetch…
+      try {
+        msg.textContent = 'Enviando…';
+        const res = await fetch(endpoint, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify(data)
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+
+        // Éxito
+        msg.textContent = '✅ Registro exitoso.';
+        if (json.activateUrl) {
+          activarLink.href = json.activateUrl;
+          activarLink.style.display = 'block';
+        }
+        form.reset();
+      } catch (err) {
+        console.error(err);
+        msg.textContent = '⚠️ Error al enviar: ' + err.message;
+      }
     });
   </script>
 </body>
