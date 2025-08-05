@@ -108,7 +108,6 @@
     const invitedWrapper = document.getElementById('invitedWrapper');
     const endpoint = 'https://sebabiole.app.n8n.cloud/webhook/registro-formulario';
 
-    // Mostrar/ocultar "Invitado por" sólo cuando plan === "duo"
     function toggleInvited() {
       invitedWrapper.style.display = planEl.value === 'duo' ? 'block' : 'none';
     }
@@ -149,8 +148,7 @@
         }
 
         if (payload.success) {
-          // 👉 Redirigir al webhook /iniciar
-          window.location.href = `https://mitempo.app/iniciar?u=${encodeURIComponent(phone)}`;
+          window.location.href = `autorizacion.html?phone=${encodeURIComponent(phone)}&plan=${encodeURIComponent(plan)}`;
         } else {
           msg.textContent = payload.message || 'Ocurrió un error. Intenta nuevamente.';
         }
