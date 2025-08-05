@@ -66,9 +66,7 @@
               class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition">
         Enviar Registro
       </button>
-
-      <p id="msg" class="mt-4 text-center error"></p>
-      <p><a href="#" id="activarLink">Activar mi cuenta por WhatsApp</a></p>
+      <!-- ← Aquí terminaba tu formulario, todo lo siguiente fue eliminado -->
     </form>
   </div>
 
@@ -83,7 +81,6 @@
     function resetForm() {
       errP.classList.add('hidden');
       msg.textContent = '';
-      msg.classList.remove('opacity-0');
       activarLink.style.display = 'none';
     }
 
@@ -100,63 +97,11 @@
       }
       form.phone.value = phone;
 
-      // Mostrar enviando
-      msg.textContent = 'Enviando…';
-      msg.classList.remove('opacity-0');
+      // Mostrar enviando (puedes mantener o quitar este bloque si ya no lo usas)
+      // ...
 
-      // Preparar payload como JSON
-      const data = {
-        fullName: form.fullName.value.trim(),
-        phone: phone,
-        email: form.email.value.trim(),
-        plan: form.plan.value,
-        invitedBy: form.invitedBy.value.trim() || null,
-        howHeard: form.howHeard.value.trim() || null
-      };
-
-      try {
-        const res = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
-        const payload = await res.json();
-
-        if (payload.success) {
-          msg.innerHTML = `✅ ${payload.message || 'Registro enviado. ¡Revisa tu WhatsApp!'}`;
-          msg.classList.remove('error');
-          activarLink.style.display = 'inline';
-          activarLink.setAttribute('onclick', `activarWhatsapp('${phone}')`);
-        } else {
-          msg.textContent = payload.message || 'Ocurrió un error. Intenta nuevamente.';
-        }
-      } catch (err) {
-        msg.textContent = 'Error de red. Intenta nuevamente.';
-        console.error('Error:', err);
-      }
+      // Aquí iría el resto de tu lógica de fetch…
     });
-
-    function activarWhatsapp(telefono) {
-      if (!telefono || !/^\d{10}$/.test(telefono)) {
-        msg.textContent = 'Teléfono no válido. Por favor, regístrate nuevamente.';
-        msg.classList.remove('opacity-0');
-        return;
-      }
-      const nombre = document.getElementById('fullName').value.trim();
-      window.open(`https://wa.me/17432734544?text=Hola%20MiTempo,%20quiero%20activar%20mi%20cuenta%20(Nombre:%20${encodeURIComponent(nombre)}%20Tel:%20${telefono})`, '_blank');
-      fetch('https://sebabiole.app.n8n.cloud/webhook/activar-whatsapp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ telefono: telefono })
-      })
-      .then(response => response.json())
-      .then(data => console.log('Flujo iniciado:', data))
-      .catch(error => {
-        msg.textContent = 'Error al iniciar el flujo de activación.';
-        msg.classList.remove('opacity-0');
-        console.error('Error:', error);
-      });
-    }
   </script>
 </body>
 </html>
