@@ -8,46 +8,83 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     body { font-family: 'Inter', sans-serif; background: #f3f4f6; }
-    a { text-decoration: none; }
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
   <div class="bg-white w-full max-w-md rounded-xl shadow-lg p-6 space-y-6">
-    <h1 class="text-2xl font-semibold text-center">¡Gracias por registrarte!</h1>
-    <p id="planPhone" class="text-center text-gray-700"></p>
-
-    <div class="space-y-4">
-      <div>
-        <p class="font-medium text-green-600">Paso único:</p>
-        <a
-          id="openWhatsApp"
-          class="block text-center w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Abrir WhatsApp
-        </a>
+    <div class="text-center">
+      <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+        <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
       </div>
+      <h1 class="text-2xl font-semibold">¡Registro exitoso!</h1>
     </div>
-
-    <p class="text-xs text-gray-500 text-center">
-      Tu asistente se activará cuando envíes el primer mensaje.
-    </p>
+    
+    <p id="planPhone" class="text-center text-gray-700"></p>
+    
+    <div class="bg-green-50 rounded-lg p-4">
+      <p class="font-medium text-green-800 mb-2">📱 Ya te enviamos un WhatsApp</p>
+      <p class="text-sm text-green-700">
+        Revisá tu WhatsApp. Te enviamos un mensaje con el link para conectar tu cuenta de Google.
+      </p>
+    </div>
+    
+    <div class="space-y-3">
+      <h3 class="font-medium text-gray-900">Próximos pasos:</h3>
+      <ol class="list-decimal list-inside space-y-2 text-sm text-gray-600">
+        <li>Abrí WhatsApp en tu teléfono</li>
+        <li>Buscá el mensaje de MiTiempo (+1 743-273-4544)</li>
+        <li>Hacé clic en el link para conectar Google</li>
+        <li>¡Listo! Ya podés usar MiTiempo</li>
+      </ol>
+    </div>
+    
+    <div class="pt-4 border-t">
+      <p class="text-xs text-gray-500 text-center">
+        ¿No recibiste el mensaje? Esperá 30 segundos y 
+        <a href="#" id="resendLink" class="text-green-600 hover:text-green-700 font-medium">
+          envialo nuevamente
+        </a>
+      </p>
+    </div>
   </div>
-
+  
   <script>
     // Obtener parámetros de la URL
     const params = new URLSearchParams(window.location.search);
     const phone = params.get('phone') || '';
     const plan = params.get('plan') || '';
-
+    
     // Mostrar info del plan y teléfono
     document.getElementById('planPhone').textContent =
-      `Plan: ${plan.charAt(0).toUpperCase() + plan.slice(1)} | Teléfono: ${phone}`;
-
-    // Preparar link al webhook /iniciar
-    const openUrl = `https://sebabiole.app.n8n.cloud/webhook/iniciar?u=549${phone}`;
-    document.getElementById('openWhatsApp').href = openUrl;
+      `Plan: ${plan.charAt(0).toUpperCase() + plan.slice(1)} | WhatsApp: +549${phone}`;
+    
+    // Manejar reenvío
+    document.getElementById('resendLink').addEventListener('click', async (e) => {
+      e.preventDefault();
+      
+      const link = e.target;
+      link.textContent = 'Enviando...';
+      link.classList.add('opacity-50', 'cursor-not-allowed');
+      
+      try {
+        // Llamar al webhook /iniciar para reenviar el mensaje
+        await fetch(`https://sebabiole.app.n8n.cloud/webhook/iniciar?u=549${phone}`, {
+          method: 'GET',
+          mode: 'no-cors'
+        });
+        
+        link.textContent = 'Mensaje reenviado ✓';
+        setTimeout(() => {
+          link.textContent = 'envialo nuevamente';
+          link.classList.remove('opacity-50', 'cursor-not-allowed');
+        }, 3000);
+      } catch (error) {
+        link.textContent = 'Error. Intentá nuevamente';
+        link.classList.remove('opacity-50', 'cursor-not-allowed');
+      }
+    });
   </script>
 </body>
 </html>
