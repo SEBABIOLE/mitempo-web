@@ -118,29 +118,11 @@
       if (params.has('id_token')) data.id_token = params.get('id_token');
       if (params.has('expired'))  data.expired  = params.get('expired');
 
-      // Intentar POST real al webhook de n8n
-      try {
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          mode: 'cors',
-          cache: 'no-cache',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const json = await response.json();
-
-        msg.textContent = '✅ Registro exitoso.';
-        // Mostrar link que dispara plantilla Twilio
-        if (json.activateUrl) {
-          activarLink.href = json.activateUrl;
-          activarLink.style.display = 'block';
-        }
-        form.reset();
-      } catch (error) {
-        console.error('Error en fetch real:', error);
-        msg.textContent = '⚠️ No se pudo enviar al servidor. Verifica consola o CORS.';
-      }
+      // Abrir WhatsApp directamente con plantilla (saludo)
+      const twilioNumber = '17432734544';
+      const greeting    = 'Hola';
+      const waLink       = `https://wa.me/${twilioNumber}?text=${encodeURIComponent(greeting)}`;
+      window.open(waLink, '_blank');
     });
   </script>
 </body>
