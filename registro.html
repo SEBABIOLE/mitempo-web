@@ -12,7 +12,6 @@
     #activarLink { display: none; margin-top: 10px; text-decoration: none; color: #10b981; font-weight: bold; }
     #activarLink:hover { text-decoration: underline; }
     #msg { text-align: center; margin-bottom: 1rem; font-size: 1rem; }
-    #joinCodeMsg { white-space: pre-wrap; text-align: center; margin-top: .5rem; color: #374151; font-size: .875rem; display: none; }
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
@@ -20,9 +19,8 @@
   <div class="bg-white w-full max-w-md rounded-xl shadow-lg p-6">
     <h1 class="text-2xl font-semibold mb-4 text-center">Regístrate y activa tu prueba</h1>
 
-    <!-- Mensajes de estado y join-code -->
+    <!-- Mensajes de estado -->
     <div id="msg"></div>
-    <div id="joinCodeMsg"></div>
     <a id="activarLink" href="#" target="_blank">Ir a activar tu cuenta</a>
 
     <form id="form" class="space-y-4">
@@ -80,14 +78,12 @@
     const form        = document.getElementById('form');
     const errP        = document.getElementById('errPhone');
     const msg         = document.getElementById('msg');
-    const joinCodeMsg = document.getElementById('joinCodeMsg');
     const activarLink = document.getElementById('activarLink');
     const endpoint    = 'https://sebabiole.app.n8n.cloud/webhook/registro-formulario';
 
     function resetForm() {
       errP.classList.add('hidden');
       msg.textContent = '';
-      joinCodeMsg.style.display = 'none';
       activarLink.style.display = 'none';
       console.clear();
     }
@@ -105,22 +101,7 @@
       }
       form.phone.value = phone;
 
-      // Mostrar estado y abrir WhatsApp con mensaje de sandbox
       msg.textContent = 'Enviando…';
-      const waText = 'join myAwesomeSandbox';
-      const waUrl = `https://api.whatsapp.com/send?phone=549${phone}&text=${encodeURIComponent(waText)}`;
-      joinCodeMsg.textContent = `Para activar tu prueba, se abrirá WhatsApp con el mensaje:\n${waText}`;
-      joinCodeMsg.style.display = 'block';
-      window.open(waUrl, '_blank');
-
-      // Simulación en preview de ChatGPT
-      if (window.location.host.includes('chatgpt.com')) {
-        msg.textContent = '✅ Registro exitoso (simulado).';
-        activarLink.href = '#';
-        activarLink.style.display = 'block';
-        form.reset();
-        return;
-      }
 
       // Preparar datos a enviar
       const whatsappAddress = `whatsapp:+549${phone}`;
@@ -146,11 +127,11 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
         });
-        console.log('Fetch response:', response);
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const json = await response.json();
 
         msg.textContent = '✅ Registro exitoso.';
+        // Mostrar link que dispara plantilla Twilio
         if (json.activateUrl) {
           activarLink.href = json.activateUrl;
           activarLink.style.display = 'block';
