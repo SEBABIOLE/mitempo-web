@@ -8,14 +8,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     body { font-family: 'Inter', sans-serif; background: #f3f4f6; }
-    .error { color: #dc2626; font-size: .875rem; }
+    .error { color: #dc2626; font-size: .875rem; margin-top: 0.25rem; }
     #activarLink { display: none; margin-top: 10px; text-decoration: none; color: #10b981; font-weight: bold; }
     #activarLink:hover { text-decoration: underline; }
     #msg { text-align: center; margin-bottom: 1rem; font-size: 1rem; }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+    .hidden { display: none; }
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
-
   <div class="bg-white w-full max-w-md rounded-xl shadow-lg p-6">
     <h1 class="text-2xl font-semibold mb-4 text-center">Regístrate y activa tu prueba</h1>
 
@@ -28,21 +29,20 @@
         <label class="block text-sm font-medium mb-1">Nombre y Apellido <span class="text-red-500">*</span></label>
         <input type="text" name="fullName" id="fullName" required
                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
+        <p id="errFullName" class="error hidden">Ingresa un nombre válido (mínimo 2 caracteres).</p>
       </div>
-
       <div>
         <label class="block text-sm font-medium mb-1">WhatsApp (10 dígitos locales, sin 0 ni prefijo) <span class="text-red-500">*</span></label>
-        <input type="text" name="phone" id="phone" required placeholder="3382416087"
+        <input type="text" name="phone" id="phone" required
                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
         <p id="errPhone" class="error hidden">Ingresa 10 dígitos locales válidos.</p>
       </div>
-
       <div>
         <label class="block text-sm font-medium mb-1">Email <span class="text-red-500">*</span></label>
         <input type="email" name="email" id="email" required
                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
+        <p id="errEmail" class="error hidden">Ingresa un email válido.</p>
       </div>
-
       <div>
         <label class="block text-sm font-medium mb-1">Plan <span class="text-red-500">*</span></label>
         <select name="plan" id="plan" required
@@ -54,19 +54,17 @@
           <option value="duo">Duo</option>
         </select>
       </div>
-
-      <div>
-        <label class="block text-sm font-medium mb-1">¿Invitado por alguien? (solo Duo)</label>
+      <div id="invitedByContainer" class="hidden">
+        <label class="block text-sm font-medium mb-1">¿Invitado por alguien? <span class="text-red-500">*</span></label>
         <input type="text" name="invitedBy" id="invitedBy"
                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
+        <p id="errInvitedBy" class="error hidden">Ingresa un nombre válido de quien te invitó.</p>
       </div>
-
       <div>
         <label class="block text-sm font-medium mb-1">¿Cómo te enteraste de MiTempo? (opcional)</label>
         <input type="text" name="howHeard" id="howHeard"
                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
       </div>
-
       <button type="submit" id="submitBtn"
               class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition">
         Enviar Registro
@@ -75,54 +73,153 @@
   </div>
 
   <script>
-    const form        = document.getElementById('form');
-    const errP        = document.getElementById('errPhone');
-    const msg         = document.getElementById('msg');
+    const form = document.getElementById('form');
+    const submitBtn = document.getElementById('submitBtn');
+    const errFullName = document.getElementById('errFullName');
+    const errPhone = document.getElementById('errPhone');
+    const errEmail = document.getElementById('errEmail');
+    const errInvitedBy = document.getElementById('errInvitedBy');
+    const msg = document.getElementById('msg');
     const activarLink = document.getElementById('activarLink');
-    const endpoint    = 'https://sebabiole.app.n8n.cloud/webhook/registro-formulario';
+    const planSelect = document.getElementById('plan');
+    const invitedByContainer = document.getElementById('invitedByContainer');
+    const invitedByInput = document.getElementById('invitedBy');
+    const endpoint = 'https://sebabiole.app.n8n.cloud/webhook/registro-formulario';
 
     function resetForm() {
-      errP.classList.add('hidden');
+      errFullName.classList.add('hidden');
+      errPhone.classList.add('hidden');
+      errEmail.classList.add('hidden');
+      errInvitedBy.classList.add('hidden');
       msg.textContent = '';
+      msg.style.color = '';
       activarLink.style.display = 'none';
+      submitBtn.disabled = false;
       console.clear();
     }
+
+    // Controlar visibilidad y obligatoriedad del campo invitedBy
+    function updateInvitedByField() {
+      if (planSelect.value === 'duo') {
+        invitedByContainer.classList.remove('hidden');
+        invitedByInput.setAttribute('required', 'true');
+      } else {
+        invitedByContainer.classList.add('hidden');
+        invitedByInput.removeAttribute('required');
+        invitedByInput.value = ''; // Limpiar el campo si no es Duo
+        errInvitedBy.classList.add('hidden');
+      }
+    }
+
+    // Actualizar campo invitedBy al cambiar el plan
+    planSelect.addEventListener('change', updateInvitedByField);
+
+    // Inicializar estado del campo invitedBy
+    updateInvitedByField();
 
     form.addEventListener('submit', async e => {
       e.preventDefault();
       resetForm();
 
-      // Validación de teléfono
-      let phone = form.phone.value.trim().replace(/\D/g, '').replace(/^0+/, '');
-      if (!/^\d{10}$/.test(phone)) {
-        errP.textContent = 'Ingresa 10 dígitos locales válidos.';
-        errP.classList.remove('hidden');
-        return;
+      // Validaciones
+      const fullName = form.fullName.value.trim();
+      const phone = form.phone.value.trim().replace(/\D/g, '').replace(/^0+/, '');
+      const email = form.email.value.trim();
+      const invitedBy = form.invitedBy.value.trim();
+      let isValid = true;
+
+      // Validar nombre
+      if (!/^[a-zA-Z\s]{2,}$/.test(fullName)) {
+        errFullName.textContent = 'Ingresa un nombre válido (mínimo 2 caracteres).';
+        errFullName.classList.remove('hidden');
+        isValid = false;
       }
+
+      // Validar teléfono
+      if (!/^\d{10}$/.test(phone)) {
+        errPhone.textContent = 'Ingresa 10 dígitos locales válidos.';
+        errPhone.classList.remove('hidden');
+        isValid = false;
+      }
+
+      // Validar email
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        errEmail.textContent = 'Ingresa un email válido.';
+        errEmail.classList.remove('hidden');
+        isValid = false;
+      }
+
+      // Validar invitedBy si el plan es Duo
+      if (planSelect.value === 'duo' && !/^[a-zA-Z\s]{2,}$/.test(invitedBy)) {
+        errInvitedBy.textContent = 'Ingresa un nombre válido de quien te invitó.';
+        errInvitedBy.classList.remove('hidden');
+        isValid = false;
+      }
+
+      if (!isValid) return;
+
       form.phone.value = phone;
-
       msg.textContent = 'Enviando…';
+      msg.style.color = '#6b7280'; // Gris
+      submitBtn.disabled = true;
 
-      // Preparar datos a enviar
+      // Preparar datos
       const whatsappAddress = `whatsapp:+549${phone}`;
       const data = {
-        fullName:   form.fullName.value.trim(),
-        phoneRaw:   phone,
+        fullName: fullName,
+        phoneRaw: phone,
         whatsappId: whatsappAddress,
-        email:      form.email.value.trim(),
-        plan:       form.plan.value,
-        invitedBy:  form.invitedBy.value.trim(),
-        howHeard:   form.howHeard.value.trim()
+        email: email,
+        plan: form.plan.value,
+        invitedBy: invitedBy,
+        howHeard: form.howHeard.value.trim()
       };
       const params = new URLSearchParams(window.location.search);
       if (params.has('id_token')) data.id_token = params.get('id_token');
-      if (params.has('expired'))  data.expired  = params.get('expired');
+      if (params.has('expired')) data.expired = params.get('expired');
 
-      // Abrir WhatsApp directamente con plantilla (saludo)
-      const twilioNumber = '17432734544';
-      const greeting    = 'Hola';
-      const waLink       = `https://wa.me/${twilioNumber}?text=${encodeURIComponent(greeting)}`;
-      window.open(waLink, '_blank');
+      try {
+        // Configurar tiempo de espera
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 segundos
+
+        // Enviar datos al webhook
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+          mode: 'cors',
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!res.ok) {
+          throw new Error(`Error ${res.status}: ${res.statusText}`);
+        }
+
+        const result = await res.json();
+        msg.textContent = '¡Registro enviado correctamente!';
+        msg.style.color = '#10b981'; // Verde
+
+        // Mostrar enlace de activación si está presente
+        if (result.activateUrl) {
+          activarLink.href = result.activateUrl;
+          activarLink.style.display = 'block';
+        }
+
+        // Abrir WhatsApp
+        const twilioNumber = '17432734544';
+        const greeting = 'Hola';
+        const waLink = `https://wa.me/${twilioNumber}?text=${encodeURIComponent(greeting)}`;
+        window.open(waLink, '_blank');
+      } catch (err) {
+        console.error('Error al enviar al webhook:', err);
+        msg.textContent = `Error al enviar el registro: ${err.message}. Intenta nuevamente.`;
+        msg.style.color = '#dc2626'; // Rojo
+      } finally {
+        submitBtn.disabled = false;
+      }
     });
   </script>
 </body>
