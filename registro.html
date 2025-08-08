@@ -98,7 +98,7 @@
       console.clear();
     }
 
-    // Controlar visibilidad y obligatoriedad del campo invitedBy
+    // Mostrar/ocultar y obligar campo invitado sólo en plan Duo
     function updateInvitedByField() {
       if (planSelect.value === 'duo') {
         invitedByContainer.classList.remove('hidden');
@@ -106,15 +106,11 @@
       } else {
         invitedByContainer.classList.add('hidden');
         invitedByInput.removeAttribute('required');
-        invitedByInput.value = ''; // Limpiar el campo si no es Duo
+        invitedByInput.value = '';
         errInvitedBy.classList.add('hidden');
       }
     }
-
-    // Actualizar campo invitedBy al cambiar el plan
     planSelect.addEventListener('change', updateInvitedByField);
-
-    // Inicializar estado del campo invitedBy
     updateInvitedByField();
 
     form.addEventListener('submit', async e => {
@@ -128,42 +124,33 @@
       const invitedBy = form.invitedBy.value.trim().replace(/\D/g, '').replace(/^0+/, '');
       let isValid = true;
 
-      // Validar nombre
       if (!/^[a-zA-Z\s]{2,}$/.test(fullName)) {
         errFullName.textContent = 'Ingresa un nombre válido (mínimo 2 caracteres).';
         errFullName.classList.remove('hidden');
         isValid = false;
       }
-
-      // Validar teléfono
       if (!/^\d{10}$/.test(phone)) {
         errPhone.textContent = 'Ingresa 10 dígitos locales válidos.';
         errPhone.classList.remove('hidden');
         isValid = false;
       }
-
-      // Validar email
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         errEmail.textContent = 'Ingresa un email válido.';
         errEmail.classList.remove('hidden');
         isValid = false;
       }
-
-      // Validar invitedBy si el plan es Duo
       if (planSelect.value === 'duo' && !/^\d{10}$/.test(invitedBy)) {
         errInvitedBy.textContent = 'Ingresa 10 dígitos locales válidos.';
         errInvitedBy.classList.remove('hidden');
         isValid = false;
       }
-
       if (!isValid) return;
 
       form.phone.value = phone;
-      msg.textContent = 'Enviando…';
-      msg.style.color = '#6b7280'; // Gris
+      msg.textContent = 'Abriendo WhatsApp…';
+      msg.style.color = '#10b981';
       submitBtn.disabled = true;
 
-      // Preparar datos
       const whatsappAddress = `whatsapp:+549${phone}`;
       const data = {
         fullName: fullName,
@@ -180,11 +167,19 @@
       if (params.has('expired')) data.expired = params.get('expired');
 
       try {
-        // Configurar tiempo de espera
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 segundos
+        // 1. Abrir WhatsApp con mensaje predeterminado
+        const twilioNumber = '17432734544';
+        const greeting = 'Enviar este mensaje de Hola para activar Whatsapp';
+        const waLink = `https://wa.me/${twilioNumber}?text=${encodeURIComponent(greeting)}`;
+        window.open(waLink, '_blank');
 
-        // Enviar datos al webhook
+        // 2. Esperar 5 segundos para que el usuario envíe "Hola"
+        await new Promise(resolve => setTimeout(resolve, 5000));
+
+        // 3. Enviar los datos al webhook de n8n
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+
         const res = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -192,7 +187,6 @@
           mode: 'cors',
           signal: controller.signal,
         });
-
         clearTimeout(timeoutId);
 
         if (!res.ok) {
@@ -201,23 +195,16 @@
 
         const result = await res.json();
         msg.textContent = '¡Registro enviado correctamente!';
-        msg.style.color = '#10b981'; // Verde
-
-        // Mostrar enlace de activación si está presente
+        msg.style.color = '#10b981';
         if (result.activateUrl) {
           activarLink.href = result.activateUrl;
           activarLink.style.display = 'block';
         }
 
-        // Abrir WhatsApp
-        const twilioNumber = '17432734544';
-        const greeting = 'Hola';
-        const waLink = `https://wa.me/${twilioNumber}?text=${encodeURIComponent(greeting)}`;
-        window.open(waLink, '_blank');
       } catch (err) {
         console.error('Error al enviar al webhook:', err);
         msg.textContent = `Error al enviar el registro: ${err.message}. Intenta nuevamente.`;
-        msg.style.color = '#dc2626'; // Rojo
+        msg.style.color = '#dc2626';
       } finally {
         submitBtn.disabled = false;
       }
