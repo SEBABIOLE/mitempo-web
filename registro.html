@@ -166,48 +166,49 @@
       if (params.has('id_token')) data.id_token = params.get('id_token');
       if (params.has('expired')) data.expired = params.get('expired');
 
-      try {
-        // 1. Abrir WhatsApp con mensaje predeterminado
-        const twilioNumber = '17432734544';
-        const greeting = 'Enviar este mensaje de Hola para activar Whatsapp';
-        const waLink = `https://wa.me/${twilioNumber}?text=${encodeURIComponent(greeting)}`;
-        window.open(waLink, '_blank');
+    try {
+  // --- CONFIG ---
+  const twilioNumber = '17432734544'; // prod
+  const greeting = 'Enviar este mensaje de Hola para activar Whatsapp';
+  const waLink = `https://wa.me/${twilioNumber}?text=${encodeURIComponent(greeting)}`;
 
-        // 2. Esperar 5 segundos para que el usuario envíe "Hola"
-        await new Promise(resolve => setTimeout(resolve, 5000));
+  // --- 1) Enviar datos a n8n primero ---
+  // Usamos sendBeacon para evitar CORS/preflight y que no se corte si se abre otra pestaña
+  const payload = JSON.stringify(data);
+  let enviado = navigator.sendBeacon(
+    endpoint,
+    new Blob([payload], { type: 'text/plain;charset=UTF-8' })
+  );
 
-        // 3. Enviar los datos al webhook de n8n
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000);
+  // Fallback si el navegador no soporta Beacon o devolvió false
+  if (!enviado) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 20000);
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: payload,
+      mode: 'cors',
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+    if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
+  }
 
-        const res = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-          mode: 'cors',
-          signal: controller.signal,
-        });
-        clearTimeout(timeoutId);
+  // --- 2) Abrir WhatsApp recién ahora ---
+  window.open(waLink, '_blank', 'noopener');
 
-        if (!res.ok) {
-          throw new Error(`Error ${res.status}: ${res.statusText}`);
-        }
+  msg.textContent = '¡Registro enviado! Abrí WhatsApp y mandá “Hola”.';
+  msg.style.color = '#10b981';
 
-        const result = await res.json();
-        msg.textContent = '¡Registro enviado correctamente!';
-        msg.style.color = '#10b981';
-        if (result.activateUrl) {
-          activarLink.href = result.activateUrl;
-          activarLink.style.display = 'block';
-        }
+} catch (err) {
+  console.error('Error al enviar al webhook:', err);
+  msg.textContent = `Error al enviar el registro: ${err.message}. Intenta nuevamente.`;
+  msg.style.color = '#dc2626';
+} finally {
+  submitBtn.disabled = false;
+}
 
-      } catch (err) {
-        console.error('Error al enviar al webhook:', err);
-        msg.textContent = `Error al enviar el registro: ${err.message}. Intenta nuevamente.`;
-        msg.style.color = '#dc2626';
-      } finally {
-        submitBtn.disabled = false;
-      }
     });
   </script>
 </body>
