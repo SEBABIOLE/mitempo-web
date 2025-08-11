@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Activar MiTempo | Paso final</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', sans-serif; background:#f3f4f6; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white w-full max-w-md rounded-2xl shadow-lg p-6">
+    <h1 class="text-2xl font-semibold text-center mb-2">Activar MiTempo</h1>
+    <p id="hello" class="text-center text-gray-600 mb-6"></p>
+
+    <ol class="space-y-4 mb-6 text-gray-800">
+      <li class="flex gap-3">
+        <span class="shrink-0 w-6 h-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center">1</span>
+        <div>
+          <p class="font-medium">Abrí WhatsApp con el botón de abajo.</p>
+          <p class="text-sm text-gray-600">Se abrirá el chat con nuestro número.</p>
+        </div>
+      </li>
+      <li class="flex gap-3">
+        <span class="shrink-0 w-6 h-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center">2</span>
+        <div>
+          <p class="font-medium">Enviá el mensaje <span class="font-mono bg-gray-100 px-1 py-0.5 rounded">Hola</span>.</p>
+          <p class="text-sm text-gray-600">Eso inicia la conversación automáticamente.</p>
+        </div>
+      </li>
+      <li class="flex gap-3">
+        <span class="shrink-0 w-6 h-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center">3</span>
+        <div>
+          <p class="font-medium">Tocá “Ya mandé Hola”.</p>
+          <p class="text-sm text-gray-600">Te mostraremos el botón para continuar la activación.</p>
+        </div>
+      </li>
+    </ol>
+
+    <!-- CTA principal -->
+    <a id="waBtn" href="#" target="_blank" rel="noopener"
+       class="block w-full text-center bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg mb-3">
+      Abrir WhatsApp
+    </a>
+
+    <button id="doneBtn"
+      class="w-full border border-green-500 text-green-600 py-2 rounded-lg hover:bg-green-50">
+      Ya mandé “Hola”
+    </button>
+
+    <!-- Continuar (se revela después) -->
+    <a id="continueBtn" href="#" class="hidden mt-4 block w-full text-center bg-black text-white py-2 rounded-lg">
+      Continuar
+    </a>
+
+    <p class="text-xs text-gray-500 mt-4 text-center">
+      Si WhatsApp no abre, agregá nuestro número manualmente y enviá “Hola”.
+    </p>
+  </div>
+
+  <script>
+    // Config
+    const TWILIO_NUMBER = '17432734544';       // sin '+' para wa.me
+    const DEFAULT_MSG   = 'Hola';
+
+    // Query params
+    const qp = new URLSearchParams(location.search);
+    const u = (qp.get('u') || '').replace(/\D/g, '').slice(-10); // 10 dígitos AR
+    const p = (qp.get('p') || '').toLowerCase();
+    const n = qp.get('n') || '';
+
+    // Validación simple
+    if (!/^\d{10}$/.test(u) || !p) {
+      document.body.innerHTML = `
+        <div class="max-w-md mx-auto p-6 text-center">
+          <h2 class="text-xl font-semibold mb-2">Faltan datos para activar</h2>
+          <p class="text-gray-600">Volvé al registro e intentá nuevamente.</p>
+        </div>`;
+    }
+
+    // Mensaje superior
+    const hello = document.getElementById('hello');
+    hello.textContent = n ? `Hola ${n}, faltan 10 segundos.` : 'Faltan 10 segundos.';
+
+    // Enlace a WhatsApp
+    const waLink = `https://wa.me/${TWILIO_NUMBER}?text=${encodeURIComponent(DEFAULT_MSG)}`;
+    document.getElementById('waBtn').href = waLink;
+
+    // Mostrar "Continuar" cuando ya envió Hola
+    const cont = document.getElementById('continueBtn');
+    document.getElementById('doneBtn').addEventListener('click', () => {
+      cont.href = `/auth.html?u=${encodeURIComponent(u)}&p=${encodeURIComponent(p)}`;
+      cont.classList.remove('hidden');
+      cont.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  </script>
+</body>
+</html>
