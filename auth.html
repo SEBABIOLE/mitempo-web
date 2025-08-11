@@ -16,6 +16,7 @@
     <h1 class="text-2xl font-semibold text-center mb-2">Conectar con Google</h1>
     <p id="hello" class="text-center text-gray-600 mb-6"></p>
 
+    <!-- Vista inicial -->
     <div id="initial">
       <div class="bg-green-50 border border-green-100 rounded-lg p-4 text-sm text-green-800 mb-4">
         Para que MiTempo funcione, necesitamos permiso para:
@@ -37,7 +38,7 @@
           <span class="shrink-0 w-6 h-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center">2</span>
           <div>
             <p class="font-medium">Aceptá los permisos.</p>
-            <p class="text-sm text-gray-600">Son solo para que el asistente pueda escribir en tu hoja y agendar.</p>
+            <p class="text-sm text-gray-600">Solo para que el asistente pueda escribir en tu hoja y agendar.</p>
           </div>
         </li>
         <li class="flex gap-3">
@@ -57,10 +58,10 @@
       </p>
     </div>
 
-    <!-- Estado después del callback -->
+    <!-- Vista de estado después del callback -->
     <div id="status" class="hidden">
       <div id="statusBox" class="rounded-lg p-4 mb-4"></div>
-      <div id="actions" class="flex flex-col gap-3">
+      <div class="flex flex-col gap-3">
         <a id="finishBtn" href="#" class="hidden text-center bg-black text-white py-2 rounded-lg">Finalizar</a>
         <a id="retryBtn" href="#" class="hidden text-center border border-green-500 text-green-600 py-2 rounded-lg hover:bg-green-50">Reintentar</a>
       </div>
@@ -69,11 +70,11 @@
   </div>
 
   <script>
-    // ===== CONFIG =====
-    const GOOGLE_CLIENT_ID = 'TU_CLIENT_ID.apps.googleusercontent.com'; // ← REEMPLAZAR
-    const REDIRECT_URI     = 'https://mitempo.app/google/oauth/callback'; // ← habilitado en Google Cloud
+    // ===== CONFIG (sin tocar n8n) =====
+    const GOOGLE_CLIENT_ID = 'TU_CLIENT_ID.apps.googleusercontent.com';   // ← poné el tuyo
+    const REDIRECT_URI     = 'https://mitempo.app/google/oauth/callback'; // ← tu callback actual
     const SCOPES = [
-      'openid', 'email',                    // ← necesario para recibir id_token con email
+      'openid', 'email', // para que Google incluya id_token con email
       'https://www.googleapis.com/auth/spreadsheets',
       'https://www.googleapis.com/auth/calendar'
     ];
@@ -84,9 +85,10 @@
     // ===== UTILS =====
     const $ = (id) => document.getElementById(id);
     const qp = new URLSearchParams(location.search);
-    const u = (qp.get('u') || '').replace(/\D/g,'').slice(-10);
+    const u = (qp.get('u') || '').replace(/\D/g,'').slice(-10);  // 10 dígitos AR
     const p = (qp.get('p') || '').toLowerCase();
     const n = qp.get('n') || '';
+    // Estos 3 parámetros son los que tu callback ya puede estar enviando:
     const emailFromCb = qp.get('email') || '';
     const idToken     = qp.get('id_token') || '';
     const expired     = (qp.get('expired') || '').toLowerCase() === 'true';
@@ -103,6 +105,7 @@
 
     $('hello').textContent = n ? `Hola ${n}. Conectemos tu cuenta de Google.` : 'Conectemos tu cuenta de Google.';
 
+    // URL de autorización (usa tu redirect actual; no hay que tocar n8n)
     function buildAuthUrl() {
       const stateObj = {
         v: 1, csrf: randomId(),
@@ -164,10 +167,11 @@
       $('details').textContent = 'Si persiste, probá con otra cuenta o escribinos.';
     }
 
+    // Decide vista en base a lo que YA devuelve tu callback actual
     if (errParam)      showStatusError(errParam);
     else if (expired)  showStatusExpired();
-    else if (idToken)  showStatusOk();
-    else               showInitial();
+    else if (idToken)  showStatusOk();     // tu callback ya agrega ?id_token=&email=
+    else               showInitial();      // primer ingreso: mostrar botón "Conectar con Google"
   </script>
 </body>
 </html>
