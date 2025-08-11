@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gracias | Paso siguiente en WhatsApp</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; base-uri 'self';
+                 script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com;
+                 style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+                 font-src https://fonts.gstatic.com; img-src 'self' data:;
+                 connect-src 'self'; frame-ancestors 'none';">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>body{font-family:Inter,sans-serif;background:#f3f4f6}</style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white w-full max-w-md rounded-2xl shadow-lg p-6 text-center">
+    <h1 class="text-2xl font-semibold mb-2">¡Registro enviado!</h1>
+    <p class="text-gray-700 mb-4">
+      Te acabamos de escribir por WhatsApp. Abrí el chat y respondé <b>Hola</b> para continuar.
+    </p>
+    <a id="waBtn" href="#" target="_blank" rel="noopener"
+       class="inline-block bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg">
+      Abrir WhatsApp
+    </a>
+    <p class="text-xs text-gray-500 mt-3">Si WhatsApp no abre, buscá el último chat nuevo y escribí “Hola”.</p>
+  </div>
+  <script>
+    const TWILIO_NUMBER='17432734544'; // sin '+'
+    const DEFAULT_MSG='Hola';
+    document.getElementById('waBtn').href =
+      `https://wa.me/${TWILIO_NUMBER}?text=${encodeURIComponent(DEFAULT_MSG)}`;
+  </script>
+</body>
+</html>
