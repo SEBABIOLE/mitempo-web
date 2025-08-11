@@ -6,6 +6,7 @@
   <title>Registro | MiTempo.app</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <meta name="color-scheme" content="light only">
   <style>
     body { font-family: 'Inter', sans-serif; background: #f3f4f6; }
     .error { color: #dc2626; font-size: .875rem; margin-top: 0.25rem; }
@@ -18,32 +19,32 @@
   <div class="bg-white w-full max-w-md rounded-2xl shadow-lg p-6">
     <h1 class="text-2xl font-semibold mb-4 text-center">Regístrate y activa tu prueba</h1>
 
-    <div id="msg"></div>
+    <div id="msg" role="status" aria-live="polite"></div>
 
     <form id="form" class="space-y-4" novalidate>
       <div>
-        <label class="block text-sm font-medium mb-1">Nombre y Apellido <span class="text-red-500">*</span></label>
-        <input type="text" id="fullName" required
+        <label class="block text-sm font-medium mb-1" for="fullName">Nombre y Apellido <span class="text-red-500">*</span></label>
+        <input type="text" id="fullName" required autocomplete="name"
                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
         <p id="errFullName" class="error hidden">Ingresa un nombre válido (mínimo 2 caracteres).</p>
       </div>
 
       <div>
-        <label class="block text-sm font-medium mb-1">WhatsApp (10 dígitos locales, sin 0 ni prefijo) <span class="text-red-500">*</span></label>
+        <label class="block text-sm font-medium mb-1" for="phone">WhatsApp (10 dígitos locales, sin 0 ni prefijo) <span class="text-red-500">*</span></label>
         <input type="text" id="phone" inputmode="numeric" autocomplete="tel" required
                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
         <p id="errPhone" class="error hidden">Ingresa 10 dígitos locales válidos.</p>
       </div>
 
       <div>
-        <label class="block text-sm font-medium mb-1">Email <span class="text-red-500">*</span></label>
+        <label class="block text-sm font-medium mb-1" for="email">Email <span class="text-red-500">*</span></label>
         <input type="email" id="email" autocomplete="email" required
                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
         <p id="errEmail" class="error hidden">Ingresa un email válido.</p>
       </div>
 
       <div>
-        <label class="block text-sm font-medium mb-1">Plan <span class="text-red-500">*</span></label>
+        <label class="block text-sm font-medium mb-1" for="plan">Plan <span class="text-red-500">*</span></label>
         <select id="plan" required
                 class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400">
           <option value="prueba">Prueba</option>
@@ -55,15 +56,15 @@
       </div>
 
       <div id="invitedByContainer" class="hidden">
-        <label class="block text-sm font-medium mb-1">¿Invitado por alguien? (celular de la persona) <span class="text-red-500">*</span></label>
-        <input type="text" id="invitedBy" placeholder="1234567890" inputmode="numeric"
+        <label class="block text-sm font-medium mb-1" for="invitedBy">¿Invitado por alguien? (celular de la persona) <span class="text-red-500">*</span></label>
+        <input type="text" id="invitedBy" placeholder="1234567890" inputmode="numeric" autocomplete="tel-national"
                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
         <p id="errInvitedBy" class="error hidden">Ingresa 10 dígitos locales válidos.</p>
       </div>
 
       <div>
-        <label class="block text-sm font-medium mb-1">¿Cómo te enteraste de MiTempo? (opcional)</label>
-        <input type="text" id="howHeard"
+        <label class="block text-sm font-medium mb-1" for="howHeard">¿Cómo te enteraste de MiTempo? (opcional)</label>
+        <input type="text" id="howHeard" autocomplete="off"
                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
       </div>
 
@@ -80,10 +81,13 @@
 
     // --- Helpers ---
     const $ = id => document.getElementById(id);
-    function qp(name) { const p = new URLSearchParams(location.search); return p.get(name) || ''; }
+    const qp = new URLSearchParams(location.search);
+    const safe = s => (s || '').toString().replace(/[<>"'`]/g, ''); // mínimo saneo para UI
+
     function resetUI() {
       ['errFullName','errPhone','errEmail','errInvitedBy'].forEach(id => $(id).classList.add('hidden'));
-      $('msg').textContent = ''; $('msg').style.color = ''; $('submitBtn').disabled = false; console.clear();
+      $('msg').textContent = ''; $('msg').style.color = ''; $('submitBtn').disabled = false;
+      console.clear();
     }
     function toggleDuo() {
       const isDuo = $('plan').value === 'duo';
@@ -91,11 +95,23 @@
       const i = $('invitedBy');
       if (isDuo) i.setAttribute('required','true'); else { i.removeAttribute('required'); i.value=''; $('errInvitedBy').classList.add('hidden'); }
     }
-    $('plan').addEventListener('change', toggleDuo); toggleDuo();
+    $('plan').addEventListener('change', toggleDuo);
+
+    // Prefill opcional por URL (?p=prueba&n=Sebas)
+    const p0 = (qp.get('p') || '').toLowerCase();
+    if (p0 && ['prueba','bronce','plata','oro','duo'].includes(p0)) { $('plan').value = p0; }
+    const n0 = safe(qp.get('n') || '');
+    if (n0) $('fullName').value = n0;
+    toggleDuo();
 
     // --- Submit ---
+    let sending = false;
     $('form').addEventListener('submit', async (e) => {
-      e.preventDefault(); resetUI();
+      e.preventDefault();
+      if (sending) return;
+      sending = true;
+
+      resetUI();
 
       const fullName = $('fullName').value.trim();
       const phoneRaw = $('phone').value.trim().replace(/\D/g,'').replace(/^0+/, '');
@@ -110,7 +126,7 @@
       if (!/^\d{10}$/.test(phoneRaw)) { $('errPhone').classList.remove('hidden'); ok=false; }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { $('errEmail').classList.remove('hidden'); ok=false; }
       if (plan==='duo' && !/^\d{10}$/.test(invitedRaw)) { $('errInvitedBy').classList.remove('hidden'); ok=false; }
-      if (!ok) return;
+      if (!ok) { sending = false; return; }
 
       // Normalizaciones
       const celular10 = phoneRaw;
@@ -119,7 +135,7 @@
       const invited_e164 = plan==='duo' ? `+549${invitedRaw}` : '';
       const invited_wa   = invited_e164 ? `whatsapp:${invited_e164}` : '';
 
-      // Payload (duplicados *_txt para guardar como TEXTO en Sheets)
+      // Payload (incluye duplicados *_txt para TEXT en Sheets)
       const data = {
         Nombre: fullName,
         Email: email,
@@ -129,7 +145,7 @@
         user_id: celular_whatsapp,
         plan,
         origen: howHeard,
-        howHeard, // redundante
+        howHeard,
 
         Celular_txt: `'${celular10}`,
         celular_e164_txt: `'+549${celular10}`,
@@ -143,10 +159,9 @@
         invitedBy_e164_txt: invited_e164 ? `'${invited_e164}` : '',
         invitedBy_whatsapp_txt: invited_wa ? `'${invited_wa}` : '',
 
-        // Passthrough desde URL (compatibilidad con tu flujo)
-        state: qp('state'),
-        id_token: qp('id_token'),
-        expired: qp('expired')
+        state: qp.get('state') || '',
+        id_token: qp.get('id_token') || '',
+        expired: qp.get('expired') || ''
       };
 
       try {
@@ -178,8 +193,8 @@
 
         // Fallback: sendBeacon (text/plain)
         if (!enviado) {
-          const ok = navigator.sendBeacon(ENDPOINT, new Blob([payload], { type: 'text/plain;charset=UTF-8' }));
-          if (!ok) throw new Error('No se pudo enviar el registro.');
+          const ok2 = navigator.sendBeacon(ENDPOINT, new Blob([payload], { type: 'text/plain;charset=UTF-8' }));
+          if (!ok2) throw new Error('No se pudo enviar el registro.');
         }
 
         // OK -> redirige a activar.html
@@ -189,8 +204,9 @@
         console.error('Error al enviar al webhook:', err);
         $('msg').textContent = `Error al enviar el registro: ${err.message || err}. Intenta nuevamente.`;
         $('msg').style.color = '#dc2626';
-      } finally {
         $('submitBtn').disabled = false;
+      } finally {
+        sending = false;
       }
     });
   </script>
