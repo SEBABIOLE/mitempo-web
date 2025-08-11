@@ -4,15 +4,25 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Registro | MiTempo.app</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; base-uri 'self';
+                 script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com;
+                 style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+                 font-src https://fonts.gstatic.com;
+                 img-src 'self' data:;
+                 connect-src 'self' https://sebabiole.app.n8n.cloud;
+                 frame-ancestors 'none';">
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-  <meta name="color-scheme" content="light only">
   <style>
     body { font-family: 'Inter', sans-serif; background: #f3f4f6; }
     .error { color: #dc2626; font-size: .875rem; margin-top: 0.25rem; }
     #msg { text-align: center; margin-bottom: 1rem; font-size: 1rem; }
     button:disabled { opacity: .6; cursor: not-allowed; }
     .hidden { display: none; }
+    #debug { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+             white-space: pre-wrap; font-size: 12px; background:#0b1020; color:#e4e7ef; padding:10px; border-radius:8px; margin-top:14px; display:none;}
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
@@ -72,22 +82,23 @@
               class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition">
         Enviar Registro
       </button>
+
+      <div id="debug"></div>
     </form>
   </div>
 
   <script>
-    // --- Config ---
     const ENDPOINT = 'https://sebabiole.app.n8n.cloud/webhook/registro-formulario';
-
-    // --- Helpers ---
     const $ = id => document.getElementById(id);
     const qp = new URLSearchParams(location.search);
-    const safe = s => (s || '').toString().replace(/[<>"'`]/g, ''); // mínimo saneo para UI
+    const debug = qp.get('debug') === '1';
+    const log = (...a) => { if (debug) { console.log(...a); const d=$('debug'); d.style.display='block'; d.textContent += a.map(x => typeof x==='string'?x:JSON.stringify(x,null,2)).join(' ') + '\\n'; } };
+
+    const safe = s => (s || '').toString().replace(/[<>"'`]/g, '');
 
     function resetUI() {
       ['errFullName','errPhone','errEmail','errInvitedBy'].forEach(id => $(id).classList.add('hidden'));
       $('msg').textContent = ''; $('msg').style.color = ''; $('submitBtn').disabled = false;
-      console.clear();
     }
     function toggleDuo() {
       const isDuo = $('plan').value === 'duo';
@@ -97,22 +108,26 @@
     }
     $('plan').addEventListener('change', toggleDuo);
 
-    // Prefill opcional por URL (?p=prueba&n=Sebas)
+    // Prefill opcional
     const p0 = (qp.get('p') || '').toLowerCase();
     if (p0 && ['prueba','bronce','plata','oro','duo'].includes(p0)) { $('plan').value = p0; }
     const n0 = safe(qp.get('n') || '');
     if (n0) $('fullName').value = n0;
     toggleDuo();
 
-    // --- Submit ---
-    let sending = false;
+    // Helper timeout para fetch
+    const fetchWithTimeout = (url, opts={}, ms=20000) => {
+      const controller = new AbortController();
+      const t = setTimeout(() => controller.abort(), ms);
+      const merged = { ...opts, signal: controller.signal };
+      return fetch(url, merged).finally(() => clearTimeout(t));
+    };
+
     $('form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      if (sending) return;
-      sending = true;
-
       resetUI();
 
+      // Validaciones
       const fullName = $('fullName').value.trim();
       const phoneRaw = $('phone').value.trim().replace(/\D/g,'').replace(/^0+/, '');
       const email = $('email').value.trim();
@@ -120,33 +135,32 @@
       const invitedRaw = ($('invitedBy').value || '').trim().replace(/\D/g,'').replace(/^0+/, '');
       const howHeard = $('howHeard').value.trim();
 
-      // Validaciones
       let ok = true;
       if (!/^[a-zA-ZÁÉÍÓÚáéíóúñÑ\s]{2,}$/.test(fullName)) { $('errFullName').classList.remove('hidden'); ok=false; }
       if (!/^\d{10}$/.test(phoneRaw)) { $('errPhone').classList.remove('hidden'); ok=false; }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { $('errEmail').classList.remove('hidden'); ok=false; }
       if (plan==='duo' && !/^\d{10}$/.test(invitedRaw)) { $('errInvitedBy').classList.remove('hidden'); ok=false; }
-      if (!ok) { sending = false; return; }
+      if (!ok) return;
 
-      // Normalizaciones
       const celular10 = phoneRaw;
       const celular_e164 = `+549${celular10}`;
       const celular_whatsapp = `whatsapp:${celular_e164}`;
       const invited_e164 = plan==='duo' ? `+549${invitedRaw}` : '';
       const invited_wa   = invited_e164 ? `whatsapp:${invited_e164}` : '';
 
-      // Payload (incluye duplicados *_txt para TEXT en Sheets)
+      // Payload EXACTO que espera tu webhook (queda dentro de body en n8n)
       const data = {
         Nombre: fullName,
         Email: email,
-        Celular: celular10,
-        celular_e164,
-        celular_whatsapp,
-        user_id: celular_whatsapp,
+        Celular: celular10,                 // 10 dígitos
+        celular_e164,                       // +549XXXXXXXXXX
+        celular_whatsapp,                   // whatsapp:+549XXXXXXXXXX
+        user_id: celular_whatsapp,          // usamos ESTE para lookups
         plan,
         origen: howHeard,
         howHeard,
 
+        // duplicados para TEXT en Sheets
         Celular_txt: `'${celular10}`,
         celular_e164_txt: `'+549${celular10}`,
         celular_whatsapp_txt: `'whatsapp:+549${celular10}`,
@@ -164,49 +178,61 @@
         expired: qp.get('expired') || ''
       };
 
+      $('msg').textContent = 'Enviando registro…';
+      $('msg').style.color = '#10b981';
+      $('submitBtn').disabled = true;
+
+      log('Origin:', location.origin);
+      if (debug && location.origin !== 'https://mitempo.app') {
+        log('⚠️ OJO: el Webhook tiene CORS restringido a https://mitempo.app. Si probás desde otro origen, fetch va a fallar.');
+      }
+
+      const payload = JSON.stringify(data);
+      let enviado = false;
+      let lastError = null;
+
+      // 1) fetch JSON (con timeout, CORS)
       try {
-        $('msg').textContent = 'Enviando registro…';
-        $('msg').style.color = '#10b981';
-        $('submitBtn').disabled = true;
-
-        const payload = JSON.stringify(data);
-
-        // Principal: fetch JSON
-        let enviado = false;
-        try {
-          const controller = new AbortController();
-          const t = setTimeout(() => controller.abort(), 20000);
-          const res = await fetch(ENDPOINT, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: payload,
-            mode: 'cors',
-            keepalive: true,
-            signal: controller.signal,
-          });
-          clearTimeout(t);
-          if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
-          enviado = true;
-        } catch (err) {
-          console.warn('fetch falló, intento sendBeacon:', err?.message || err);
-        }
-
-        // Fallback: sendBeacon (text/plain)
-        if (!enviado) {
-          const ok2 = navigator.sendBeacon(ENDPOINT, new Blob([payload], { type: 'text/plain;charset=UTF-8' }));
-          if (!ok2) throw new Error('No se pudo enviar el registro.');
-        }
-
-        // OK -> redirige a gracias.html
-        location.href = `/gracias.html;
-
+        const res = await fetchWithTimeout(ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: payload,
+          mode: 'cors',
+          keepalive: true,
+        }, 20000);
+        log('fetch status:', res.status);
+        if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+        enviado = true;
       } catch (err) {
-        console.error('Error al enviar al webhook:', err);
-        $('msg').textContent = `Error al enviar el registro: ${err.message || err}. Intenta nuevamente.`;
+        lastError = err;
+        log('fetch error:', err && (err.message || err));
+      }
+
+      // 2) fallback sendBeacon (text/plain)
+      if (!enviado) {
+        try {
+          const ok2 = navigator.sendBeacon(
+            ENDPOINT,
+            new Blob([payload], { type: 'text/plain;charset=UTF-8' })
+          );
+          log('sendBeacon result:', ok2);
+          if (!ok2) throw new Error('sendBeacon devolvió false');
+          enviado = true;
+        } catch (err2) {
+          lastError = err2;
+          log('sendBeacon error:', err2 && (err2.message || err2));
+        }
+      }
+
+      if (enviado) {
+        $('msg').textContent = '¡Listo! Te acabamos de escribir por WhatsApp. Abrí el chat y respondé “Hola”.';
+        $('msg').style.color = '#10b981';
+        // Paso 2: pantalla de gracias (simple)
+        setTimeout(() => { window.location.href = '/gracias.html'; }, debug ? 2000 : 600);
+      } else {
+        $('msg').textContent = `No pudimos enviar el registro. ${lastError ? (lastError.message || lastError) : ''}`;
         $('msg').style.color = '#dc2626';
         $('submitBtn').disabled = false;
-      } finally {
-        sending = false;
       }
     });
   </script>
