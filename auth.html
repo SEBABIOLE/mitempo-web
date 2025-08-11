@@ -4,174 +4,252 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Conectar con Google | MiTempo</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <meta name="color-scheme" content="light dark" />
   <style>
-    body { font-family: 'Inter', sans-serif; background:#f3f4f6; }
-    .card { background:#fff; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,.06); }
+    :root {
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --brand: #16a34a;
+      --brand-600: #059669;
+      --warn: #b91c1c;
+      --ring: rgba(22, 163, 74, 0.25);
+      --shadow: 0 10px 25px rgba(2, 6, 23, 0.08);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b1220;
+      --card: #0f172a;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --shadow: 0 10px 25px rgba(0,0,0,0.5);
+      }
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      background: radial-gradient(1200px 1200px at 50% -10%, #e8fff1 0%, var(--bg) 45%);
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .card {
+      width: 100%;
+      max-width: 520px;
+      background: var(--card);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+    .logo {
+      display: grid;
+      place-items: center;
+      margin-bottom: 8px;
+    }
+    .logo-circle {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--brand), var(--brand-600));
+      display: grid; place-items: center;
+      color: #fff; font-weight: 800; letter-spacing: .5px;
+    }
+    h1 {
+      font-size: clamp(20px, 2.2vw, 26px);
+      margin: 8px 0 6px;
+      text-align: center;
+    }
+    p.sub {
+      margin: 0 0 16px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 14px;
+    }
+    .notice {
+      background: #ecfdf5;
+      border: 1px solid #d1fae5;
+      color: #064e3b;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      margin: 14px 0 18px;
+    }
+    .steps { margin: 16px 0 18px; padding-left: 2px;}
+    .step { display: grid; grid-template-columns: 28px 1fr; gap: 10px; margin: 10px 0; }
+    .bullet {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: grid; place-items: center;
+      background: #e7f6ee; color: #065f46; font-weight: 700; font-size: 13px;
+      border: 1px solid #c7f0db;
+    }
+    .step p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+    .btn {
+      width: 100%;
+      border: 0;
+      background: var(--brand);
+      color: white;
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 6px 16px var(--ring);
+      transition: transform .06s ease, filter .2s ease;
+    }
+    .btn:hover { filter: brightness(1.03); }
+    .btn:active { transform: translateY(1px); }
+    .btn:disabled { opacity: .6; cursor: not-allowed; }
+    .hint {
+      margin-top: 10px; color: var(--muted); font-size: 12px; text-align: center;
+    }
+    .error {
+      background: #fef2f2; border: 1px solid #fecaca; color: var(--warn);
+      padding: 10px 12px; border-radius: 10px; font-size: 14px; margin: 8px 0 14px;
+    }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .fade-in { animation: fade .35s ease; }
+    @keyframes fade { from {opacity:.6; transform: translateY(2px);} to {opacity:1; transform:none;} }
   </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
-  <div class="card w-full max-w-lg p-6">
-    <h1 class="text-2xl font-semibold text-center mb-2">Conectar con Google</h1>
-    <p id="hello" class="text-center text-gray-600 mb-6"></p>
+<body>
+  <main class="card fade-in" id="card">
+    <div class="logo">
+      <div class="logo-circle">MT</div>
+    </div>
+    <h1>Conectar con Google</h1>
+    <p class="sub">Conectemos tu cuenta para que MiTempo funcione.</p>
 
-    <!-- Vista inicial -->
-    <div id="initial">
-      <div class="bg-green-50 border border-green-100 rounded-lg p-4 text-sm text-green-800 mb-4">
-        Para que MiTempo funcione, necesitamos permiso para:
-        <ul class="list-disc pl-5 mt-2">
-          <li>Crear y actualizar tus <b>Google Sheets</b>.</li>
-          <li>Leer y gestionar eventos en tu <b>Google Calendar</b>.</li>
-        </ul>
-      </div>
-
-      <ol class="space-y-4 mb-6 text-gray-800">
-        <li class="flex gap-3">
-          <span class="shrink-0 w-6 h-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center">1</span>
-          <div>
-            <p class="font-medium">Tocá “Conectar con Google”.</p>
-            <p class="text-sm text-gray-600">Se abrirá la pantalla segura de Google para autorizar.</p>
-          </div>
-        </li>
-        <li class="flex gap-3">
-          <span class="shrink-0 w-6 h-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center">2</span>
-          <div>
-            <p class="font-medium">Aceptá los permisos.</p>
-            <p class="text-sm text-gray-600">Solo para que el asistente pueda escribir en tu hoja y agendar.</p>
-          </div>
-        </li>
-        <li class="flex gap-3">
-          <span class="shrink-0 w-6 h-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center">3</span>
-          <div>
-            <p class="font-medium">Volverás acá automáticamente.</p>
-            <p class="text-sm text-gray-600">Te confirmamos si quedó conectado.</p>
-          </div>
-        </li>
-      </ol>
-
-      <a id="connectBtn" href="#" class="block w-full text-center bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg mb-3">
-        Conectar con Google
-      </a>
-      <p class="text-xs text-gray-500 text-center">
-        Si tenés varias cuentas, elegí la que vas a usar con MiTempo.
-      </p>
+    <div class="notice" id="notice">
+      <strong>Permisos necesarios:</strong>
+      <div style="height:6px"></div>
+      • Crear y actualizar tus <strong>Google Sheets</strong>.<br/>
+      • Leer y gestionar eventos en tu <strong>Google Calendar</strong>.
     </div>
 
-    <!-- Vista de estado después del callback -->
-    <div id="status" class="hidden">
-      <div id="statusBox" class="rounded-lg p-4 mb-4"></div>
-      <div class="flex flex-col gap-3">
-        <a id="finishBtn" href="#" class="hidden text-center bg-black text-white py-2 rounded-lg">Finalizar</a>
-        <a id="retryBtn" href="#" class="hidden text-center border border-green-500 text-green-600 py-2 rounded-lg hover:bg-green-50">Reintentar</a>
+    <div class="steps">
+      <div class="step">
+        <div class="bullet">1</div>
+        <div>
+          <strong>Tocá “Conectar con Google”.</strong>
+          <p>Se abrirá la pantalla segura de Google para autorizar.</p>
+        </div>
       </div>
-      <p id="details" class="text-xs text-gray-500 mt-4"></p>
+      <div class="step">
+        <div class="bullet">2</div>
+        <div>
+          <strong>Aceptá los permisos.</strong>
+          <p>Solo para que el asistente pueda escribir en tu hoja y agendar.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="bullet">3</div>
+        <div>
+          <strong>Vas a volver acá automáticamente.</strong>
+          <p>Te confirmamos si quedó conectado.</p>
+        </div>
+      </div>
     </div>
-  </div>
+
+    <div id="errorBox" class="error" style="display:none"></div>
+
+    <button id="connectBtn" class="btn">
+      Conectar con Google
+    </button>
+    <div class="hint" id="hint">Si tenés varias cuentas, elegí la que vas a usar con MiTempo.</div>
+  </main>
 
   <script>
-    // ===== CONFIG (sin tocar n8n) =====
-    const GOOGLE_CLIENT_ID = 'TU_CLIENT_ID.apps.googleusercontent.com';   // ← poné el tuyo
-    const REDIRECT_URI     = 'https://mitempo.app/google/oauth/callback'; // ← tu callback actual
+    // ≡≡≡ CONFIG ≡≡≡
+    const GOOGLE_CLIENT_ID = "TU_CLIENT_ID_DE_GOOGLE.apps.googleusercontent.com"; // ← REEMPLAZAR
+    const REDIRECT_URI     = "https://sebabiole.app.n8n.cloud/webhook/google-callback"; // webhook n8n
+    // Scopes mínimos para tu caso (podés ajustar/expandir)
     const SCOPES = [
-      'openid', 'email', // para que Google incluya id_token con email
-      'https://www.googleapis.com/auth/spreadsheets',
-      'https://www.googleapis.com/auth/calendar'
+      "https://www.googleapis.com/auth/spreadsheets",
+      "https://www.googleapis.com/auth/calendar"
     ];
-    const ACCESS_TYPE = 'offline';
-    const PROMPT      = 'consent';
-    const INCLUDE_GRANTED = 'true';
 
-    // ===== UTILS =====
-    const $ = (id) => document.getElementById(id);
-    const qp = new URLSearchParams(location.search);
-    const u = (qp.get('u') || '').replace(/\D/g,'').slice(-10);  // 10 dígitos AR
-    const p = (qp.get('p') || '').toLowerCase();
-    const n = qp.get('n') || '';
-    // Estos 3 parámetros son los que tu callback ya puede estar enviando:
-    const emailFromCb = qp.get('email') || '';
-    const idToken     = qp.get('id_token') || '';
-    const expired     = (qp.get('expired') || '').toLowerCase() === 'true';
-    const errParam    = qp.get('error') || '';
+    // ≡≡≡ HELPERS ≡≡≡
+    const $  = sel => document.querySelector(sel);
+    const qs = new URLSearchParams(location.search);
 
-    function b64urlEncode(str) {
-      return btoa(unescape(encodeURIComponent(str))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-    }
-    function randomId(len=12) {
-      const arr = new Uint8Array(len);
-      crypto.getRandomValues(arr);
-      return Array.from(arr, b => ('0' + b.toString(16)).slice(-2)).join('');
+    function b64url(str) {
+      return btoa(str).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/,"");
     }
 
-    $('hello').textContent = n ? `Hola ${n}. Conectemos tu cuenta de Google.` : 'Conectemos tu cuenta de Google.';
-
-    // URL de autorización (usa tu redirect actual; no hay que tocar n8n)
-    function buildAuthUrl() {
-      const stateObj = {
-        v: 1, csrf: randomId(),
-        u, p, n,
-        return_url: `${location.origin}/auth.html`
-      };
-      const state = b64urlEncode(JSON.stringify(stateObj));
-      const url = new URL('https://accounts.google.com/o/oauth2/v2/auth');
-      url.searchParams.set('client_id', GOOGLE_CLIENT_ID);
-      url.searchParams.set('redirect_uri', REDIRECT_URI);
-      url.searchParams.set('response_type', 'code');
-      url.searchParams.set('scope', SCOPES.join(' '));
-      url.searchParams.set('access_type', ACCESS_TYPE);
-      url.searchParams.set('include_granted_scopes', INCLUDE_GRANTED);
-      url.searchParams.set('prompt', PROMPT);
-      url.searchParams.set('state', state);
-      const eHint = qp.get('e');
-      if (eHint) url.searchParams.set('login_hint', eHint.trim());
-      return url.toString();
+    function showError(msg) {
+      const box = $("#errorBox");
+      box.textContent = msg;
+      box.style.display = "block";
     }
 
-    function showInitial() {
-      $('connectBtn').href = buildAuthUrl();
-      $('initial').classList.remove('hidden');
-      $('status').classList.add('hidden');
-    }
-    function showStatusOk() {
-      $('initial').classList.add('hidden');
-      $('status').classList.remove('hidden');
-      const box = $('statusBox');
-      box.className = 'rounded-lg p-4 mb-4 bg-green-50 border border-green-100 text-green-800';
-      box.innerHTML = `
-        <div class="font-medium mb-1">¡Listo! Tu cuenta quedó conectada.</div>
-        <div class="text-sm">${emailFromCb ? `Cuenta: <b>${emailFromCb}</b>` : 'Conexión verificada.'}</div>`;
-      $('finishBtn').href = `https://wa.me/17432734544?text=${encodeURIComponent('Listo, ya conecté Google ✅')}`;
-      $('finishBtn').classList.remove('hidden');
-      $('details').textContent = 'Podés volver a WhatsApp y empezar a usar MiTempo.';
-    }
-    function showStatusExpired() {
-      $('initial').classList.add('hidden');
-      $('status').classList.remove('hidden');
-      const box = $('statusBox');
-      box.className = 'rounded-lg p-4 mb-4 bg-yellow-50 border border-yellow-100 text-yellow-800';
-      box.innerHTML = `<div class="font-medium mb-1">La sesión expiró.</div>
-                       <div class="text-sm">Volvé a intentar la conexión.</div>`;
-      $('retryBtn').href = buildAuthUrl();
-      $('retryBtn').classList.remove('hidden');
-      $('details').textContent = 'Google expira algunos intentos si tardamos demasiado.';
-    }
-    function showStatusError(msg) {
-      $('initial').classList.add('hidden');
-      $('status').classList.remove('hidden');
-      const box = $('statusBox');
-      box.className = 'rounded-lg p-4 mb-4 bg-red-50 border border-red-100 text-red-800';
-      box.innerHTML = `<div class="font-medium mb-1">No pudimos conectar.</div>
-                       <div class="text-sm">${msg || 'Intentá nuevamente.'}</div>`;
-      $('retryBtn').href = buildAuthUrl();
-      $('retryBtn').classList.remove('hidden');
-      $('details').textContent = 'Si persiste, probá con otra cuenta o escribinos.';
+    function normalizePhone(val) {
+      // trae últimos 10 dígitos (formato local argentino, ej: 3382416087)
+      const d = String(val || "").replace(/\D/g, "");
+      return d.slice(-10);
     }
 
-    // Decide vista en base a lo que YA devuelve tu callback actual
-    if (errParam)      showStatusError(errParam);
-    else if (expired)  showStatusExpired();
-    else if (idToken)  showStatusOk();     // tu callback ya agrega ?id_token=&email=
-    else               showInitial();      // primer ingreso: mostrar botón "Conectar con Google"
+    function buildAuthUrl(u, p) {
+      const stateObj = { u, p, ts: Date.now() };
+      const stateB64 = b64url(JSON.stringify(stateObj));
+      const params = new URLSearchParams({
+        client_id: GOOGLE_CLIENT_ID,
+        redirect_uri: REDIRECT_URI,
+        response_type: "code",
+        scope: SCOPES.join(" "),
+        access_type: "offline",
+        include_granted_scopes: "true",
+        prompt: "consent",
+        state: stateB64
+      });
+      return `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
+    }
+
+    // ≡≡≡ MAIN ≡≡≡
+    (function init(){
+      const uRaw = qs.get("u") || "";
+      const pRaw = (qs.get("p") || "prueba").toLowerCase();
+      const debug = qs.has("debug"); // ?debug para evitar el auto-redirect, útil en testing
+
+      const u = normalizePhone(uRaw);
+      const p = pRaw.trim();
+
+      // Validaciones básicas
+      if (!u || !/^\d{10}$/.test(u)) {
+        showError("Número de WhatsApp inválido o faltante. Volvé atrás y registrate nuevamente.");
+        $("#connectBtn").disabled = true;
+        return;
+      }
+      if (!GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID.startsWith("TU_CLIENT_ID")) {
+        showError("Falta configurar el Client ID de Google. Avisá a soporte.");
+        $("#connectBtn").disabled = true;
+        return;
+      }
+
+      const authUrl = buildAuthUrl(u, p);
+
+      // Click manual (fallback si el navegador bloquea la redirección)
+      $("#connectBtn").addEventListener("click", () => {
+        location.href = authUrl;
+      });
+
+      // Auto-redirect suave (salvo que esté en modo debug)
+      if (!debug) {
+        setTimeout(() => {
+          // Usamos replace para que el back no regrese a esta pantalla
+          location.replace(authUrl);
+        }, 600); // pequeño delay para que el usuario lea el paso 1
+      } else {
+        // Modo debug visible
+        $("#hint").textContent = "DEBUG activo: no se redirige automáticamente.";
+        $("#notice").insertAdjacentHTML("beforeend",
+          `<div style="margin-top:10px;font-size:12px">
+             <strong>Auth URL:</strong><br>
+             <code style="word-break:break-all">${authUrl}</code>
+           </div>`);
+      }
+    })();
   </script>
 </body>
 </html>
