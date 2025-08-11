@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /registro.html
+Disallow: /activar.html
+Disallow: /auth.html
