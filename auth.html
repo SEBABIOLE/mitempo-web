@@ -9,7 +9,7 @@
 
       const clientId = "395746584240-ue4uh3k5p0a24db69jkhsq7at95ns0gv.apps.googleusercontent.com";
       const redirectUri = encodeURIComponent("https://sebabiole.app.n8n.cloud/webhook/google-callback");
-      const scope = encodeURIComponent("https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/spreadsheets");
+      const scope = encodeURIComponent("https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.file");
 
       const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent&state=${userId}`;
 
