@@ -4,16 +4,33 @@
     <meta charset="UTF-8" />
     <title>Redireccionando a Google...</title>
     <script>
-      const params = new URLSearchParams(window.location.search);
-      const userId = params.get("u") || "sin_dato";
+      const q = new URLSearchParams(location.search);
+      const u = q.get("u") || "sin_dato";
+      const p = q.get("p") || "";               // opcional (plan, etc.)
+      const state = btoa(JSON.stringify({ u, p, t: Date.now() })); // vuelve al webhook
 
-      const clientId = "395746584240-ue4uh3k5p0a24db69jkhsq7at95ns0gv.apps.googleusercontent.com";
-      const redirectUri = encodeURIComponent("https://sebabiole.app.n8n.cloud/webhook/google-callback");
-      const scope = encodeURIComponent("https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/spreadsheets");
+      const clientId   = "395746584240-ue4uh3k5p0a24db69jkhsq7at95ns0gv.apps.googleusercontent.com";
+      const redirectUri= "https://sebabiole.app.n8n.cloud/webhook/google-callback";
 
-      const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent&state=${userId}`;
+      // 3 scopes: Sheets + Calendar + Drive.file
+      const scopes = [
+        "https://www.googleapis.com/auth/spreadsheets",
+        "https://www.googleapis.com/auth/calendar",
+        "https://www.googleapis.com/auth/drive.file"
+      ].join(" ");
 
-      window.location.href = oauthUrl;
+      const oauthUrl =
+        "https://accounts.google.com/o/oauth2/v2/auth"
+        + "?client_id=" + encodeURIComponent(clientId)
+        + "&redirect_uri=" + encodeURIComponent(redirectUri)
+        + "&response_type=code"
+        + "&scope=" + encodeURIComponent(scopes)
+        + "&access_type=offline"
+        + "&include_granted_scopes=true"
+        + "&prompt=consent"
+        + "&state=" + encodeURIComponent(state);
+
+      location.href = oauthUrl;
     </script>
   </head>
   <body>
