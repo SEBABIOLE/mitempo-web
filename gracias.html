@@ -19,17 +19,17 @@
   <div class="bg-white w-full max-w-md rounded-2xl shadow-lg p-6 text-center">
     <h1 class="text-2xl font-semibold mb-2">¡Registro enviado!</h1>
     <p class="text-gray-700 mb-4">
-      Te acabamos de escribir por WhatsApp. Abrí el chat y respondé segui las instrucciones para continuar.
+      Para activar tu cuenta, hacé clic en el botón de abajo y escribí "ACTIVAR".
     </p>
     <a id="waBtn" href="#" target="_blank" rel="noopener"
        class="inline-block bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg">
       Abrir WhatsApp
     </a>
-    <p class="text-xs text-gray-500 mt-3">Si WhatsApp no abre, buscá el último chat nuevo y escribí “Hola”.</p>
+    <p class="text-xs text-gray-500 mt-3">Si WhatsApp no abre, buscá el último chat nuevo y escribí “ACTIVAR”.</p>
   </div>
   <script>
     const TWILIO_NUMBER='17432734544'; // sin '+'
-    const DEFAULT_MSG='ahora seguiremos la configuracion por whatsapp';
+    const DEFAULT_MSG='ACTIVAR';
     document.getElementById('waBtn').href =
       `https://wa.me/${TWILIO_NUMBER}?text=${encodeURIComponent(DEFAULT_MSG)}`;
   </script>
