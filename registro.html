@@ -88,40 +88,71 @@
   </div>
 
   <script>
+    // ====== Endpoints ======
     const ENDPOINT = 'https://sebabiole.app.n8n.cloud/webhook/registro-formulario';
+    const MP_CHECKOUT = 'https://sebabiole.app.n8n.cloud/webhook/mp/checkout';
+
     const $ = id => document.getElementById(id);
     const qp = new URLSearchParams(location.search);
     const debug = qp.get('debug') === '1';
-    const log = (...a) => { if (debug) { console.log(...a); const d=$('debug'); d.style.display='block'; d.textContent += a.map(x => typeof x==='string'?x:JSON.stringify(x,null,2)).join(' ') + '\\n'; } };
+    const log = (...a) => {
+      if (debug) {
+        console.log(...a);
+        const d = $('debug');
+        d.style.display = 'block';
+        d.textContent += a.map(x => typeof x === 'string' ? x : JSON.stringify(x, null, 2)).join(' ') + '\n';
+      }
+    };
 
     const safe = s => (s || '').toString().replace(/[<>"'`]/g, '');
 
     function resetUI() {
       ['errFullName','errPhone','errEmail','errInvitedBy'].forEach(id => $(id).classList.add('hidden'));
-      $('msg').textContent = ''; $('msg').style.color = ''; $('submitBtn').disabled = false;
+      $('msg').textContent = '';
+      $('msg').style.color = '';
+      $('submitBtn').disabled = false;
     }
+
     function toggleDuo() {
       const isDuo = $('plan').value === 'duo';
       $('invitedByContainer').classList.toggle('hidden', !isDuo);
       const i = $('invitedBy');
-      if (isDuo) i.setAttribute('required','true'); else { i.removeAttribute('required'); i.value=''; $('errInvitedBy').classList.add('hidden'); }
+      if (isDuo) i.setAttribute('required','true');
+      else {
+        i.removeAttribute('required');
+        i.value = '';
+        $('errInvitedBy').classList.add('hidden');
+      }
     }
     $('plan').addEventListener('change', toggleDuo);
 
-    // Prefill opcional
+    // Prefill opcional (?p=bronce|plata|oro|duo|prueba)
     const p0 = (qp.get('p') || '').toLowerCase();
     if (p0 && ['prueba','bronce','plata','oro','duo'].includes(p0)) { $('plan').value = p0; }
+
     const n0 = safe(qp.get('n') || '');
     if (n0) $('fullName').value = n0;
+
     toggleDuo();
 
     // Helper timeout para fetch
-    const fetchWithTimeout = (url, opts={}, ms=20000) => {
+    const fetchWithTimeout = (url, opts = {}, ms = 20000) => {
       const controller = new AbortController();
       const t = setTimeout(() => controller.abort(), ms);
       const merged = { ...opts, signal: controller.signal };
       return fetch(url, merged).finally(() => clearTimeout(t));
     };
+
+    function redirectToMpCheckout({ celular10, plan, email, celular_whatsapp }) {
+      const url = new URL(MP_CHECKOUT);
+      // IMPORTANTE: user_id numérico (10 dígitos) para que matchee con tu mp/checkout actual
+      url.searchParams.set('user_id', celular10);
+      url.searchParams.set('plan_slug', plan);
+      url.searchParams.set('email', email);
+      // opcional: por si querés guardarlo en UsuariosConectados
+      url.searchParams.set('user_whatsapp', celular_whatsapp);
+      window.location.href = url.toString();
+    }
 
     $('form').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -136,16 +167,16 @@
       const howHeard = $('howHeard').value.trim();
 
       let ok = true;
-      if (!/^[a-zA-ZÁÉÍÓÚáéíóúñÑ\s]{2,}$/.test(fullName)) { $('errFullName').classList.remove('hidden'); ok=false; }
-      if (!/^\d{10}$/.test(phoneRaw)) { $('errPhone').classList.remove('hidden'); ok=false; }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { $('errEmail').classList.remove('hidden'); ok=false; }
-      if (plan==='duo' && !/^\d{10}$/.test(invitedRaw)) { $('errInvitedBy').classList.remove('hidden'); ok=false; }
+      if (!/^[a-zA-ZÁÉÍÓÚáéíóúñÑ\s]{2,}$/.test(fullName)) { $('errFullName').classList.remove('hidden'); ok = false; }
+      if (!/^\d{10}$/.test(phoneRaw)) { $('errPhone').classList.remove('hidden'); ok = false; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { $('errEmail').classList.remove('hidden'); ok = false; }
+      if (plan === 'duo' && !/^\d{10}$/.test(invitedRaw)) { $('errInvitedBy').classList.remove('hidden'); ok = false; }
       if (!ok) return;
 
       const celular10 = phoneRaw;
       const celular_e164 = `+549${celular10}`;
       const celular_whatsapp = `whatsapp:${celular_e164}`;
-      const invited_e164 = plan==='duo' ? `+549${invitedRaw}` : '';
+      const invited_e164 = plan === 'duo' ? `+549${invitedRaw}` : '';
       const invited_wa   = invited_e164 ? `whatsapp:${invited_e164}` : '';
 
       // Payload EXACTO que espera tu webhook (queda dentro de body en n8n)
@@ -155,7 +186,13 @@
         Celular: celular10,                 // 10 dígitos
         celular_e164,                       // +549XXXXXXXXXX
         celular_whatsapp,                   // whatsapp:+549XXXXXXXXXX
-        user_id: celular_whatsapp,          // usamos ESTE para lookups
+
+        // IMPORTANTE: user_id NUMERICO (10 dígitos) para que sea consistente con mp/checkout
+        user_id: celular10,
+
+        // opcional: lo dejo igual por si lo usás en otros flujos
+        user_whatsapp: celular_whatsapp,
+
         plan,
         origen: howHeard,
         howHeard,
@@ -225,10 +262,20 @@
       }
 
       if (enviado) {
-        $('msg').textContent = '¡Registro exitoso! Ahora necesitás activar tu cuenta por WhatsApp.';
+        $('msg').textContent = '¡Registro exitoso! Redirigiendo…';
         $('msg').style.color = '#10b981';
-        // Paso 2: pantalla de gracias (simple)
-        setTimeout(() => { window.location.href = '/gracias.html'; }, debug ? 2000 : 600);
+
+        // Prueba: no cobramos
+        if (plan === 'prueba') {
+          setTimeout(() => { window.location.href = '/gracias.html'; }, debug ? 1200 : 600);
+          return;
+        }
+
+        // Plan pago: redirigir a n8n mp/checkout (sin fetch -> sin CORS)
+        setTimeout(() => {
+          redirectToMpCheckout({ celular10, plan, email, celular_whatsapp });
+        }, debug ? 1200 : 300);
+
       } else {
         $('msg').textContent = `No pudimos enviar el registro. ${lastError ? (lastError.message || lastError) : ''}`;
         $('msg').style.color = '#dc2626';
