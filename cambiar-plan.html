@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cambiar plan | MiTempo.app</title>
+  <meta name="robots" content="noindex, nofollow">
+</head>
+<body style="font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; padding: 24px;">
+  <h2 id="title">Procesando cambio de plan…</h2>
+  <p id="msg">Redirigiendo a MercadoPago.</p>
+
+  <script>
+    const qp = new URLSearchParams(location.search);
+
+    // Acepta ?plan= o ?p=
+    const plan = (qp.get('plan') || qp.get('p') || '').toLowerCase();
+    const user_id = (qp.get('user_id') || '').replace(/\D/g, '').slice(-10);
+
+    const allowed = ['bronce','plata','oro','duo'];
+    if (!allowed.includes(plan)) {
+      document.getElementById('title').textContent = 'Plan inválido';
+      document.getElementById('msg').textContent = 'Usá: bronce, plata, oro o duo.';
+      throw new Error('plan inválido');
+    }
+    if (!/^\d{10}$/.test(user_id)) {
+      document.getElementById('title').textContent = 'Falta user_id';
+      document.getElementById('msg').textContent = 'No se pudo identificar tu cuenta.';
+      throw new Error('user_id inválido');
+    }
+
+    const MP_CHECKOUT = 'https://sebabiole.app.n8n.cloud/webhook/mp/checkout';
+    const url = new URL(MP_CHECKOUT);
+    url.searchParams.set('user_id', user_id);
+    url.searchParams.set('plan_slug', plan);
+
+    // opcionales si los mandás
+    const email = (qp.get('email') || '').trim();
+    if (email) url.searchParams.set('email', email);
+
+    const user_whatsapp = (qp.get('user_whatsapp') || '').trim();
+    if (user_whatsapp) url.searchParams.set('user_whatsapp', user_whatsapp);
+
+    // redirige
+    window.location.replace(url.toString());
+  </script>
+</body>
+</html>
