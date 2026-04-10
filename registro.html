@@ -21,17 +21,50 @@
     #msg { text-align: center; margin-bottom: 1rem; font-size: 1rem; }
     button:disabled { opacity: .6; cursor: not-allowed; }
     .hidden { display: none; }
+    .plan-badge {
+      display: inline-block;
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #6ee7b7;
+      border-radius: 8px;
+      padding: 6px 16px;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .plan-badge.duo { background: #ede9fe; color: #4c1d95; border-color: #c4b5fd; }
+    .duo-section {
+      border: 1px solid #c4b5fd;
+      border-radius: 12px;
+      padding: 16px;
+      background: #faf5ff;
+    }
+    .duo-section h2 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #4c1d95;
+      margin-bottom: 12px;
+    }
     #debug { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
              white-space: pre-wrap; font-size: 12px; background:#0b1020; color:#e4e7ef; padding:10px; border-radius:8px; margin-top:14px; display:none;}
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
   <div class="bg-white w-full max-w-md rounded-2xl shadow-lg p-6">
-    <h1 class="text-2xl font-semibold mb-4 text-center">Regístrate y activa tu prueba</h1>
+    <h1 id="formTitle" class="text-2xl font-semibold mb-1 text-center">Regístrate en MiTempo</h1>
+    <p id="formSubtitle" class="text-center text-sm text-gray-500 mb-4"></p>
 
     <div id="msg" role="status" aria-live="polite"></div>
 
     <form id="form" class="space-y-4" novalidate>
+
+      <!-- Plan fijo (badge, no editable) -->
+      <div class="flex items-center gap-2">
+        <span class="text-sm font-medium text-gray-700">Plan:</span>
+        <span id="planBadge" class="plan-badge">Prueba</span>
+        <input type="hidden" id="plan" value="prueba" />
+      </div>
+
+      <!-- ── Datos del titular ── -->
       <div>
         <label class="block text-sm font-medium mb-1" for="fullName">Nombre y Apellido <span class="text-red-500">*</span></label>
         <input type="text" id="fullName" required autocomplete="name"
@@ -53,25 +86,39 @@
         <p id="errEmail" class="error hidden">Ingresa un email válido.</p>
       </div>
 
-      <div>
-        <label class="block text-sm font-medium mb-1" for="plan">Plan <span class="text-red-500">*</span></label>
-        <select id="plan" required
-                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400">
-          <option value="prueba">Prueba</option>
-          <option value="bronce">Bronce</option>
-          <option value="plata">Plata</option>
-          <option value="oro">Oro</option>
-          <option value="duo">Duo</option>
-        </select>
+      <!-- ── Sección DUO: datos de la pareja (solo visible si plan=duo) ── -->
+      <div id="duoSection" class="duo-section hidden">
+        <h2>👥 Datos de tu pareja</h2>
+        <p class="text-xs text-gray-500 mb-3">Van a compartir la misma planilla de gastos. Los calendarios son independientes.</p>
+
+        <div class="space-y-3">
+          <div>
+            <label class="block text-sm font-medium mb-1" for="partnerName">Nombre y Apellido <span class="text-red-500">*</span></label>
+            <input type="text" id="partnerName" inputmode="text" autocomplete="off"
+                   class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400" />
+            <p id="errPartnerName" class="error hidden">Ingresa un nombre válido (mínimo 2 caracteres).</p>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1" for="partnerPhone">WhatsApp (10 dígitos locales, sin 0 ni prefijo) <span class="text-red-500">*</span></label>
+            <input type="text" id="partnerPhone" inputmode="numeric" autocomplete="off"
+                   class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400" />
+            <p id="errPartnerPhone" class="error hidden">Ingresa 10 dígitos locales válidos.</p>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1" for="partnerEmail">
+              Email de Google <span class="text-red-500">*</span>
+              <span class="text-xs font-normal text-gray-400 ml-1">(Gmail u otro, necesario para compartir la planilla)</span>
+            </label>
+            <input type="email" id="partnerEmail" autocomplete="off"
+                   class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400" />
+            <p id="errPartnerEmail" class="error hidden">Ingresa un email válido.</p>
+          </div>
+        </div>
       </div>
 
-      <div id="invitedByContainer" class="hidden">
-        <label class="block text-sm font-medium mb-1" for="invitedBy">¿Invitado por alguien? (celular de la persona) <span class="text-red-500">*</span></label>
-        <input type="text" id="invitedBy" placeholder="1234567890" inputmode="numeric" autocomplete="tel-national"
-               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
-        <p id="errInvitedBy" class="error hidden">Ingresa 10 dígitos locales válidos.</p>
-      </div>
-
+      <!-- ── Cómo te enteraste ── -->
       <div>
         <label class="block text-sm font-medium mb-1" for="howHeard">¿Cómo te enteraste de MiTempo? (opcional)</label>
         <input type="text" id="howHeard" autocomplete="off"
@@ -79,7 +126,7 @@
       </div>
 
       <button type="submit" id="submitBtn"
-              class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition">
+              class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition font-semibold">
         Enviar Registro
       </button>
 
@@ -89,7 +136,7 @@
 
   <script>
     // ====== Endpoints ======
-    const ENDPOINT = 'https://sebabiole.app.n8n.cloud/webhook/registro-formulario';
+    const ENDPOINT   = 'https://sebabiole.app.n8n.cloud/webhook/registro-formulario';
     const MP_CHECKOUT = 'https://sebabiole.app.n8n.cloud/webhook/mp/checkout';
 
     const $ = id => document.getElementById(id);
@@ -103,132 +150,155 @@
         d.textContent += a.map(x => typeof x === 'string' ? x : JSON.stringify(x, null, 2)).join(' ') + '\n';
       }
     };
-
     const safe = s => (s || '').toString().replace(/[<>"'`]/g, '');
 
+    // ── Determinar plan desde URL ──
+    const PLANS_VALID = ['prueba','bronce','plata','oro','duo'];
+    const PLAN_LABELS = { prueba:'Prueba gratis', bronce:'Bronce', plata:'Plata', oro:'Oro', duo:'DUO' };
+    const PLAN_TITLES = {
+      prueba: 'Regístrate y activa tu prueba',
+      bronce: 'Activá tu plan Bronce',
+      plata:  'Activá tu plan Plata',
+      oro:    'Activá tu plan Oro',
+      duo:    'Activá tu plan DUO'
+    };
+    const PLAN_SUBTITLES = {
+      prueba: '15 días gratis, sin tarjeta de crédito',
+      bronce: 'Gestión personal de gastos e ingresos',
+      plata:  'Con integración a Google Calendar',
+      oro:    'Gestión financiera completa',
+      duo:    'Una planilla compartida para dos personas'
+    };
+
+    const rawPlan = (qp.get('p') || qp.get('plan') || 'prueba').toLowerCase().trim();
+    const plan = PLANS_VALID.includes(rawPlan) ? rawPlan : 'prueba';
+
+    // Aplicar al DOM
+    $('plan').value = plan;
+    $('planBadge').textContent = PLAN_LABELS[plan];
+    if (plan === 'duo') $('planBadge').classList.add('duo');
+    $('formTitle').textContent = PLAN_TITLES[plan];
+    $('formSubtitle').textContent = PLAN_SUBTITLES[plan];
+
+    // Mostrar sección DUO si corresponde
+    if (plan === 'duo') {
+      $('duoSection').classList.remove('hidden');
+      ['partnerName','partnerPhone','partnerEmail'].forEach(id => $(id).setAttribute('required','true'));
+    }
+
+    // Prefill nombre desde URL (?n=...)
+    const n0 = safe(qp.get('n') || '');
+    if (n0) $('fullName').value = n0;
+
+    // ── Helpers ──
     function resetUI() {
-      ['errFullName','errPhone','errEmail','errInvitedBy'].forEach(id => $(id).classList.add('hidden'));
+      ['errFullName','errPhone','errEmail','errPartnerName','errPartnerPhone','errPartnerEmail'].forEach(id => {
+        const el = $(id); if (el) el.classList.add('hidden');
+      });
       $('msg').textContent = '';
       $('msg').style.color = '';
       $('submitBtn').disabled = false;
     }
 
-    function toggleDuo() {
-      const isDuo = $('plan').value === 'duo';
-      $('invitedByContainer').classList.toggle('hidden', !isDuo);
-      const i = $('invitedBy');
-      if (isDuo) i.setAttribute('required','true');
-      else {
-        i.removeAttribute('required');
-        i.value = '';
-        $('errInvitedBy').classList.add('hidden');
-      }
-    }
-    $('plan').addEventListener('change', toggleDuo);
-
-    // Prefill opcional (?p=bronce|plata|oro|duo|prueba)
-    const p0 = (qp.get('p') || '').toLowerCase();
-    if (p0 && ['prueba','bronce','plata','oro','duo'].includes(p0)) { $('plan').value = p0; }
-
-    const n0 = safe(qp.get('n') || '');
-    if (n0) $('fullName').value = n0;
-
-    toggleDuo();
-
-    // Helper timeout para fetch
     const fetchWithTimeout = (url, opts = {}, ms = 20000) => {
       const controller = new AbortController();
       const t = setTimeout(() => controller.abort(), ms);
-      const merged = { ...opts, signal: controller.signal };
-      return fetch(url, merged).finally(() => clearTimeout(t));
+      return fetch(url, { ...opts, signal: controller.signal }).finally(() => clearTimeout(t));
     };
 
     function redirectToMpCheckout({ celular10, plan, email, celular_whatsapp }) {
       const url = new URL(MP_CHECKOUT);
-      // IMPORTANTE: user_id numérico (10 dígitos) para que matchee con tu mp/checkout actual
       url.searchParams.set('user_id', celular10);
       url.searchParams.set('plan_slug', plan);
       url.searchParams.set('email', email);
-      // opcional: por si querés guardarlo en UsuariosConectados
       url.searchParams.set('user_whatsapp', celular_whatsapp);
       window.location.href = url.toString();
     }
 
+    // ── Submit ──
     $('form').addEventListener('submit', async (e) => {
       e.preventDefault();
       resetUI();
 
-      // Validaciones
-      const fullName = $('fullName').value.trim();
-      const phoneRaw = $('phone').value.trim().replace(/\D/g,'').replace(/^0+/, '');
-      const email = $('email').value.trim();
-      const plan = $('plan').value;
-      const invitedRaw = ($('invitedBy').value || '').trim().replace(/\D/g,'').replace(/^0+/, '');
-      const howHeard = $('howHeard').value.trim();
+      const fullName    = $('fullName').value.trim();
+      const phoneRaw    = $('phone').value.trim().replace(/\D/g,'').replace(/^0+/, '');
+      const email       = $('email').value.trim();
+      const howHeard    = $('howHeard').value.trim();
+
+      // Campos DUO
+      const partnerName  = plan === 'duo' ? $('partnerName').value.trim()  : '';
+      const partnerPhone = plan === 'duo' ? $('partnerPhone').value.trim().replace(/\D/g,'').replace(/^0+/, '') : '';
+      const partnerEmail = plan === 'duo' ? $('partnerEmail').value.trim()  : '';
 
       let ok = true;
-      if (!/^[a-zA-ZÁÉÍÓÚáéíóúñÑ\s]{2,}$/.test(fullName)) { $('errFullName').classList.remove('hidden'); ok = false; }
-      if (!/^\d{10}$/.test(phoneRaw)) { $('errPhone').classList.remove('hidden'); ok = false; }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { $('errEmail').classList.remove('hidden'); ok = false; }
-      if (plan === 'duo' && !/^\d{10}$/.test(invitedRaw)) { $('errInvitedBy').classList.remove('hidden'); ok = false; }
+      if (!/^[a-zA-ZÁÉÍÓÚáéíóúñÑ\s]{2,}$/.test(fullName))  { $('errFullName').classList.remove('hidden');  ok = false; }
+      if (!/^\d{10}$/.test(phoneRaw))                         { $('errPhone').classList.remove('hidden');     ok = false; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))         { $('errEmail').classList.remove('hidden');     ok = false; }
+
+      if (plan === 'duo') {
+        if (!/^[a-zA-ZÁÉÍÓÚáéíóúñÑ\s]{2,}$/.test(partnerName))  { $('errPartnerName').classList.remove('hidden');  ok = false; }
+        if (!/^\d{10}$/.test(partnerPhone))                        { $('errPartnerPhone').classList.remove('hidden'); ok = false; }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(partnerEmail))     { $('errPartnerEmail').classList.remove('hidden'); ok = false; }
+      }
       if (!ok) return;
 
-      const celular10 = phoneRaw;
-      const celular_e164 = `+549${celular10}`;
+      const celular10        = phoneRaw;
+      const celular_e164     = `+549${celular10}`;
       const celular_whatsapp = `whatsapp:${celular_e164}`;
-      const invited_e164 = plan === 'duo' ? `+549${invitedRaw}` : '';
-      const invited_wa   = invited_e164 ? `whatsapp:${invited_e164}` : '';
 
-      // Payload EXACTO que espera tu webhook (queda dentro de body en n8n)
+      const partner_e164     = partnerPhone ? `+549${partnerPhone}` : '';
+      const partner_whatsapp = partner_e164 ? `whatsapp:${partner_e164}` : '';
+
       const data = {
-        Nombre: fullName,
-        Email: email,
-        Celular: celular10,                 // 10 dígitos
-        celular_e164,                       // +549XXXXXXXXXX
-        celular_whatsapp,                   // whatsapp:+549XXXXXXXXXX
-
-        // IMPORTANTE: user_id NUMERICO (10 dígitos) para que sea consistente con mp/checkout
-        user_id: celular10,
-
-        // opcional: lo dejo igual por si lo usás en otros flujos
-        user_whatsapp: celular_whatsapp,
-
+        // Titular
+        Nombre:           fullName,
+        Email:            email,
+        Celular:          celular10,
+        celular_e164,
+        celular_whatsapp,
+        user_id:          celular10,
+        user_whatsapp:    celular_whatsapp,
         plan,
-        origen: howHeard,
+        origen:           howHeard,
         howHeard,
 
-        // duplicados para TEXT en Sheets
-        Celular_txt: `'${celular10}`,
-        celular_e164_txt: `'+549${celular10}`,
+        // Texto plano para Sheets (evita que Google los interprete como números)
+        Celular_txt:          `'${celular10}`,
+        celular_e164_txt:     `'+549${celular10}`,
         celular_whatsapp_txt: `'whatsapp:+549${celular10}`,
 
-        invitedBy_celular: invitedRaw || '',
-        invitedBy_e164: invited_e164,
-        invitedBy_whatsapp: invited_wa,
+        // Pareja DUO
+        partner_nombre:        partnerName,
+        partner_celular:       partnerPhone,
+        partner_e164,
+        partner_whatsapp,
+        partner_email:         partnerEmail,
 
-        invitedBy_celular_txt: invitedRaw ? `'${invitedRaw}` : '',
-        invitedBy_e164_txt: invited_e164 ? `'${invited_e164}` : '',
-        invitedBy_whatsapp_txt: invited_wa ? `'${invited_wa}` : '',
+        partner_celular_txt:   partnerPhone  ? `'${partnerPhone}`    : '',
+        partner_e164_txt:      partner_e164  ? `'${partner_e164}`    : '',
+        partner_whatsapp_txt:  partner_whatsapp ? `'${partner_whatsapp}` : '',
 
-        state: qp.get('state') || '',
-        id_token: qp.get('id_token') || '',
-        expired: qp.get('expired') || ''
+        // Compatibilidad retroactiva con campo invitedBy anterior
+        invitedBy_celular: '',
+        invitedBy_e164:    '',
+        invitedBy_whatsapp:'',
+
+        state:     qp.get('state') || '',
+        id_token:  qp.get('id_token') || '',
+        expired:   qp.get('expired') || ''
       };
 
       $('msg').textContent = 'Enviando registro…';
       $('msg').style.color = '#10b981';
       $('submitBtn').disabled = true;
 
-      log('Origin:', location.origin);
-      if (debug && location.origin !== 'https://mitempo.app') {
-        log('⚠️ OJO: el Webhook tiene CORS restringido a https://mitempo.app. Si probás desde otro origen, fetch va a fallar.');
-      }
+      log('Payload:', data);
 
       const payload = JSON.stringify(data);
       let enviado = false;
       let lastError = null;
 
-      // 1) fetch JSON (con timeout, CORS)
+      // 1) fetch con timeout
       try {
         const res = await fetchWithTimeout(ENDPOINT, {
           method: 'POST',
@@ -245,13 +315,10 @@
         log('fetch error:', err && (err.message || err));
       }
 
-      // 2) fallback sendBeacon (text/plain)
+      // 2) fallback sendBeacon
       if (!enviado) {
         try {
-          const ok2 = navigator.sendBeacon(
-            ENDPOINT,
-            new Blob([payload], { type: 'text/plain;charset=UTF-8' })
-          );
+          const ok2 = navigator.sendBeacon(ENDPOINT, new Blob([payload], { type: 'text/plain;charset=UTF-8' }));
           log('sendBeacon result:', ok2);
           if (!ok2) throw new Error('sendBeacon devolvió false');
           enviado = true;
@@ -265,13 +332,11 @@
         $('msg').textContent = '¡Registro exitoso! Redirigiendo…';
         $('msg').style.color = '#10b981';
 
-        // Prueba: no cobramos
         if (plan === 'prueba') {
           setTimeout(() => { window.location.href = '/gracias.html'; }, debug ? 1200 : 600);
           return;
         }
 
-        // Plan pago: redirigir a n8n mp/checkout (sin fetch -> sin CORS)
         setTimeout(() => {
           redirectToMpCheckout({ celular10, plan, email, celular_whatsapp });
         }, debug ? 1200 : 300);
