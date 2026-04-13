@@ -206,13 +206,27 @@
       return fetch(url, { ...opts, signal: controller.signal }).finally(() => clearTimeout(t));
     };
 
-    function redirectToMpCheckout({ celular10, plan, email, celular_whatsapp }) {
+    async function redirectToMpCheckout({ celular10, plan, email, celular_whatsapp }) {
       const url = new URL(MP_CHECKOUT);
       url.searchParams.set('user_id', celular10);
       url.searchParams.set('plan_slug', plan);
       url.searchParams.set('email', email);
       url.searchParams.set('user_whatsapp', celular_whatsapp);
-      window.location.href = url.toString();
+      try {
+        $('msg').textContent = 'Generando link de pago…';
+        const res = await fetchWithTimeout(url.toString(), {}, 15000);
+        const data = await res.json();
+        if (data.ok && data.init_point) {
+          window.location.href = data.init_point;
+        } else {
+          throw new Error(data.error || 'Respuesta inesperada de checkout');
+        }
+      } catch (err) {
+        $('msg').textContent = 'No pudimos generar el link de pago. Intentá de nuevo.';
+        $('msg').style.color = '#dc2626';
+        $('submitBtn').disabled = false;
+        log('MP checkout error:', err && (err.message || err));
+      }
     }
 
     // ── Submit ──
