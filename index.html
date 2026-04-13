@@ -7,7 +7,7 @@
   <meta name="description" content="MiTempo.app: Tu asistente con IA y automatizaciones para profesionales. Organiza tu agenda, registra gastos y optimiza procesos desde WhatsApp.">
   <meta name="keywords" content="asistente IA, automatización, WhatsApp, gestión de agenda, finanzas personales">
   <meta property="og:title" content="MiTempo.app | Asistente IA y Automatizaciones">
-  <meta property="og:description" content="Organiza tu vida y negocio con nuestro asistente IA en WhatsApp. Planes desde $3 USD/mes.">
+  <meta property="og:description" content="Organiza tu vida y negocio con nuestro asistente IA en WhatsApp. Planes en pesos argentinos.">
   <meta property="og:image" content="https://yourdomain.com/Logo con blanco.png">
   <meta property="og:url" content="https://yourdomain.com">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -201,8 +201,8 @@
               <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Agendado por voz o texto</li>
               <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Recordatorios y alertas simples</li>
             </ul>
-            <p class="text-xl font-extrabold my-4">💰 Precio estimado: $3 USD<span class="text-base font-medium text-gray-500">/mes</span></p>
-            <a href="registro.html?plan=Bronce" class="block text-center w-full mt-auto bg-gray-200 text-gray-800 font-bold py-3 rounded-lg hover:bg-gray-300 transition">Probar</a>
+            <p id="precio-bronce" class="text-xl font-extrabold my-4">💰 <span class="precio-valor">Cargando...</span></p>
+            <a href="registro.html?p=bronce" class="block text-center w-full mt-auto bg-gray-200 text-gray-800 font-bold py-3 rounded-lg hover:bg-gray-300 transition">Probar</a>
           </div>
           <div class="bg-white p-6 rounded-xl shadow-lg border flex flex-col">
             <h3 class="text-xl font-bold text-gray-500">🥈 Plan Plata</h3>
@@ -214,8 +214,8 @@
               <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Comprensión de lenguaje natural</li>
               <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Confirmaciones automáticas</li>
             </ul>
-            <p class="text-xl font-extrabold my-4">💰 Precio estimado: $5 USD<span class="text-base font-medium text-gray-500">/mes</span></p>
-            <a href="registro.html?plan=Plata" class="block text-center w-full mt-auto bg-gray-800 text-white font-bold py-3 rounded-lg hover:bg-gray-900 transition">Elegir</a>
+            <p id="precio-plata" class="text-xl font-extrabold my-4">💰 <span class="precio-valor">Cargando...</span></p>
+            <a href="registro.html?p=plata" class="block text-center w-full mt-auto bg-gray-800 text-white font-bold py-3 rounded-lg hover:bg-gray-900 transition">Elegir</a>
           </div>
           <div class="bg-white p-6 rounded-xl shadow-2xl border-2 border-brand-green relative flex flex-col">
             <span class="absolute top-0 -translate-y-1/2 bg-brand-green text-white text-xs font-bold px-3 py-1 rounded-full">RECOMENDADO</span>
@@ -228,8 +228,8 @@
               <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Reportes semanales y mensuales</li>
               <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Recomendaciones de ahorro</li>
             </ul>
-            <p class="text-xl font-extrabold my-4">💰 Precio estimado: $10 USD<span class="text-base font-medium text-gray-500">/mes</span></p>
-            <a href="registro.html?plan=Oro" class="block text-center w-full mt-auto bg-brand-green text-white font-bold py-3 rounded-lg hover:bg-brand-green-dark transition">Elegir</a>
+            <p id="precio-oro" class="text-xl font-extrabold my-4">💰 <span class="precio-valor">Cargando...</span></p>
+            <a href="registro.html?p=oro" class="block text-center w-full mt-auto bg-brand-green text-white font-bold py-3 rounded-lg hover:bg-brand-green-dark transition">Elegir</a>
           </div>
           <div class="bg-white p-6 rounded-xl shadow-lg border flex flex-col">
             <h3 class="text-xl font-bold text-blue-500">👥 Plan Duo</h3>
@@ -241,8 +241,8 @@
               <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Control financiero conjunto</li>
               <li class="flex items-center"><svg class="w-4 h-4 text-brand-green mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Registros separados y sincronizados</li>
             </ul>
-            <p class="text-xl font-extrabold my-4">💰 Precio estimado: $10 USD<span class="text-base font-medium text-gray-500">/mes (ambos incluidos)</span></p>
-            <a href="registro.html?plan=Duo" class="block text-center w-full mt-auto bg-gray-800 text-white font-bold py-3 rounded-lg hover:bg-gray-900 transition">Elegir</a>
+            <p id="precio-duo" class="text-xl font-extrabold my-4">💰 <span class="precio-valor">Cargando...</span></p>
+            <a href="registro.html?p=duo" class="block text-center w-full mt-auto bg-gray-800 text-white font-bold py-3 rounded-lg hover:bg-gray-900 transition">Elegir</a>
           </div>
         </div>
       </div>
@@ -364,6 +364,32 @@
         }
       });
     });
+  </script>
+  <script>
+    // Carga precios dinámicos desde la hoja Planes vía n8n
+    (function () {
+      const PLANES_API = 'https://sebabiole.app.n8n.cloud/webhook/planes';
+      const SUFIJOS = { duo: '/mes (ambos incluidos)', bronce: '/mes', plata: '/mes', oro: '/mes' };
+
+      fetch(PLANES_API)
+        .then(r => r.json())
+        .then(planes => {
+          planes.forEach(p => {
+            const el = document.getElementById('precio-' + p.plan_slug);
+            if (!el) return;
+            const sufijo = SUFIJOS[p.plan_slug] || '/mes';
+            el.innerHTML =
+              '💰 <strong>' + p.label + '</strong>' +
+              '<span class="text-base font-medium text-gray-500">' + sufijo + '</span>';
+          });
+        })
+        .catch(() => {
+          // Si falla el fetch, mostrar texto de respaldo
+          document.querySelectorAll('.precio-valor').forEach(el => {
+            el.textContent = 'Consultá el precio';
+          });
+        });
+    })();
   </script>
 </body>
 </html>
