@@ -84,31 +84,32 @@
 <body class="bg-gray-100 text-gray-800 text-sm">
 
 <!-- ── Header ── -->
-<header class="bg-slate-800 text-white px-6 py-3 flex items-center gap-3 shadow-md">
-  <div class="flex-1">
-    <h1 class="text-lg font-bold leading-none">MiTempo</h1>
-    <p id="headerSub" class="text-xs opacity-75 mt-0.5">Cargando…</p>
+<header class="bg-slate-800 text-white px-4 py-3 flex items-center gap-2 shadow-md">
+  <div class="flex-1 min-w-0">
+    <h1 class="text-base font-bold leading-none">MiTempo</h1>
+    <p id="headerSub" class="text-xs opacity-75 mt-0.5 truncate">Cargando…</p>
   </div>
-  <button onclick="logout()" id="logoutBtn" class="hidden text-xs text-white/50 hover:text-white/90 transition px-2 py-1">Cerrar sesión</button>
+  <button onclick="installApp()" id="installBtn" class="hidden text-xs bg-white/20 text-white px-2.5 py-1 rounded-full hover:bg-white/30 transition whitespace-nowrap">Instalar</button>
+  <button onclick="logout()" id="logoutBtn" class="hidden text-xs text-white/50 hover:text-white/90 transition px-2 py-1 whitespace-nowrap">Salir</button>
 </header>
 
 <!-- ── Tabs ── -->
-<nav class="bg-white border-b border-gray-200 px-6 flex gap-0">
-  <button class="tab-btn active px-5 py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-sm" onclick="showTab('presupuesto',this)">Presupuesto</button>
-  <button class="tab-btn px-5 py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-sm" onclick="showTab('dashboard',this)">Dashboard</button>
-  <button class="tab-btn px-5 py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-sm" onclick="showTab('tablas',this)">Tablas dinámicas</button>
+<nav class="bg-white border-b border-gray-200 flex">
+  <button class="tab-btn active flex-1 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('presupuesto',this)">Presupuesto</button>
+  <button class="tab-btn flex-1 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('dashboard',this)">Dashboard</button>
+  <button class="tab-btn flex-1 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('tablas',this)">Tablas</button>
 </nav>
 
 <!-- ── Content ── -->
-<main class="p-5">
+<main class="p-3 sm:p-5">
 
   <!-- ──────────────── LOADING ──────────────── -->
   <div id="stateLoading" class="space-y-4">
-    <div class="grid grid-cols-4 gap-4">
-      <div class="skeleton h-24 rounded-xl"></div>
-      <div class="skeleton h-24 rounded-xl"></div>
-      <div class="skeleton h-24 rounded-xl"></div>
-      <div class="skeleton h-24 rounded-xl"></div>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div class="skeleton h-20 sm:h-24 rounded-xl"></div>
+      <div class="skeleton h-20 sm:h-24 rounded-xl"></div>
+      <div class="skeleton h-20 sm:h-24 rounded-xl"></div>
+      <div class="skeleton h-20 sm:h-24 rounded-xl"></div>
     </div>
     <div class="skeleton h-40 rounded-xl"></div>
     <div class="skeleton h-64 rounded-xl"></div>
@@ -167,31 +168,31 @@
   <!-- ──────────────── DASHBOARD ──────────────── -->
   <div id="dashboard" class="tab-section hidden">
     <!-- KPI Cards -->
-    <div class="grid grid-cols-4 gap-4 mb-4" id="kpiRow">
-      <div class="bg-white rounded-xl shadow p-4 border-l-4 border-emerald-400">
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3" id="kpiRow">
+      <div class="bg-white rounded-xl shadow p-3 sm:p-4 border-l-4 border-emerald-400">
         <p class="text-xs text-gray-400 uppercase tracking-wide mb-1" id="kpiIngLabel">Ingresos · mes</p>
-        <p class="text-2xl font-bold text-gray-900" id="kpiIngVal">—</p>
+        <p class="text-xl sm:text-2xl font-bold text-gray-900 leading-tight" id="kpiIngVal">—</p>
         <p class="text-xs text-gray-400 mt-1" id="kpiIngSub"></p>
       </div>
-      <div class="bg-white rounded-xl shadow p-4 border-l-4 border-rose-400">
+      <div class="bg-white rounded-xl shadow p-3 sm:p-4 border-l-4 border-rose-400">
         <p class="text-xs text-gray-400 uppercase tracking-wide mb-1" id="kpiEgrLabel">Egresos · mes</p>
-        <p class="text-2xl font-bold text-gray-900" id="kpiEgrVal">—</p>
+        <p class="text-xl sm:text-2xl font-bold text-gray-900 leading-tight" id="kpiEgrVal">—</p>
         <p class="text-xs text-gray-400 mt-1" id="kpiEgrSub"></p>
       </div>
-      <div class="bg-white rounded-xl shadow p-4 border-l-4 border-sky-400">
+      <div class="bg-white rounded-xl shadow p-3 sm:p-4 border-l-4 border-sky-400">
         <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Balance neto</p>
-        <p class="text-2xl font-bold text-gray-900" id="kpiBalVal">—</p>
+        <p class="text-xl sm:text-2xl font-bold text-gray-900 leading-tight" id="kpiBalVal">—</p>
         <p class="text-xs text-gray-400 mt-1" id="kpiBalSub"></p>
       </div>
-      <div class="bg-white rounded-xl shadow p-4 border-l-4 border-violet-400">
+      <div class="bg-white rounded-xl shadow p-3 sm:p-4 border-l-4 border-violet-400">
         <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Tasa de ahorro</p>
-        <p class="text-2xl font-bold text-gray-900" id="kpiAhorroVal">—</p>
+        <p class="text-xl sm:text-2xl font-bold text-gray-900 leading-tight" id="kpiAhorroVal">—</p>
         <p class="text-xs text-gray-400 mt-1" id="kpiAhorroSub"></p>
       </div>
     </div>
 
     <!-- Row 1: Pres vs Real + Resumen mensual -->
-    <div class="grid grid-cols-2 gap-4 mb-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
       <div class="bg-white rounded-xl shadow p-4">
         <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 pb-2 border-b border-gray-100" id="presVsRealTitle">Presupuesto vs Real</h3>
         <div id="presVsRealBars"></div>
@@ -214,15 +215,15 @@
     </div>
 
     <!-- Evolución anual -->
-    <div class="bg-white rounded-xl shadow p-4 mb-4">
+    <div class="bg-white rounded-xl shadow p-4 mb-3">
       <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 pb-2 border-b border-gray-100">Evolución anual — Ingresos, Egresos y Ahorro acumulado</h3>
-      <div class="chart-wrap"><canvas id="chartEvolucion" height="70"></canvas></div>
+      <div class="chart-wrap"><canvas id="chartEvolucion" height="100"></canvas></div>
     </div>
 
     <!-- Ranking YTD -->
     <div class="bg-white rounded-xl shadow p-4">
       <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 pb-2 border-b border-gray-100">Ranking de gastos anuales por categoría <span class="font-normal text-gray-400 normal-case">(YTD)</span></h3>
-      <div class="chart-wrap"><canvas id="chartRanking" height="80"></canvas></div>
+      <div class="chart-wrap"><canvas id="chartRanking" height="120"></canvas></div>
     </div>
   </div>
 
@@ -235,7 +236,7 @@
       </select>
     </div>
 
-    <div class="grid grid-cols-2 gap-4 mb-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
       <!-- Top 5 -->
       <div class="bg-white rounded-xl shadow p-4">
         <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 pb-2 border-b border-gray-100">Top 5 categorías — mayor gasto</h3>
@@ -289,6 +290,12 @@
   </div>
 
 </main>
+
+<!-- ── iOS install banner ── -->
+<div id="iosBanner" class="hidden fixed bottom-0 left-0 right-0 bg-slate-900 text-white px-4 py-3 flex items-center gap-3 shadow-2xl z-50 text-xs">
+  <span class="flex-1">Para instalar: toca <strong>Compartir</strong> ⬆️ y luego <strong>"Agregar a pantalla de inicio"</strong></span>
+  <button onclick="document.getElementById('iosBanner').classList.add('hidden');localStorage.setItem('iosDismissed','1')" class="text-white/60 hover:text-white font-bold text-lg leading-none px-1">×</button>
+</div>
 
 <script>
 // ══════════════════════════════════════════════════
@@ -1022,6 +1029,39 @@ function renderResumenAnual() {
       <td class="py-1.5 px-2 text-right">${ytdBadge}</td>
     </tr>`;
   }
+}
+
+// ══════════════════════════════════════════════════
+//  PWA INSTALL
+// ══════════════════════════════════════════════════
+let deferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBtn').classList.remove('hidden');
+});
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('installBtn').classList.add('hidden');
+  deferredPrompt = null;
+});
+
+async function installApp() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  if (outcome === 'accepted') {
+    document.getElementById('installBtn').classList.add('hidden');
+  }
+}
+
+// iOS: mostrar banner con instrucciones
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+if (isIOS && !isStandalone && !localStorage.getItem('iosDismissed')) {
+  setTimeout(() => document.getElementById('iosBanner').classList.remove('hidden'), 1500);
 }
 
 // ══════════════════════════════════════════════════
