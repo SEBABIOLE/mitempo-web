@@ -9,6 +9,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1e293b">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="MiTempo">
+  <link rel="apple-touch-icon" href="Logo con blanco.png">
   <style>
     body { font-family: 'Inter', sans-serif; }
 
@@ -79,10 +85,11 @@
 
 <!-- ── Header ── -->
 <header class="bg-slate-800 text-white px-6 py-3 flex items-center gap-3 shadow-md">
-  <div>
+  <div class="flex-1">
     <h1 class="text-lg font-bold leading-none">MiTempo</h1>
     <p id="headerSub" class="text-xs opacity-75 mt-0.5">Cargando…</p>
   </div>
+  <button onclick="logout()" id="logoutBtn" class="hidden text-xs text-white/50 hover:text-white/90 transition px-2 py-1">Cerrar sesión</button>
 </header>
 
 <!-- ── Tabs ── -->
@@ -112,6 +119,27 @@
     <div class="text-5xl mb-4">🔒</div>
     <h2 class="text-xl font-bold text-gray-700 mb-2" id="errorTitle">Enlace inválido o expirado</h2>
     <p class="text-gray-500 max-w-sm" id="errorMsg">Tu enlace de dashboard ha expirado (24 h). Escribí <strong>"mi dashboard"</strong> a MiTempo por WhatsApp para recibir un nuevo enlace.</p>
+  </div>
+
+  <!-- ──────────────── LOGIN ──────────────── -->
+  <div id="stateLogin" class="hidden flex flex-col items-center justify-center py-16">
+    <div class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-sm text-center">
+      <div class="text-4xl mb-3">📊</div>
+      <h1 class="text-xl font-bold text-slate-800 mb-1">MiTempo</h1>
+      <p class="text-sm text-gray-400 mb-6">Tu panel de finanzas personales</p>
+      <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 text-left">
+        Número de WhatsApp
+      </label>
+      <input id="phoneInput" type="tel" placeholder="Ej: 3382416087"
+        class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-slate-300 mb-3"
+        onkeydown="if(event.key==='Enter') loginWithPhone()">
+      <button onclick="loginWithPhone()"
+        class="w-full bg-slate-800 text-white font-semibold py-2.5 rounded-lg hover:bg-slate-900 transition text-sm">
+        Entrar
+      </button>
+      <p id="loginError" class="text-xs text-rose-500 mt-3 hidden"></p>
+      <p class="text-xs text-gray-400 mt-4">Ingresá el número que usás en WhatsApp (sin el 0 ni el 15, solo los 10 dígitos)</p>
+    </div>
   </div>
 
   <!-- ──────────────── EMPTY ──────────────── -->
@@ -362,9 +390,10 @@ const pesos = v => '$' + Math.round(v).toLocaleString('es-AR');
 const pct   = v => (v * 100).toFixed(1) + '%';
 
 function showState(st) {
-  // st: 'loading' | 'error' | 'empty' | 'data'
+  // st: 'loading' | 'error' | 'login' | 'empty' | 'data'
   $('stateLoading').classList.toggle('hidden', st !== 'loading');
   $('stateError').classList.toggle('hidden', st !== 'error');
+  $('stateLogin').classList.toggle('hidden', st !== 'login');
   $('stateEmpty').classList.toggle('hidden', st !== 'empty');
   // Show/hide tabs content
   ['presupuesto','dashboard','tablas'].forEach(id => {
@@ -373,6 +402,9 @@ function showState(st) {
   });
   if (st === 'data') {
     $('presupuesto').classList.add('active');
+    $('logoutBtn').classList.remove('hidden');
+  } else {
+    $('logoutBtn').classList.add('hidden');
   }
 }
 
@@ -384,50 +416,77 @@ function showTab(id, btn) {
 }
 
 // ══════════════════════════════════════════════════
-//  FETCH DATA
+//  AUTH — Login por número de teléfono
 // ══════════════════════════════════════════════════
 async function loadData() {
   const params = new URLSearchParams(window.location.search);
-  const token  = params.get('token');
   const demo   = params.get('demo') === '1';
 
+  if (demo) { DATA = MOCK; renderAll(); return; }
+
   showState('loading');
+  const savedPhone = localStorage.getItem('mitempo_phone');
+  if (savedPhone) {
+    await fetchWithPhone(savedPhone);
+  } else {
+    showState('login');
+  }
+}
 
-  if (demo) {
-    DATA = MOCK;
-    renderAll();
+async function loginWithPhone() {
+  const input = $('phoneInput');
+  const phone = (input.value || '').replace(/\D/g, '').slice(-10);
+  if (phone.length < 8) {
+    showLoginError('Ingresá un número válido (sin el 0 ni el 15)');
     return;
   }
+  $('loginError').classList.add('hidden');
+  showState('loading');
+  await fetchWithPhone(phone);
+}
 
-  if (!token) {
-    $('errorTitle').textContent = 'Token faltante';
-    $('errorMsg').textContent   = 'No se encontró un token de acceso en la URL. Escribí "mi dashboard" a MiTempo por WhatsApp.';
-    showState('error');
-    return;
-  }
+function showLoginError(msg) {
+  const el = $('loginError');
+  el.textContent = msg;
+  el.classList.remove('hidden');
+  showState('login');
+}
 
+async function fetchWithPhone(phone) {
   try {
-    const res  = await fetch(`${WEBHOOK_URL}?token=${encodeURIComponent(token)}`);
+    const res  = await fetch(`${WEBHOOK_URL}?phone=${encodeURIComponent(phone)}`);
     const json = await res.json();
 
-    if (json.error === 'token_invalid' || json.error === 'token_expired') {
-      showState('error');
+    if (json.error === 'user_not_found') {
+      localStorage.removeItem('mitempo_phone');
+      showLoginError('Número no encontrado. Verificá que sea el mismo número que usás en WhatsApp.');
       return;
     }
-
+    if (json.error === 'subscription_inactive') {
+      localStorage.removeItem('mitempo_phone');
+      showLoginError('Tu suscripción no está activa. Escribile a MiTempo por WhatsApp.');
+      return;
+    }
     if (!json.kpis && !json.resumen_mensual) {
+      localStorage.setItem('mitempo_phone', phone);
       showState('empty');
       return;
     }
-
+    localStorage.setItem('mitempo_phone', phone);
     DATA = json;
     renderAll();
   } catch (e) {
     console.error(e);
-    $('errorTitle').textContent = 'Error de conexión';
-    $('errorMsg').textContent   = 'No se pudo conectar con el servidor. Intentá de nuevo en unos minutos.';
-    showState('error');
+    showLoginError('Error de conexión. Verificá tu internet e intentá de nuevo.');
   }
+}
+
+function logout() {
+  localStorage.removeItem('mitempo_phone');
+  DATA = null;
+  showState('login');
+  $('headerSub').textContent = '';
+  setTimeout(() => $('phoneInput')?.focus(), 100);
 }
 
 // ══════════════════════════════════════════════════
@@ -526,8 +585,7 @@ function renderPresupuesto() {
 //  GUARDAR PRESUPUESTO
 // ══════════════════════════════════════════════════
 async function guardarPresupuesto() {
-  const params = new URLSearchParams(window.location.search);
-  const token  = params.get('token') || 'demo';
+  const phone  = localStorage.getItem('mitempo_phone') || '';
   const status = $('saveStatus');
 
   const inputs = document.querySelectorAll('.pres-input');
@@ -550,7 +608,7 @@ async function guardarPresupuesto() {
     const res = await fetch(SAVE_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token, presupuesto }),
+      body: JSON.stringify({ phone, presupuesto }),
     });
     const json = await res.json();
     if (json.ok) {
@@ -969,6 +1027,9 @@ function renderResumenAnual() {
 // ══════════════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════════════
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(() => {});
+}
 loadData();
 </script>
 </body>
