@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MiTempo — Dashboard Financiero</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+
+    /* ── Sticky col A in presupuesto table ── */
+    .col-cat {
+      position: sticky;
+      left: 0;
+      background: #fff;
+      z-index: 2;
+      min-width: 150px;
+      border-right: 2px solid #e5e7eb;
+    }
+    .month-head { background: #1a3a5c; color: #fff; }
+    .annual-head { background: #7e57c2; color: #fff; }
+
+    /* ── Presupuesto input cells ── */
+    .pres-input {
+      width: 80px;
+      text-align: right;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 12px;
+      font-family: 'Inter', sans-serif;
+    }
+    .pres-input:focus {
+      outline: none;
+      border-color: #6366f1;
+      background: #eef2ff;
+    }
+
+    /* ── Tab active indicator ── */
+    .tab-btn { border-bottom: 3px solid transparent; transition: all .2s; }
+    .tab-btn.active { border-bottom-color: #6366f1; color: #4f46e5; }
+
+    /* ── Section hide/show ── */
+    .tab-section { display: none; }
+    .tab-section.active { display: block; }
+
+    /* ── Accordion ── */
+    .acc-body { display: none; }
+    .acc-row.open .acc-body { display: block; }
+    .acc-arrow { transition: transform .2s; }
+    .acc-row.open .acc-arrow { transform: rotate(90deg); }
+
+    /* ── Skeleton shimmer ── */
+    @keyframes shimmer {
+      0%   { background-position: -600px 0; }
+      100% { background-position: 600px 0; }
+    }
+    .skeleton {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 600px 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 6px;
+    }
+
+    /* ── Chart containers ── */
+    .chart-wrap { position: relative; }
+
+    /* ── Pres bar ── */
+    .pres-bar-bg { background: #f0f0f0; border-radius: 4px; height: 10px; overflow: hidden; }
+    .pres-bar-fill { height: 100%; border-radius: 4px; transition: width .4s; }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800 text-sm">
+
+<!-- ── Header ── -->
+<header class="bg-indigo-600 text-white px-6 py-3 flex items-center gap-3 shadow-md">
+  <div>
+    <h1 class="text-lg font-bold leading-none">MiTempo</h1>
+    <p id="headerSub" class="text-xs opacity-75 mt-0.5">Cargando…</p>
+  </div>
+</header>
+
+<!-- ── Tabs ── -->
+<nav class="bg-white border-b border-gray-200 px-6 flex gap-0">
+  <button class="tab-btn active px-5 py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-sm" onclick="showTab('presupuesto',this)">Presupuesto</button>
+  <button class="tab-btn px-5 py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-sm" onclick="showTab('dashboard',this)">Dashboard</button>
+  <button class="tab-btn px-5 py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-sm" onclick="showTab('tablas',this)">Tablas dinámicas</button>
+</nav>
+
+<!-- ── Content ── -->
+<main class="p-5">
+
+  <!-- ──────────────── LOADING ──────────────── -->
+  <div id="stateLoading" class="space-y-4">
+    <div class="grid grid-cols-4 gap-4">
+      <div class="skeleton h-24 rounded-xl"></div>
+      <div class="skeleton h-24 rounded-xl"></div>
+      <div class="skeleton h-24 rounded-xl"></div>
+      <div class="skeleton h-24 rounded-xl"></div>
+    </div>
+    <div class="skeleton h-40 rounded-xl"></div>
+    <div class="skeleton h-64 rounded-xl"></div>
+  </div>
+
+  <!-- ──────────────── ERROR ──────────────── -->
+  <div id="stateError" class="hidden flex flex-col items-center justify-center py-20 text-center">
+    <div class="text-5xl mb-4">🔒</div>
+    <h2 class="text-xl font-bold text-gray-700 mb-2" id="errorTitle">Enlace inválido o expirado</h2>
+    <p class="text-gray-500 max-w-sm" id="errorMsg">Tu enlace de dashboard ha expirado (24 h). Escribí <strong>"mi dashboard"</strong> a MiTempo por WhatsApp para recibir un nuevo enlace.</p>
+  </div>
+
+  <!-- ──────────────── EMPTY ──────────────── -->
+  <div id="stateEmpty" class="hidden flex flex-col items-center justify-center py-20 text-center">
+    <div class="text-5xl mb-4">📭</div>
+    <h2 class="text-xl font-bold text-gray-700 mb-2">Sin movimientos aún</h2>
+    <p class="text-gray-500 max-w-sm">Todavía no registraste ingresos ni egresos. Contale a MiTempo tus movimientos por WhatsApp y volvé aquí para ver tus finanzas.</p>
+  </div>
+
+  <!-- ──────────────── PRESUPUESTO ──────────────── -->
+  <div id="presupuesto" class="tab-section active hidden">
+    <div class="bg-amber-50 border-l-4 border-amber-400 rounded px-4 py-2.5 mb-4 text-amber-800 text-xs">
+      📝 Columnas <strong>Pres.</strong> son editables. <strong>Real</strong>, <strong>Dif.</strong> y <strong>%</strong> se calculan automáticamente desde tus movimientos.
+      <button onclick="guardarPresupuesto()" class="ml-4 bg-indigo-600 text-white text-xs font-semibold px-4 py-1.5 rounded-lg hover:bg-indigo-700 transition">Guardar presupuesto</button>
+      <span id="saveStatus" class="ml-2 text-xs"></span>
+    </div>
+    <div class="bg-white rounded-xl shadow overflow-auto" style="max-height:calc(100vh - 200px)">
+      <table class="border-collapse text-xs" style="min-width:100%">
+        <thead id="presHead"></thead>
+        <tbody id="presBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ──────────────── DASHBOARD ──────────────── -->
+  <div id="dashboard" class="tab-section hidden">
+    <!-- KPI Cards -->
+    <div class="grid grid-cols-4 gap-4 mb-4" id="kpiRow">
+      <div class="bg-white rounded-xl shadow p-4 border-l-4 border-green-500">
+        <p class="text-xs text-gray-400 uppercase tracking-wide mb-1" id="kpiIngLabel">Ingresos · mes</p>
+        <p class="text-2xl font-bold text-gray-900" id="kpiIngVal">—</p>
+        <p class="text-xs text-gray-400 mt-1" id="kpiIngSub"></p>
+      </div>
+      <div class="bg-white rounded-xl shadow p-4 border-l-4 border-red-500">
+        <p class="text-xs text-gray-400 uppercase tracking-wide mb-1" id="kpiEgrLabel">Egresos · mes</p>
+        <p class="text-2xl font-bold text-gray-900" id="kpiEgrVal">—</p>
+        <p class="text-xs text-gray-400 mt-1" id="kpiEgrSub"></p>
+      </div>
+      <div class="bg-white rounded-xl shadow p-4 border-l-4 border-indigo-500">
+        <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Balance neto</p>
+        <p class="text-2xl font-bold text-gray-900" id="kpiBalVal">—</p>
+        <p class="text-xs text-gray-400 mt-1" id="kpiBalSub"></p>
+      </div>
+      <div class="bg-white rounded-xl shadow p-4 border-l-4 border-purple-500">
+        <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Tasa de ahorro</p>
+        <p class="text-2xl font-bold text-gray-900" id="kpiAhorroVal">—</p>
+        <p class="text-xs text-gray-400 mt-1" id="kpiAhorroSub"></p>
+      </div>
+    </div>
+
+    <!-- Row 1: Pres vs Real + Resumen mensual -->
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div class="bg-white rounded-xl shadow p-4">
+        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 pb-2 border-b border-gray-100" id="presVsRealTitle">Presupuesto vs Real</h3>
+        <div id="presVsRealBars"></div>
+      </div>
+      <div class="bg-white rounded-xl shadow p-4">
+        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 pb-2 border-b border-gray-100">Resumen mensual</h3>
+        <div class="overflow-auto">
+          <table class="w-full text-xs">
+            <thead><tr class="bg-gray-50">
+              <th class="py-1.5 px-2 text-left">Mes</th>
+              <th class="py-1.5 px-2 text-right">Ingresos</th>
+              <th class="py-1.5 px-2 text-right">Egresos</th>
+              <th class="py-1.5 px-2 text-right">Ahorro</th>
+              <th class="py-1.5 px-2 text-right">%</th>
+            </tr></thead>
+            <tbody id="resumenBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Evolución anual -->
+    <div class="bg-white rounded-xl shadow p-4 mb-4">
+      <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 pb-2 border-b border-gray-100">Evolución anual — Ingresos, Egresos y Ahorro acumulado</h3>
+      <div class="chart-wrap"><canvas id="chartEvolucion" height="70"></canvas></div>
+    </div>
+
+    <!-- Ranking YTD -->
+    <div class="bg-white rounded-xl shadow p-4">
+      <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 pb-2 border-b border-gray-100">Ranking de gastos anuales por categoría <span class="font-normal text-gray-400 normal-case">(YTD)</span></h3>
+      <div class="chart-wrap"><canvas id="chartRanking" height="80"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ──────────────── TABLAS DINÁMICAS ──────────────── -->
+  <div id="tablas" class="tab-section hidden">
+    <!-- Month filter -->
+    <div class="flex items-center gap-3 mb-4">
+      <span class="text-sm font-semibold text-gray-600">Período analizado:</span>
+      <select id="mesSelect" onchange="renderTablas()" class="px-3 py-1.5 rounded-lg border border-gray-200 text-sm font-semibold text-indigo-600 bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+      </select>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <!-- Top 5 -->
+      <div class="bg-white rounded-xl shadow p-4">
+        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 pb-2 border-b border-gray-100">Top 5 categorías — mayor gasto</h3>
+        <div id="top5"></div>
+      </div>
+
+      <!-- MoM -->
+      <div class="bg-white rounded-xl shadow p-4">
+        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 pb-2 border-b border-gray-100">Comparativo mes anterior (MoM%)</h3>
+        <div class="overflow-auto">
+          <table class="w-full text-xs">
+            <thead><tr class="bg-gray-50">
+              <th class="py-1.5 px-2 text-left">Categoría</th>
+              <th class="py-1.5 px-2 text-right">Mes ant.</th>
+              <th class="py-1.5 px-2 text-right">Mes act.</th>
+              <th class="py-1.5 px-2 text-right">MoM%</th>
+              <th class="py-1.5 px-2 text-right">% Ing.</th>
+            </tr></thead>
+            <tbody id="momBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Accordion -->
+    <div class="bg-white rounded-xl shadow p-4 mb-4">
+      <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 pb-2 border-b border-gray-100">
+        Desglose por categoría
+        <span class="font-normal text-gray-400 normal-case ml-1">· clic para ver transacciones</span>
+      </h3>
+      <div id="acordeon"></div>
+    </div>
+
+    <!-- Resumen anual Tablas -->
+    <div class="bg-white rounded-xl shadow p-4">
+      <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 pb-2 border-b border-gray-100">Resumen mensual del año</h3>
+      <div class="overflow-auto">
+        <table class="w-full text-xs">
+          <thead><tr class="bg-gray-50">
+            <th class="py-1.5 px-2 text-left">Mes</th>
+            <th class="py-1.5 px-2 text-right">Ingresos</th>
+            <th class="py-1.5 px-2 text-right">Egresos</th>
+            <th class="py-1.5 px-2 text-right">Balance</th>
+            <th class="py-1.5 px-2 text-right">Tasa ahorro</th>
+            <th class="py-1.5 px-2 text-right">vs Pres.</th>
+          </tr></thead>
+          <tbody id="resumenAnualBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ══════════════════════════════════════════════════
+//  CONFIG
+// ══════════════════════════════════════════════════
+const WEBHOOK_URL   = 'https://sebabiole.app.n8n.cloud/webhook/dashboard-data';
+const SAVE_URL      = 'https://sebabiole.app.n8n.cloud/webhook/dashboard-save-budget';
+const MESES_NOM     = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const MESES_CORTO   = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+const CAT_COLORS    = ['#ea4335','#fbbc04','#34a853','#1a73e8','#a142f4','#00bcd4','#ff7043','#8d6e63','#90a4ae','#607d8b'];
+
+// ══════════════════════════════════════════════════
+//  MOCK DATA (used when ?demo=1)
+// ══════════════════════════════════════════════════
+const MOCK = {
+  user_name: 'Demo',
+  anio: 2025,
+  mes_actual: 4,
+  categorias_egreso: ['Vivienda / Alquiler','Comida','Transporte','Entretenimiento','Salud','Educación','Ropa'],
+  categorias_ingreso: ['Sueldo','Freelance'],
+  kpis: {
+    ingresos_mes: 180000, egresos_mes: 112400,
+    balance: 67600, tasa_ahorro: 0.376,
+    ingresos_prev: 167000, egresos_prev: 108000,
+  },
+  presupuesto_tabla: [
+    { cat: 'Vivienda / Alquiler', tipo: 'E', meses: Array.from({length:12},(_,i)=>({m:i+1,pres:28000,real:i<4?28000:0})) },
+    { cat: 'Comida',              tipo: 'E', meses: Array.from({length:12},(_,i)=>({m:i+1,pres:50000,real:i===0?47500:i===1?54000:i===2?48200:i===3?24100:0})) },
+    { cat: 'Transporte',          tipo: 'E', meses: Array.from({length:12},(_,i)=>({m:i+1,pres:15000,real:i<4?[15600,14200,15600,18200][i]:0})) },
+    { cat: 'Entretenimiento',     tipo: 'E', meses: Array.from({length:12},(_,i)=>({m:i+1,pres:20000,real:i<4?[12000,11500,12000,9500][i]:0})) },
+    { cat: 'Salud',               tipo: 'E', meses: Array.from({length:12},(_,i)=>({m:i+1,pres:12000,real:i<4?[8800,9200,9200,8700][i]:0})) },
+    { cat: 'Educación',           tipo: 'E', meses: Array.from({length:12},(_,i)=>({m:i+1,pres:10000,real:i<4?[8500,8500,8500,10000][i]:0})) },
+    { cat: 'Ropa',                tipo: 'E', meses: Array.from({length:12},(_,i)=>({m:i+1,pres:15000,real:i<4?[5600,0,15400,15400][i]:0})) },
+    { cat: 'Sueldo',              tipo: 'I', meses: Array.from({length:12},(_,i)=>({m:i+1,pres:150000,real:i<4?[155000,162000,167000,180000][i]:0})) },
+  ],
+  resumen_mensual: [
+    {mes:1,nombre:'Enero',    ingresos:155000,egresos:98000, balance:57000,pres_egr:100000},
+    {mes:2,nombre:'Febrero',  ingresos:162000,egresos:109000,balance:53000,pres_egr:105000},
+    {mes:3,nombre:'Marzo',    ingresos:167000,egresos:108000,balance:59000,pres_egr:110000},
+    {mes:4,nombre:'Abril',    ingresos:180000,egresos:112400,balance:67600,pres_egr:109000},
+  ],
+  top_categorias_ytd: [
+    {cat:'Vivienda / Alquiler',total:112000},
+    {cat:'Comida',             total:96400 },
+    {cat:'Transporte',         total:68500 },
+    {cat:'Ropa',               total:51200 },
+    {cat:'Salud',              total:34400 },
+    {cat:'Educación',          total:30000 },
+    {cat:'Entretenimiento',    total:28700 },
+  ],
+  cat_mensual: {
+    'Vivienda / Alquiler': [28000,28000,28000,28000,null,null,null,null,null,null,null,null],
+    'Comida':              [47500,54000,48200,24100,null,null,null,null,null,null,null,null],
+    'Transporte':          [15600,14200,15600,18200,null,null,null,null,null,null,null,null],
+  },
+  mom_comparativo: [
+    {cat:'Comida',         mes_ant:22800,mes_act:24100,mom_pct:0.057, pct_ingreso:0.134},
+    {cat:'Transporte',     mes_ant:15600,mes_act:18200,mom_pct:0.167, pct_ingreso:0.101},
+    {cat:'Entretenimiento',mes_ant:12000,mes_act:9500, mom_pct:-0.208,pct_ingreso:0.053},
+    {cat:'Vivienda / Alquiler',mes_ant:28000,mes_act:28000,mom_pct:0,pct_ingreso:0.156},
+    {cat:'Salud',          mes_ant:9200, mes_act:8700, mom_pct:-0.054,pct_ingreso:0.048},
+  ],
+  transacciones_mes: [
+    {cat:'Comida',          desc:'Supermercado Dia',   fecha:'03/04',monto:8400, tipo:'E'},
+    {cat:'Comida',          desc:'Delivery PedidosYa', fecha:'07/04',monto:3200, tipo:'E'},
+    {cat:'Comida',          desc:'Carnicería',         fecha:'12/04',monto:5100, tipo:'E'},
+    {cat:'Comida',          desc:'Verdulería',         fecha:'18/04',monto:2800, tipo:'E'},
+    {cat:'Comida',          desc:'Supermercado Coto',  fecha:'24/04',monto:4600, tipo:'E'},
+    {cat:'Transporte',      desc:'Nafta YPF',          fecha:'02/04',monto:7200, tipo:'E'},
+    {cat:'Transporte',      desc:'SUBE recarga',       fecha:'08/04',monto:3000, tipo:'E'},
+    {cat:'Transporte',      desc:'Peaje Autopista',    fecha:'15/04',monto:4800, tipo:'E'},
+    {cat:'Transporte',      desc:'Estacionamiento',    fecha:'22/04',monto:3200, tipo:'E'},
+    {cat:'Vivienda / Alquiler',desc:'Alquiler abril',  fecha:'01/04',monto:22000,tipo:'E'},
+    {cat:'Vivienda / Alquiler',desc:'Expensas',        fecha:'05/04',monto:4200, tipo:'E'},
+    {cat:'Vivienda / Alquiler',desc:'Internet',        fecha:'10/04',monto:1800, tipo:'E'},
+    {cat:'Entretenimiento', desc:'Netflix',            fecha:'01/04',monto:2100, tipo:'E'},
+    {cat:'Entretenimiento', desc:'Spotify',            fecha:'01/04',monto:900,  tipo:'E'},
+    {cat:'Entretenimiento', desc:'Cine + salida',      fecha:'20/04',monto:6500, tipo:'E'},
+    {cat:'Salud',           desc:'Obra social',        fecha:'05/04',monto:5400, tipo:'E'},
+    {cat:'Salud',           desc:'Farmacia',           fecha:'14/04',monto:3300, tipo:'E'},
+    {cat:'Educación',       desc:'Curso online',       fecha:'03/04',monto:8500, tipo:'E'},
+    {cat:'Ropa',            desc:'Zapatillas',         fecha:'11/04',monto:9800, tipo:'E'},
+    {cat:'Ropa',            desc:'Remeras',            fecha:'25/04',monto:5600, tipo:'E'},
+  ],
+};
+
+// ══════════════════════════════════════════════════
+//  GLOBALS
+// ══════════════════════════════════════════════════
+let DATA = null;
+let chartEvolucion = null;
+let chartRanking   = null;
+
+// ══════════════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════════════
+const $ = id => document.getElementById(id);
+const pesos = v => '$' + Math.round(v).toLocaleString('es-AR');
+const pct   = v => (v * 100).toFixed(1) + '%';
+
+function showState(st) {
+  // st: 'loading' | 'error' | 'empty' | 'data'
+  $('stateLoading').classList.toggle('hidden', st !== 'loading');
+  $('stateError').classList.toggle('hidden', st !== 'error');
+  $('stateEmpty').classList.toggle('hidden', st !== 'empty');
+  // Show/hide tabs content
+  ['presupuesto','dashboard','tablas'].forEach(id => {
+    $(id).classList.toggle('hidden', st !== 'data');
+    if (st !== 'data') $(id).classList.remove('active');
+  });
+  if (st === 'data') {
+    $('presupuesto').classList.add('active');
+  }
+}
+
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  $(id).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// ══════════════════════════════════════════════════
+//  FETCH DATA
+// ══════════════════════════════════════════════════
+async function loadData() {
+  const params = new URLSearchParams(window.location.search);
+  const token  = params.get('token');
+  const demo   = params.get('demo') === '1';
+
+  showState('loading');
+
+  if (demo) {
+    DATA = MOCK;
+    renderAll();
+    return;
+  }
+
+  if (!token) {
+    $('errorTitle').textContent = 'Token faltante';
+    $('errorMsg').textContent   = 'No se encontró un token de acceso en la URL. Escribí "mi dashboard" a MiTempo por WhatsApp.';
+    showState('error');
+    return;
+  }
+
+  try {
+    const res  = await fetch(`${WEBHOOK_URL}?token=${encodeURIComponent(token)}`);
+    const json = await res.json();
+
+    if (json.error === 'token_invalid' || json.error === 'token_expired') {
+      showState('error');
+      return;
+    }
+
+    if (!json.kpis && !json.resumen_mensual) {
+      showState('empty');
+      return;
+    }
+
+    DATA = json;
+    renderAll();
+  } catch (e) {
+    console.error(e);
+    $('errorTitle').textContent = 'Error de conexión';
+    $('errorMsg').textContent   = 'No se pudo conectar con el servidor. Intentá de nuevo en unos minutos.';
+    showState('error');
+  }
+}
+
+// ══════════════════════════════════════════════════
+//  RENDER ALL
+// ══════════════════════════════════════════════════
+function renderAll() {
+  const mesNom = MESES_NOM[DATA.mes_actual - 1] || 'mes';
+  $('headerSub').textContent = `${DATA.user_name || ''} · ${mesNom} ${DATA.anio}`;
+
+  showState('data');
+  renderPresupuesto();
+  renderDashboard();
+  renderTablasInit();
+}
+
+// ══════════════════════════════════════════════════
+//  PRESUPUESTO
+// ══════════════════════════════════════════════════
+function renderPresupuesto() {
+  // Build header
+  const head = $('presHead');
+  let row1 = `<tr><th class="col-cat border border-gray-200 px-3 py-2 text-left font-semibold" rowspan="2">Categoría</th>`;
+  let row2 = `<tr>`;
+  for (let m = 1; m <= 12; m++) {
+    row1 += `<th class="month-head text-center text-xs font-bold px-1 py-1 border border-gray-300" colspan="4">${MESES_CORTO[m-1]}</th>`;
+    row2 += `<th class="bg-gray-100 text-center text-xs px-1 py-1 border border-gray-200 font-medium text-gray-500">Pres.</th>`;
+    row2 += `<th class="bg-blue-50 text-center text-xs px-1 py-1 border border-gray-200 font-medium text-blue-600">Real</th>`;
+    row2 += `<th class="bg-red-50 text-center text-xs px-1 py-1 border border-gray-200 font-medium text-red-500">Dif.</th>`;
+    row2 += `<th class="bg-green-50 text-center text-xs px-1 py-1 border border-gray-200 font-medium text-green-600">%</th>`;
+  }
+  row1 += `<th class="annual-head text-center text-xs font-bold px-1 py-1 border border-gray-300" colspan="2">Anual</th></tr>`;
+  row2 += `<th class="bg-purple-50 text-center text-xs px-1 py-1 border border-gray-200 font-medium text-purple-600">Pres.</th>`;
+  row2 += `<th class="bg-purple-50 text-center text-xs px-1 py-1 border border-gray-200 font-medium text-purple-600">Real</th>`;
+  row2 += `</tr>`;
+  head.innerHTML = row1 + row2;
+
+  // Separate by type
+  const egrCats = (DATA.presupuesto_tabla || []).filter(r => r.tipo === 'E' || !r.tipo);
+  const ingCats = (DATA.presupuesto_tabla || []).filter(r => r.tipo === 'I');
+
+  const body = $('presBody');
+  body.innerHTML = '';
+
+  const buildSectionHeader = (label) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td colspan="51" class="bg-gray-700 text-white text-xs font-bold uppercase tracking-wider px-3 py-1.5">${label}</td>`;
+    body.appendChild(tr);
+  };
+
+  const buildRow = (rowData) => {
+    const tr = document.createElement('tr');
+    let html = `<td class="col-cat border border-gray-200 px-3 py-1.5 font-medium text-gray-700">${rowData.cat}</td>`;
+    let totalPres = 0, totalReal = 0;
+
+    for (let m = 1; m <= 12; m++) {
+      const mes = (rowData.meses || []).find(x => x.m === m) || { pres: 0, real: 0 };
+      const pres = mes.pres || 0;
+      const real = mes.real || 0;
+      const dif  = pres - real;
+      const ratio = pres > 0 ? real / pres : null;
+      totalPres += pres;
+      totalReal += real;
+
+      const pctCls = ratio === null ? '' :
+        ratio <= 0.95 ? 'bg-green-100 text-green-700' :
+        ratio <= 1.05 ? 'bg-yellow-100 text-yellow-700' :
+                        'bg-red-100 text-red-700';
+      const difCls = dif >= 0 ? 'text-green-600' : 'text-red-500';
+
+      html += `<td class="border border-gray-100 px-1 py-1 text-right bg-gray-50">
+        <input class="pres-input" data-cat="${rowData.cat}" data-mes="${m}" value="${pres > 0 ? Math.round(pres) : ''}" placeholder="0">
+      </td>`;
+      html += `<td class="border border-gray-100 px-2 py-1 text-right font-medium">${real > 0 ? pesos(real) : ''}</td>`;
+      html += `<td class="border border-gray-100 px-2 py-1 text-right text-xs ${difCls}">${real > 0 && pres > 0 ? pesos(dif) : ''}</td>`;
+      html += `<td class="border border-gray-100 px-1 py-1 text-center text-xs font-bold rounded ${pctCls}">${ratio !== null && real > 0 ? Math.round(ratio*100)+'%' : ''}</td>`;
+    }
+
+    const annualRatio = totalPres > 0 ? totalReal / totalPres : null;
+    html += `<td class="border border-purple-100 px-2 py-1 text-right text-xs font-semibold bg-purple-50">${totalPres > 0 ? pesos(totalPres) : ''}</td>`;
+    html += `<td class="border border-purple-100 px-2 py-1 text-right text-xs font-bold bg-purple-50">${totalReal > 0 ? pesos(totalReal) : ''}</td>`;
+    tr.innerHTML = html;
+    body.appendChild(tr);
+  };
+
+  if (egrCats.length > 0) {
+    buildSectionHeader('Egresos');
+    egrCats.forEach(buildRow);
+  }
+  if (ingCats.length > 0) {
+    buildSectionHeader('Ingresos');
+    ingCats.forEach(buildRow);
+  }
+}
+
+// ══════════════════════════════════════════════════
+//  GUARDAR PRESUPUESTO
+// ══════════════════════════════════════════════════
+async function guardarPresupuesto() {
+  const params = new URLSearchParams(window.location.search);
+  const token  = params.get('token') || 'demo';
+  const status = $('saveStatus');
+
+  const inputs = document.querySelectorAll('.pres-input');
+  const presupuesto = [];
+  inputs.forEach(inp => {
+    const monto = parseFloat(inp.value.replace(/\./g,'').replace(',','.'));
+    if (!isNaN(monto) && monto > 0) {
+      presupuesto.push({
+        cat: inp.dataset.cat,
+        mes: parseInt(inp.dataset.mes),
+        monto,
+      });
+    }
+  });
+
+  status.textContent = '⏳ Guardando…';
+  status.className = 'ml-2 text-xs text-gray-500';
+
+  try {
+    const res = await fetch(SAVE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, presupuesto }),
+    });
+    const json = await res.json();
+    if (json.ok) {
+      status.textContent = '✅ Guardado';
+      status.className = 'ml-2 text-xs text-green-600 font-semibold';
+    } else {
+      throw new Error('Response not ok');
+    }
+  } catch (e) {
+    status.textContent = '❌ Error al guardar';
+    status.className = 'ml-2 text-xs text-red-500 font-semibold';
+  }
+
+  setTimeout(() => { status.textContent = ''; }, 4000);
+}
+
+// ══════════════════════════════════════════════════
+//  DASHBOARD
+// ══════════════════════════════════════════════════
+function renderDashboard() {
+  const k   = DATA.kpis || {};
+  const mes = MESES_NOM[(DATA.mes_actual || 1) - 1];
+
+  $('kpiIngLabel').textContent = `Ingresos · ${mes}`;
+  $('kpiEgrLabel').textContent = `Egresos · ${mes}`;
+
+  $('kpiIngVal').textContent = pesos(k.ingresos_mes || 0);
+  $('kpiEgrVal').textContent = pesos(k.egresos_mes  || 0);
+  $('kpiBalVal').textContent = pesos(k.balance      || 0);
+  $('kpiAhorroVal').textContent = pct(k.tasa_ahorro || 0);
+
+  // vs prev
+  if (k.ingresos_prev) {
+    const vIng = ((k.ingresos_mes - k.ingresos_prev) / k.ingresos_prev * 100).toFixed(1);
+    $('kpiIngSub').textContent = `${vIng > 0 ? '↑' : '↓'} ${Math.abs(vIng)}% vs mes anterior`;
+    const vEgr = ((k.egresos_mes - k.egresos_prev) / k.egresos_prev * 100).toFixed(1);
+    $('kpiEgrSub').textContent = `${vEgr > 0 ? '↑' : '↓'} ${Math.abs(vEgr)}% vs mes anterior`;
+  }
+  $('kpiBalSub').textContent = `${pct(k.tasa_ahorro || 0)} del ingreso`;
+  $('kpiAhorroSub').textContent = (k.tasa_ahorro || 0) >= 0.30 ? 'Meta 30% ✅' : 'Meta 30% ⚠️';
+
+  // Pres vs Real bars
+  $('presVsRealTitle').textContent = `Presupuesto vs Real — ${mes}`;
+  const barsWrap = $('presVsRealBars');
+  barsWrap.innerHTML = '';
+
+  const egrMes = (DATA.presupuesto_tabla || []).filter(r => r.tipo === 'E' || !r.tipo);
+  egrMes.forEach(cat => {
+    const mesData = (cat.meses || []).find(m => m.m === DATA.mes_actual) || {};
+    const pres = mesData.pres || 0;
+    const real = mesData.real || 0;
+    if (pres === 0 && real === 0) return;
+    const ratio = pres > 0 ? real / pres : 1;
+    const fillCls = ratio <= 0.95 ? 'bg-green-500' : ratio <= 1.05 ? 'bg-yellow-400' : 'bg-red-500';
+    const w = Math.min(ratio, 1.2) / 1.2 * 100;
+    barsWrap.innerHTML += `
+      <div class="mb-2.5">
+        <div class="flex justify-between text-xs mb-1">
+          <span class="font-medium text-gray-600">${cat.cat}</span>
+          <span class="text-gray-500">${pesos(real)} / ${pesos(pres)} · ${Math.round(ratio*100)}%</span>
+        </div>
+        <div class="pres-bar-bg"><div class="pres-bar-fill ${fillCls}" style="width:${w}%"></div></div>
+      </div>`;
+  });
+
+  // Resumen mensual
+  const resBody = $('resumenBody');
+  resBody.innerHTML = '';
+  const resumen = DATA.resumen_mensual || [];
+  let ytdIng = 0, ytdEgr = 0, ytdBal = 0;
+  resumen.forEach(r => {
+    ytdIng += r.ingresos; ytdEgr += r.egresos; ytdBal += r.balance;
+    const ahorroRate = r.ingresos > 0 ? (r.balance / r.ingresos * 100).toFixed(1) : '—';
+    const esCurrent = r.mes === DATA.mes_actual;
+    const bold = esCurrent ? 'font-bold' : '';
+    resBody.innerHTML += `<tr class="${esCurrent ? 'bg-indigo-50' : ''} hover:bg-gray-50 border-b border-gray-100">
+      <td class="py-1.5 px-2 ${bold}">${r.nombre}</td>
+      <td class="py-1.5 px-2 text-right ${bold}">${pesos(r.ingresos)}</td>
+      <td class="py-1.5 px-2 text-right ${bold}">${pesos(r.egresos)}</td>
+      <td class="py-1.5 px-2 text-right ${bold} text-green-600">${pesos(r.balance)}</td>
+      <td class="py-1.5 px-2 text-right ${bold}">${ahorroRate}%</td>
+    </tr>`;
+  });
+  // YTD row
+  if (resumen.length > 0) {
+    const ytdRate = ytdIng > 0 ? (ytdBal / ytdIng * 100).toFixed(1) : '—';
+    resBody.innerHTML += `<tr class="bg-indigo-100 font-bold">
+      <td class="py-1.5 px-2">YTD</td>
+      <td class="py-1.5 px-2 text-right">${pesos(ytdIng)}</td>
+      <td class="py-1.5 px-2 text-right">${pesos(ytdEgr)}</td>
+      <td class="py-1.5 px-2 text-right text-green-700">${pesos(ytdBal)}</td>
+      <td class="py-1.5 px-2 text-right">${ytdRate}%</td>
+    </tr>`;
+  }
+
+  // ── Charts ──
+  renderChartEvolucion();
+  renderChartRanking();
+}
+
+function renderChartEvolucion() {
+  if (chartEvolucion) chartEvolucion.destroy();
+
+  const resumen = DATA.resumen_mensual || [];
+  const mesesLabels = MESES_CORTO.slice(0, 12);
+  const ingresos = mesesLabels.map((_, i) => {
+    const r = resumen.find(x => x.mes === i + 1);
+    return r ? r.ingresos : null;
+  });
+  const egresos = mesesLabels.map((_, i) => {
+    const r = resumen.find(x => x.mes === i + 1);
+    return r ? r.egresos : null;
+  });
+
+  let cumAhorro = 0;
+  const ahorroAcum = ingresos.map((ing, i) => {
+    if (ing === null) return null;
+    cumAhorro += ing - (egresos[i] || 0);
+    return cumAhorro;
+  });
+
+  const lastIdx = ahorroAcum.reduce((acc, v, i) => v !== null ? i : acc, -1);
+
+  chartEvolucion = new Chart($('chartEvolucion'), {
+    data: {
+      labels: mesesLabels,
+      datasets: [
+        { type:'bar',  label:'Ingresos', data: ingresos, backgroundColor:'rgba(52,168,83,0.75)', borderRadius:4, order:2 },
+        { type:'bar',  label:'Egresos',  data: egresos,  backgroundColor:'rgba(234,67,53,0.75)', borderRadius:4, order:2 },
+        { type:'line', label:'Ahorro acumulado', data: ahorroAcum,
+          borderColor:'#6366f1', backgroundColor:'rgba(99,102,241,0.1)',
+          borderWidth:2.5, fill:true, tension:0.35, yAxisID:'yAhorro', order:1,
+          pointRadius: ctx => ctx.dataIndex === lastIdx ? 6 : 3,
+          pointBackgroundColor:'#6366f1',
+        },
+      ],
+    },
+    options: {
+      responsive:true,
+      interaction:{ mode:'index', intersect:false },
+      plugins:{
+        legend:{ position:'top', labels:{ font:{ size:12 } } },
+        tooltip:{ callbacks:{ label: ctx => ` ${ctx.dataset.label}: ${pesos(ctx.raw || 0)}` } },
+      },
+      scales:{
+        x:{ grid:{ display:false } },
+        y:{ position:'left', ticks:{ callback: v => '$'+(v/1000)+'k', font:{size:11} }, grid:{ color:'#f5f5f5' } },
+        yAhorro:{ position:'right', ticks:{ callback: v => '$'+(v/1000)+'k', font:{size:11}, color:'#6366f1' }, grid:{ display:false } },
+      },
+    },
+  });
+}
+
+function renderChartRanking() {
+  if (chartRanking) chartRanking.destroy();
+  const sorted = [...(DATA.top_categorias_ytd || [])].sort((a,b) => b.total - a.total);
+
+  chartRanking = new Chart($('chartRanking'), {
+    type:'bar',
+    data:{
+      labels: sorted.map(c => c.cat),
+      datasets:[{
+        label:'Gasto YTD',
+        data: sorted.map(c => c.total),
+        backgroundColor: sorted.map((_,i) => CAT_COLORS[i % CAT_COLORS.length]),
+        borderRadius:4,
+      }],
+    },
+    options:{
+      indexAxis:'y', responsive:true,
+      plugins:{
+        legend:{ display:false },
+        tooltip:{ callbacks:{ label: ctx => ` ${pesos(ctx.raw)}` } },
+      },
+      scales:{
+        x:{ ticks:{ callback: v => '$'+(v/1000)+'k', font:{size:11} }, grid:{ color:'#f5f5f5' } },
+        y:{ ticks:{ font:{size:12} }, grid:{ display:false } },
+      },
+    },
+  });
+}
+
+// ══════════════════════════════════════════════════
+//  TABLAS DINÁMICAS
+// ══════════════════════════════════════════════════
+function renderTablasInit() {
+  // Populate month selector
+  const select = $('mesSelect');
+  select.innerHTML = '';
+  const resumen = DATA.resumen_mensual || [];
+  [...resumen].reverse().forEach(r => {
+    const opt = document.createElement('option');
+    opt.value = r.mes;
+    opt.textContent = `${r.nombre} ${DATA.anio}`;
+    if (r.mes === DATA.mes_actual) opt.selected = true;
+    select.appendChild(opt);
+  });
+  renderTablas();
+}
+
+function renderTablas() {
+  const mesNum = parseInt($('mesSelect').value);
+  renderTop5(mesNum);
+  renderMoM(mesNum);
+  renderAcordeon(mesNum);
+  renderResumenAnual();
+}
+
+function renderTop5(mesNum) {
+  // Build totals per cat for selected month from presupuesto_tabla
+  const totales = {};
+  (DATA.presupuesto_tabla || []).filter(r => r.tipo === 'E' || !r.tipo).forEach(cat => {
+    const m = (cat.meses || []).find(x => x.m === mesNum);
+    if (m && m.real > 0) totales[cat.cat] = m.real;
+  });
+  // fallback to transacciones_mes if no presupuesto data
+  if (Object.keys(totales).length === 0) {
+    (DATA.transacciones_mes || []).forEach(t => {
+      totales[t.cat] = (totales[t.cat] || 0) + t.monto;
+    });
+  }
+
+  const sorted = Object.entries(totales).sort((a,b) => b[1]-a[1]).slice(0,5);
+  const max    = sorted[0]?.[1] || 1;
+  const wrap   = $('top5');
+  wrap.innerHTML = '';
+
+  // Lookup presupuesto for badge
+  const presByMes = {};
+  (DATA.presupuesto_tabla || []).forEach(cat => {
+    const m = (cat.meses || []).find(x => x.m === mesNum);
+    if (m) presByMes[cat.cat] = m.pres || 0;
+  });
+
+  sorted.forEach(([cat, total], i) => {
+    const w     = (total / max * 100).toFixed(0);
+    const pres  = presByMes[cat] || 0;
+    const excede = pres > 0 && total > pres;
+    const badgeCls = excede
+      ? 'bg-red-100 text-red-700 text-xs font-semibold px-2 py-0.5 rounded-full'
+      : 'bg-green-100 text-green-700 text-xs font-semibold px-2 py-0.5 rounded-full';
+    const barColor = excede ? '#ef4444' : '#6366f1';
+
+    wrap.innerHTML += `<div class="flex items-center gap-2 mb-2.5">
+      <span class="text-lg font-bold text-gray-300 w-5 text-center">${i+1}</span>
+      <span class="flex-1 text-xs font-medium text-gray-700">${cat}</span>
+      <span class="text-xs font-bold text-gray-800">${pesos(total)}</span>
+      <div class="flex-grow bg-gray-100 rounded h-2 max-w-24 overflow-hidden">
+        <div style="width:${w}%;background:${barColor};height:100%;border-radius:4px"></div>
+      </div>
+      <span class="${badgeCls}">${excede ? 'Excedido' : 'En pres.'}</span>
+    </div>`;
+  });
+
+  if (sorted.length === 0) {
+    wrap.innerHTML = '<p class="text-xs text-gray-400 text-center py-4">Sin datos para este mes</p>';
+  }
+}
+
+function renderMoM(mesNum) {
+  const body = $('momBody');
+  body.innerHTML = '';
+  const mom = DATA.mom_comparativo || [];
+
+  let totAnt = 0, totAct = 0;
+  mom.forEach(r => {
+    totAnt += r.mes_ant || 0;
+    totAct += r.mes_act || 0;
+    const momPct = r.mom_pct || 0;
+    const arrowCls = momPct > 0 ? 'text-red-500' : momPct < 0 ? 'text-green-600' : 'text-gray-400';
+    const arrow    = momPct > 0 ? '↑' : momPct < 0 ? '↓' : '—';
+    const display  = momPct !== 0 ? `<span class="${arrowCls}">${arrow} ${Math.abs(momPct*100).toFixed(1)}%</span>` : '<span class="text-gray-400">—</span>';
+    body.innerHTML += `<tr class="border-b border-gray-100 hover:bg-gray-50">
+      <td class="py-1.5 px-2 font-medium">${r.cat}</td>
+      <td class="py-1.5 px-2 text-right">${pesos(r.mes_ant)}</td>
+      <td class="py-1.5 px-2 text-right">${pesos(r.mes_act)}</td>
+      <td class="py-1.5 px-2 text-right">${display}</td>
+      <td class="py-1.5 px-2 text-right">${(r.pct_ingreso*100).toFixed(1)}%</td>
+    </tr>`;
+  });
+
+  if (totAnt + totAct > 0) {
+    const totalMom = totAnt > 0 ? (totAct - totAnt) / totAnt : 0;
+    const arrowCls = totalMom > 0 ? 'text-red-500' : 'text-green-600';
+    const arrow    = totalMom > 0 ? '↑' : '↓';
+    body.innerHTML += `<tr class="bg-gray-100 font-bold">
+      <td class="py-1.5 px-2">TOTAL</td>
+      <td class="py-1.5 px-2 text-right">${pesos(totAnt)}</td>
+      <td class="py-1.5 px-2 text-right">${pesos(totAct)}</td>
+      <td class="py-1.5 px-2 text-right"><span class="${arrowCls}">${arrow} ${Math.abs(totalMom*100).toFixed(1)}%</span></td>
+      <td class="py-1.5 px-2 text-right">—</td>
+    </tr>`;
+  }
+
+  if (mom.length === 0) {
+    body.innerHTML = '<tr><td colspan="5" class="text-xs text-gray-400 text-center py-4">Sin datos</td></tr>';
+  }
+}
+
+function renderAcordeon(mesNum) {
+  // Group transactions by category
+  const txns = (DATA.transacciones_mes || []).filter(t => t.tipo === 'E');
+  const groups = {};
+  txns.forEach(t => {
+    if (!groups[t.cat]) groups[t.cat] = [];
+    groups[t.cat].push(t);
+  });
+
+  const sorted = Object.entries(groups)
+    .map(([cat, items]) => ({ cat, items, total: items.reduce((s,i)=>s+i.monto,0) }))
+    .sort((a,b) => b.total - a.total);
+
+  const totalAll = sorted.reduce((s,g) => s+g.total, 0) || 1;
+  const wrap = $('acordeon');
+  wrap.innerHTML = '';
+
+  if (sorted.length === 0) {
+    wrap.innerHTML = '<p class="text-xs text-gray-400 text-center py-4">Sin transacciones para este mes</p>';
+    return;
+  }
+
+  sorted.forEach(group => {
+    const pctNum = Math.round(group.total / totalAll * 100);
+    const maxItem = Math.max(...group.items.map(i => i.monto));
+
+    const row = document.createElement('div');
+    row.className = 'acc-row border-b border-gray-100 last:border-0';
+    row.innerHTML = `
+      <div class="acc-header flex items-center gap-2.5 px-3 py-2.5 cursor-pointer hover:bg-gray-50 select-none" onclick="toggleAcc(this)">
+        <span class="acc-arrow text-gray-400 text-xs w-3">▶</span>
+        <span class="flex-1 font-semibold text-gray-700">${group.cat}</span>
+        <span class="text-xs text-gray-400 w-12 text-right">${pctNum}%</span>
+        <span class="font-bold text-gray-900">${pesos(group.total)}</span>
+      </div>
+      <div class="acc-body bg-gray-50 px-8 pb-3">
+        ${group.items.map(item => {
+          const w = Math.round(item.monto / maxItem * 100);
+          return `<div class="flex items-center gap-2 py-1.5 border-b border-dashed border-gray-200 last:border-0 text-xs">
+            <span class="flex-1 text-gray-600">${item.desc}</span>
+            <span class="text-gray-400 w-16">${item.fecha}</span>
+            <span class="font-semibold text-gray-800 w-20 text-right">${pesos(item.monto)}</span>
+            <div class="w-16 bg-indigo-100 rounded h-1.5 overflow-hidden">
+              <div class="bg-indigo-400 h-1.5 rounded" style="width:${w}%"></div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>`;
+    wrap.appendChild(row);
+  });
+}
+
+function toggleAcc(headerEl) {
+  headerEl.closest('.acc-row').classList.toggle('open');
+}
+
+function renderResumenAnual() {
+  const body = $('resumenAnualBody');
+  body.innerHTML = '';
+  const resumen = DATA.resumen_mensual || [];
+
+  let ytdIng = 0, ytdEgr = 0, ytdBal = 0, ytdPres = 0;
+
+  // Fill all 12 months
+  for (let m = 1; m <= 12; m++) {
+    const r = resumen.find(x => x.mes === m);
+    const esCurrent = m === DATA.mes_actual;
+    if (r) {
+      ytdIng  += r.ingresos;
+      ytdEgr  += r.egresos;
+      ytdBal  += r.balance;
+      ytdPres += r.pres_egr || 0;
+      const rate = r.ingresos > 0 ? (r.balance/r.ingresos*100).toFixed(1) : '—';
+      const presDiff = r.pres_egr > 0 ? ((r.egresos - r.pres_egr) / r.pres_egr * 100).toFixed(1) : null;
+      const presBadge = presDiff !== null
+        ? (parseFloat(presDiff) > 0
+          ? `<span class="bg-red-100 text-red-700 text-xs px-1.5 py-0.5 rounded-full font-semibold">+${presDiff}%</span>`
+          : `<span class="bg-green-100 text-green-700 text-xs px-1.5 py-0.5 rounded-full font-semibold">${presDiff}%</span>`)
+        : '—';
+      const bold = esCurrent ? 'font-bold' : '';
+      body.innerHTML += `<tr class="${esCurrent ? 'bg-indigo-50' : ''} hover:bg-gray-50 border-b border-gray-100">
+        <td class="py-1.5 px-2 ${bold}">${r.nombre}</td>
+        <td class="py-1.5 px-2 text-right ${bold}">${pesos(r.ingresos)}</td>
+        <td class="py-1.5 px-2 text-right ${bold}">${pesos(r.egresos)}</td>
+        <td class="py-1.5 px-2 text-right ${bold} text-green-600">${pesos(r.balance)}</td>
+        <td class="py-1.5 px-2 text-right ${bold}">${rate}%</td>
+        <td class="py-1.5 px-2 text-right">${presBadge}</td>
+      </tr>`;
+    } else {
+      body.innerHTML += `<tr class="text-gray-300 border-b border-gray-100">
+        <td class="py-1.5 px-2">${MESES_NOM[m-1]}</td>
+        <td colspan="5" class="py-1.5 px-2 text-center italic text-xs">Pendiente</td>
+      </tr>`;
+    }
+  }
+
+  // YTD
+  if (resumen.length > 0) {
+    const ytdRate = ytdIng > 0 ? (ytdBal/ytdIng*100).toFixed(1) : '—';
+    const ytdPresDiff = ytdPres > 0 ? ((ytdEgr-ytdPres)/ytdPres*100).toFixed(1) : null;
+    const ytdBadge = ytdPresDiff !== null
+      ? (parseFloat(ytdPresDiff) > 0
+        ? `<span class="bg-red-100 text-red-700 text-xs px-1.5 py-0.5 rounded-full font-semibold">+${ytdPresDiff}%</span>`
+        : `<span class="bg-green-100 text-green-700 text-xs px-1.5 py-0.5 rounded-full font-semibold">${ytdPresDiff}%</span>`)
+      : '—';
+    body.innerHTML += `<tr class="bg-indigo-100 font-bold">
+      <td class="py-1.5 px-2">TOTAL YTD</td>
+      <td class="py-1.5 px-2 text-right">${pesos(ytdIng)}</td>
+      <td class="py-1.5 px-2 text-right">${pesos(ytdEgr)}</td>
+      <td class="py-1.5 px-2 text-right text-green-700">${pesos(ytdBal)}</td>
+      <td class="py-1.5 px-2 text-right">${ytdRate}%</td>
+      <td class="py-1.5 px-2 text-right">${ytdBadge}</td>
+    </tr>`;
+  }
+}
+
+// ══════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════
+loadData();
+</script>
+</body>
+</html>
