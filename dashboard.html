@@ -79,6 +79,17 @@
     /* ── Pres bar ── */
     .pres-bar-bg { background: #f0f0f0; border-radius: 4px; height: 10px; overflow: hidden; }
     .pres-bar-fill { height: 100%; border-radius: 4px; transition: width .4s; }
+
+    /* ── Notas ── */
+    .nota-card { background:#fff; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04); border-left:4px solid #94a3b8; transition:box-shadow .15s; overflow:hidden; }
+    .nota-card:hover { box-shadow:0 4px 12px rgba(0,0,0,.12); }
+    .nota-card-body { padding:14px 16px; cursor:pointer; }
+    .nota-card-content { font-size:12px; color:#6b7280; line-height:1.5; max-height:60px; overflow:hidden; white-space:pre-wrap; }
+    .nota-card-content.expanded { max-height:none; }
+    .nota-card-footer { display:flex; align-items:center; justify-content:space-between; padding:8px 16px; border-top:1px solid #f3f4f6; background:#fafafa; }
+    .nota-accent-0{border-left-color:#f59e0b} .nota-accent-1{border-left-color:#10b981}
+    .nota-accent-2{border-left-color:#38bdf8} .nota-accent-3{border-left-color:#a78bfa}
+    .nota-accent-4{border-left-color:#f87171} .nota-accent-5{border-left-color:#94a3b8}
   </style>
 </head>
 <body class="bg-gray-100 text-gray-800 text-sm">
@@ -98,6 +109,7 @@
   <button class="tab-btn active flex-1 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('presupuesto',this)">Presupuesto</button>
   <button class="tab-btn flex-1 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('dashboard',this)">Dashboard</button>
   <button class="tab-btn flex-1 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('tablas',this)">Tablas</button>
+  <button class="tab-btn flex-1 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('notas',this)">Notas <span id="notasBadge" class="hidden ml-1 bg-slate-200 text-slate-600 text-xs font-bold px-1.5 py-0.5 rounded-full"></span></button>
 </nav>
 
 <!-- ── Content ── -->
@@ -289,6 +301,69 @@
     </div>
   </div>
 
+  <!-- ──────────────── NOTAS ──────────────── -->
+  <div id="notas" class="tab-section hidden">
+    <div class="flex items-center justify-between mb-4">
+      <div>
+        <h2 class="text-sm font-bold text-gray-700">Mis notas</h2>
+        <p class="text-xs text-gray-400 mt-0.5" id="notasSubtitle">Cargando notas…</p>
+      </div>
+      <button onclick="abrirModalNuevaNota()"
+        class="bg-slate-800 text-white text-xs font-semibold px-3 py-2 rounded-lg hover:bg-slate-900 transition flex items-center gap-1.5">
+        + Nueva nota
+      </button>
+    </div>
+
+    <div id="notasEmpty" class="hidden flex flex-col items-center justify-center py-20 text-center">
+      <div class="text-5xl mb-4">📝</div>
+      <h3 class="text-lg font-bold text-gray-600 mb-2">Todavía no tenés notas</h3>
+      <p class="text-gray-400 max-w-sm text-sm">Creá tu primera nota desde el botón de arriba o pedile a tu asistente que cree una por WhatsApp.</p>
+    </div>
+
+    <div id="notasGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+  </div>
+
+  <!-- ── MODAL Nueva/Editar Nota ── -->
+  <div id="modalNota" class="hidden fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md">
+      <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+        <h3 class="font-bold text-gray-800 text-sm" id="modalNotaTitulo">Nueva nota</h3>
+        <button onclick="cerrarModalNota()" class="text-gray-400 hover:text-gray-600 text-xl font-bold leading-none px-1">×</button>
+      </div>
+      <div class="px-5 py-4 space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Título</label>
+          <input id="modalNotaTituloInput" type="text" placeholder="Ej: Lista del super"
+            class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-300" maxlength="100">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Contenido</label>
+          <textarea id="modalNotaContenidoInput" rows="5" placeholder="Escribí el contenido de tu nota…"
+            class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-300 resize-none"></textarea>
+        </div>
+      </div>
+      <div class="px-5 py-3 border-t border-gray-100 flex gap-2 justify-end">
+        <button onclick="cerrarModalNota()" class="text-xs text-gray-500 hover:text-gray-700 px-4 py-2 rounded-lg transition">Cancelar</button>
+        <button onclick="guardarNota()" id="btnGuardarNota"
+          class="bg-slate-800 text-white text-xs font-semibold px-4 py-2 rounded-lg hover:bg-slate-900 transition">Guardar</button>
+      </div>
+      <p id="modalNotaError" class="hidden text-xs text-rose-500 px-5 pb-3"></p>
+    </div>
+  </div>
+
+  <!-- ── MODAL Confirmar Eliminar ── -->
+  <div id="modalConfirmar" class="hidden fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center">
+      <div class="text-4xl mb-3">🗑️</div>
+      <h3 class="font-bold text-gray-800 mb-2">¿Eliminar nota?</h3>
+      <p class="text-sm text-gray-500 mb-4" id="confirmNombreNota"></p>
+      <div class="flex gap-2 justify-center">
+        <button onclick="cerrarConfirmar()" class="text-sm text-gray-500 hover:text-gray-700 px-4 py-2 rounded-lg transition border border-gray-200">Cancelar</button>
+        <button onclick="confirmarBorrar()" class="bg-rose-500 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-rose-600 transition">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
 </main>
 
 <!-- ── iOS install banner ── -->
@@ -303,9 +378,11 @@
 // ══════════════════════════════════════════════════
 const WEBHOOK_URL   = 'https://sebabiole.app.n8n.cloud/webhook/dashboard-data';
 const SAVE_URL      = 'https://sebabiole.app.n8n.cloud/webhook/dashboard-save-budget';
+const NOTAS_URL     = 'https://sebabiole.app.n8n.cloud/webhook/dashboard-notas';
 const MESES_NOM     = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const MESES_CORTO   = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 const CAT_COLORS    = ['#4e79a7','#f28e2b','#e15759','#76b7b2','#59a14f','#b07aa1','#9c755f','#bab0ac','#499894','#d4a373'];
+const NOTA_COLORS   = ['nota-accent-0','nota-accent-1','nota-accent-2','nota-accent-3','nota-accent-4','nota-accent-5'];
 
 // ══════════════════════════════════════════════════
 //  MOCK DATA (used when ?demo=1)
@@ -358,6 +435,11 @@ const MOCK = {
     {cat:'Vivienda / Alquiler',mes_ant:28000,mes_act:28000,mom_pct:0,pct_ingreso:0.156},
     {cat:'Salud',          mes_ant:9200, mes_act:8700, mom_pct:-0.054,pct_ingreso:0.048},
   ],
+  notas: [
+    { id: 'demo-0001', titulo: 'Lista del super', contenido: 'Leche\nPan\nAzúcar\nArroz\nAceite', fecha_creacion: '2026-04-18 10:30:00', fecha_modificacion: '2026-04-19 14:22:00', activa: 'TRUE' },
+    { id: 'demo-0002', titulo: 'Ideas de regalo', contenido: 'Auriculares para mamá\nLibro de cocina\nSuscripción Spotify', fecha_creacion: '2026-04-15 09:00:00', fecha_modificacion: '2026-04-15 09:00:00', activa: 'TRUE' },
+    { id: 'demo-0003', titulo: 'Gastos a revisar', contenido: 'Revisar débito automático de Netflix\nPreguntar factura del gym', fecha_creacion: '2026-04-10 16:45:00', fecha_modificacion: '2026-04-10 16:45:00', activa: 'TRUE' },
+  ],
   transacciones_mes: [
     {cat:'Comida',          desc:'Supermercado Dia',   fecha:'03/04',monto:8400, tipo:'E'},
     {cat:'Comida',          desc:'Delivery PedidosYa', fecha:'07/04',monto:3200, tipo:'E'},
@@ -388,6 +470,9 @@ const MOCK = {
 let DATA = null;
 let chartEvolucion = null;
 let chartRanking   = null;
+let NOTAS          = [];
+let _editingNota   = null;
+let _deletingNota  = null;
 
 // ══════════════════════════════════════════════════
 //  UTILS
@@ -403,7 +488,7 @@ function showState(st) {
   $('stateLogin').classList.toggle('hidden', st !== 'login');
   $('stateEmpty').classList.toggle('hidden', st !== 'empty');
   // Show/hide tabs content
-  ['presupuesto','dashboard','tablas'].forEach(id => {
+  ['presupuesto','dashboard','tablas','notas'].forEach(id => {
     $(id).classList.toggle('hidden', st !== 'data');
     if (st !== 'data') $(id).classList.remove('active');
   });
@@ -507,6 +592,7 @@ function renderAll() {
   renderPresupuesto();
   renderDashboard();
   renderTablasInit();
+  if (DATA.notas) { NOTAS = DATA.notas; renderNotas(); } else { loadNotas(); }
 }
 
 // ══════════════════════════════════════════════════
@@ -1089,6 +1175,190 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js').catch(() => {});
 }
 loadData();
+
+// ══════════════════════════════════════════════════
+//  NOTAS
+// ══════════════════════════════════════════════════
+function escHtml(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function fechaRelativa(isoStr) {
+  if (!isoStr) return '';
+  const fecha = new Date(isoStr.replace(' ', 'T'));
+  const diff  = Math.floor((Date.now() - fecha.getTime()) / 1000);
+  if (diff < 60)    return 'hace un momento';
+  if (diff < 3600)  return `hace ${Math.floor(diff/60)} min`;
+  if (diff < 86400) return `hace ${Math.floor(diff/3600)} h`;
+  const dias = Math.floor(diff / 86400);
+  if (dias === 1) return 'ayer';
+  if (dias < 7)   return `hace ${dias} días`;
+  if (dias < 30)  return `hace ${Math.floor(dias/7)} sem.`;
+  return `hace ${Math.floor(dias/30)} mes${Math.floor(dias/30) > 1 ? 'es' : ''}`;
+}
+
+async function loadNotas() {
+  const phone = localStorage.getItem('mitempo_phone') || '';
+  if (!phone) { NOTAS = []; renderNotas(); return; }
+  try {
+    const res  = await fetch(`${NOTAS_URL}?phone=${encodeURIComponent(phone)}`);
+    const json = await res.json();
+    NOTAS = json.error ? [] : (json.notas || []);
+  } catch(e) {
+    NOTAS = [];
+  }
+  renderNotas();
+}
+
+function renderNotas() {
+  const grid     = $('notasGrid');
+  const empty    = $('notasEmpty');
+  const badge    = $('notasBadge');
+  const subtitle = $('notasSubtitle');
+
+  if (NOTAS.length > 0) {
+    badge.textContent = NOTAS.length;
+    badge.classList.remove('hidden');
+  } else {
+    badge.classList.add('hidden');
+  }
+  subtitle.textContent = NOTAS.length === 0
+    ? 'Sin notas activas'
+    : `${NOTAS.length} nota${NOTAS.length !== 1 ? 's' : ''} activa${NOTAS.length !== 1 ? 's' : ''}`;
+
+  if (NOTAS.length === 0) {
+    grid.innerHTML = '';
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+
+  grid.innerHTML = NOTAS.map((nota, i) => {
+    const colorCls = NOTA_COLORS[i % NOTA_COLORS.length];
+    const fechaRel = fechaRelativa(nota.fecha_modificacion || nota.fecha_creacion);
+    return `
+      <div class="nota-card ${colorCls}" id="nota-${nota.id}">
+        <div class="nota-card-body" onclick="toggleNota(this)">
+          <div class="flex items-start justify-between gap-2 mb-1.5">
+            <h4 class="font-bold text-gray-800 text-sm leading-tight flex-1">${escHtml(nota.titulo)}</h4>
+          </div>
+          <div class="nota-card-content">${escHtml(nota.contenido)}</div>
+        </div>
+        <div class="nota-card-footer">
+          <span class="text-xs text-gray-400">${fechaRel}</span>
+          <div class="flex gap-1">
+            <button onclick="event.stopPropagation();abrirEditar(${i})" title="Editar"
+              class="text-gray-400 hover:text-slate-700 transition text-sm p-1.5 rounded hover:bg-gray-100">✏️</button>
+            <button onclick="event.stopPropagation();pedirConfirmarBorrar(${i})" title="Eliminar"
+              class="text-gray-400 hover:text-rose-500 transition text-sm p-1.5 rounded hover:bg-rose-50">🗑️</button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function toggleNota(bodyEl) {
+  bodyEl.querySelector('.nota-card-content').classList.toggle('expanded');
+}
+
+function abrirModalNuevaNota() {
+  _editingNota = null;
+  $('modalNotaTitulo').textContent = 'Nueva nota';
+  $('modalNotaTituloInput').value  = '';
+  $('modalNotaContenidoInput').value = '';
+  $('modalNotaError').classList.add('hidden');
+  $('modalNota').classList.remove('hidden');
+  setTimeout(() => $('modalNotaTituloInput').focus(), 50);
+}
+
+function abrirEditar(idx) {
+  _editingNota = NOTAS[idx];
+  $('modalNotaTitulo').textContent   = 'Editar nota';
+  $('modalNotaTituloInput').value    = _editingNota.titulo || '';
+  $('modalNotaContenidoInput').value = _editingNota.contenido || '';
+  $('modalNotaError').classList.add('hidden');
+  $('modalNota').classList.remove('hidden');
+  setTimeout(() => $('modalNotaTituloInput').focus(), 50);
+}
+
+function cerrarModalNota() {
+  $('modalNota').classList.add('hidden');
+  _editingNota = null;
+}
+
+async function guardarNota() {
+  const titulo    = $('modalNotaTituloInput').value.trim();
+  const contenido = $('modalNotaContenidoInput').value.trim();
+  const errEl     = $('modalNotaError');
+  const btn       = $('btnGuardarNota');
+
+  if (!titulo) {
+    errEl.textContent = 'El título es obligatorio.';
+    errEl.classList.remove('hidden');
+    return;
+  }
+
+  btn.textContent = 'Guardando…';
+  btn.disabled    = true;
+  errEl.classList.add('hidden');
+
+  const phone = localStorage.getItem('mitempo_phone') || '';
+  const body  = _editingNota
+    ? { accion: 'editar', id: _editingNota.id, titulo, contenido, phone }
+    : { accion: 'crear',  titulo, contenido, phone };
+
+  try {
+    const res  = await fetch(NOTAS_URL, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(body),
+    });
+    const json = await res.json();
+    if (json.error === 'limite_alcanzado') {
+      errEl.textContent = `Alcanzaste el límite de notas de tu plan (${json.limite_notas} notas). Eliminá alguna nota para crear una nueva.`;
+      errEl.classList.remove('hidden');
+    } else if (json.error) {
+      errEl.textContent = 'Error al guardar. Intentá de nuevo.';
+      errEl.classList.remove('hidden');
+    } else {
+      cerrarModalNota();
+      await loadNotas();
+    }
+  } catch(e) {
+    errEl.textContent = 'Error de conexión.';
+    errEl.classList.remove('hidden');
+  } finally {
+    btn.textContent = 'Guardar';
+    btn.disabled    = false;
+  }
+}
+
+function pedirConfirmarBorrar(idx) {
+  _deletingNota = NOTAS[idx];
+  $('confirmNombreNota').textContent = `"${_deletingNota.titulo}"`;
+  $('modalConfirmar').classList.remove('hidden');
+}
+
+function cerrarConfirmar() {
+  $('modalConfirmar').classList.add('hidden');
+  _deletingNota = null;
+}
+
+async function confirmarBorrar() {
+  if (!_deletingNota) return;
+  const phone = localStorage.getItem('mitempo_phone') || '';
+  cerrarConfirmar();
+  try {
+    await fetch(NOTAS_URL, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ accion: 'borrar', id: _deletingNota.id, phone }),
+    });
+    await loadNotas();
+  } catch(e) {
+    console.error('Error borrando nota:', e);
+  }
+}
 </script>
 </body>
 </html>
