@@ -516,13 +516,7 @@ async function loadData() {
 
   if (demo) { DATA = MOCK; renderAll(); return; }
 
-  showState('loading');
-  const savedPhone = localStorage.getItem('mitempo_phone');
-  if (savedPhone) {
-    await fetchWithPhone(savedPhone);
-  } else {
-    showState('login');
-  }
+  showState('login');
 }
 
 async function loginWithPhone() {
