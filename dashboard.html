@@ -106,9 +106,9 @@
 
 <!-- ── Tabs ── -->
 <nav class="bg-white border-b border-gray-200 flex">
-  <button class="tab-btn active flex-1 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('presupuesto',this)">Presupuesto</button>
+  <button class="tab-btn active flex-1 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('tablas',this)">Tablas</button>
   <button class="tab-btn flex-1 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('dashboard',this)">Dashboard</button>
-  <button class="tab-btn flex-1 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('tablas',this)">Tablas</button>
+  <button class="tab-btn flex-1 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('presupuesto',this)">Presupuesto</button>
   <button class="tab-btn flex-1 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('notas',this)">Notas <span id="notasBadge" class="hidden ml-1 bg-slate-200 text-slate-600 text-xs font-bold px-1.5 py-0.5 rounded-full"></span></button>
 </nav>
 
@@ -493,7 +493,7 @@ function showState(st) {
     if (st !== 'data') $(id).classList.remove('active');
   });
   if (st === 'data') {
-    $('presupuesto').classList.add('active');
+    $('tablas').classList.add('active');
     $('logoutBtn').classList.remove('hidden');
   } else {
     $('logoutBtn').classList.add('hidden');
