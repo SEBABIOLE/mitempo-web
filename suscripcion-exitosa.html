@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>¡Pago exitoso! | MiTempo</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; base-uri 'self';
+                 script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com;
+                 style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+                 font-src https://fonts.gstatic.com;
+                 img-src 'self' data:;
+                 connect-src 'self';
+                 frame-ancestors 'none';">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #f3f4f6; }
+    .spin { animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white w-full max-w-md rounded-2xl shadow-lg p-6 text-center">
+
+    <div class="text-5xl mb-4">🎉</div>
+
+    <h1 class="text-2xl font-semibold mb-2">¡Suscripción confirmada!</h1>
+
+    <p id="planLabel" class="inline-block bg-green-100 text-green-800 text-sm font-semibold px-3 py-1 rounded-full mb-4"></p>
+
+    <p class="text-gray-700 mb-6">
+      Tu pago fue procesado correctamente. Ahora vamos a activar tu cuenta en MiTempo.
+    </p>
+
+    <div id="redirectMsg" class="flex items-center justify-center gap-2 text-sm text-gray-500 mb-5">
+      <svg class="spin w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+      </svg>
+      <span>Redirigiendo a la activación...</span>
+    </div>
+
+    <a id="btnActivar" href="#"
+       class="block w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2.5 rounded-lg transition text-center">
+      Ir a activar mi cuenta
+    </a>
+
+    <p class="text-xs text-gray-400 mt-4">
+      Si no ves la redirección automática, usá el botón de arriba.
+    </p>
+  </div>
+
+  <script>
+    const qp = new URLSearchParams(location.search);
+    const userId = qp.get('user_id') || '';
+    const planSlug = qp.get('plan_slug') || '';
+
+    const PLAN_LABELS = { bronce: 'Plan Bronce', plata: 'Plan Plata', oro: 'Plan Oro', duo: 'Plan DUO' };
+    const label = PLAN_LABELS[planSlug] || 'Plan activo';
+    document.getElementById('planLabel').textContent = label;
+
+    // Build activar URL
+    const activarUrl = '/activar.html?u=549' + userId + '&p=' + encodeURIComponent(planSlug);
+    document.getElementById('btnActivar').href = activarUrl;
+
+    // Auto-redirect after 3 seconds
+    setTimeout(() => { window.location.href = activarUrl; }, 3000);
+  </script>
+</body>
+</html>
