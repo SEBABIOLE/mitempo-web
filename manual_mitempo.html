@@ -206,9 +206,1394 @@
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
-<script type="text/babel" src="mocks.jsx"></script>
-<script type="text/babel" src="drive-mocks.jsx"></script>
-<script type="text/babel" src="sections.jsx"></script>
+<script type="text/babel" data-presets="react">
+// Mini visual mockups of dashboard elements - used to illustrate explanations
+
+const fmt = (n) => '$' + n.toLocaleString('es-AR');
+
+function StatCard({ color, label, value, delta, deltaDir, icon }) {
+  const colorMap = {
+    green: { bg: '#ecfdf5', border: '#a7f3d0', text: '#047857', accent: '#10b981' },
+    red:   { bg: '#fef2f2', border: '#fecaca', text: '#b91c1c', accent: '#ef4444' },
+    blue:  { bg: '#eff6ff', border: '#bfdbfe', text: '#1e40af', accent: '#3b82f6' },
+    amber: { bg: '#fffbeb', border: '#fde68a', text: '#92400e', accent: '#f59e0b' },
+  };
+  const c = colorMap[color];
+  return (
+    <div style={{
+      background: 'white',
+      border: `1px solid ${c.border}`,
+      borderRadius: 14,
+      padding: '16px 18px',
+      position: 'relative',
+      overflow: 'hidden',
+    }}>
+      <div style={{
+        position: 'absolute', top: 0, left: 0, width: 4, height: '100%', background: c.accent,
+      }} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+        <span style={{ fontSize: 14 }}>{icon}</span>
+        <span style={{ fontSize: 11, color: '#6b7280', fontWeight: 500, letterSpacing: 0.3, textTransform: 'uppercase' }}>
+          {label}
+        </span>
+      </div>
+      <div style={{ fontSize: 22, fontWeight: 600, color: '#111827', fontFamily: 'DM Serif Display, serif', letterSpacing: -0.5 }}>
+        {value}
+      </div>
+      {delta && (
+        <div style={{ fontSize: 12, color: c.text, marginTop: 4, fontWeight: 500 }}>
+          {deltaDir === 'up' ? '↑' : '↓'} {delta} vs mes anterior
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MiniStatGrid() {
+  return (
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(4, 1fr)',
+      gap: 10,
+      padding: 16,
+      background: '#f9fafb',
+      borderRadius: 16,
+      border: '1px solid #e5e7eb',
+    }}>
+      <StatCard color="green" icon="💚" label="Ingresos" value={fmt(150000)} delta="5%" deltaDir="up" />
+      <StatCard color="red" icon="🔴" label="Egresos" value={fmt(120000)} delta="12%" deltaDir="up" />
+      <StatCard color="blue" icon="🔵" label="Balance" value={'+' + fmt(30000)} />
+      <StatCard color="amber" icon="🟡" label="Ahorro" value="20%" />
+    </div>
+  );
+}
+
+function BudgetBarChart() {
+  const data = [
+    { name: 'Vivienda', budget: 85, real: 82 },
+    { name: 'Comida', budget: 60, real: 70 },
+    { name: 'Transporte', budget: 35, real: 28 },
+    { name: 'Salidas', budget: 25, real: 42 },
+    { name: 'Servicios', budget: 30, real: 31 },
+  ];
+  const max = 100;
+  return (
+    <div style={{
+      background: 'white', borderRadius: 16, padding: 20,
+      border: '1px solid #e5e7eb',
+    }}>
+      <div style={{ fontSize: 13, color: '#6b7280', fontWeight: 500, marginBottom: 4 }}>Abril 2026</div>
+      <div style={{ fontSize: 18, fontWeight: 600, color: '#111827', marginBottom: 16, fontFamily: 'DM Serif Display, serif' }}>
+        Presupuesto vs Real
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        {data.map((d) => {
+          const over = d.real > d.budget;
+          return (
+            <div key={d.name}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: '#374151', marginBottom: 5, fontWeight: 500 }}>
+                <span>{d.name}</span>
+                <span style={{ color: over ? '#dc2626' : '#059669' }}>
+                  {fmt(d.real * 1000)} / {fmt(d.budget * 1000)}
+                </span>
+              </div>
+              <div style={{ position: 'relative', height: 16, background: '#f3f4f6', borderRadius: 8, overflow: 'hidden' }}>
+                <div style={{
+                  position: 'absolute', top: 0, left: 0, height: '100%',
+                  width: `${(d.budget / max) * 100}%`,
+                  background: '#bfdbfe',
+                  borderRadius: 8,
+                }} />
+                <div style={{
+                  position: 'absolute', top: 0, left: 0, height: '100%',
+                  width: `${(d.real / max) * 100}%`,
+                  background: over ? 'linear-gradient(90deg, #f87171, #ef4444)' : 'linear-gradient(90deg, #34d399, #10b981)',
+                  borderRadius: 8,
+                  transition: 'width 0.6s ease',
+                }} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div style={{ display: 'flex', gap: 16, marginTop: 16, fontSize: 11, color: '#6b7280' }}>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span style={{ width: 10, height: 10, background: '#bfdbfe', borderRadius: 2, display: 'inline-block' }} /> Presupuesto
+        </span>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span style={{ width: 10, height: 10, background: '#10b981', borderRadius: 2, display: 'inline-block' }} /> Real
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function EvolutionChart() {
+  const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const income = [140,145,150,155,148,160,170,165,158,162,170,180];
+  const expense = [110,125,120,130,135,128,140,145,132,138,145,150];
+  const savings = income.map((inc, i) => inc - expense[i]);
+  let acc = 0;
+  const accSavings = savings.map(s => (acc += s));
+  const maxBar = 200;
+  const maxAcc = Math.max(...accSavings);
+
+  return (
+    <div style={{
+      background: 'white', borderRadius: 16, padding: 20,
+      border: '1px solid #e5e7eb',
+    }}>
+      <div style={{ fontSize: 18, fontWeight: 600, color: '#111827', marginBottom: 4, fontFamily: 'DM Serif Display, serif' }}>
+        Evolución anual
+      </div>
+      <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 16 }}>Ingresos, egresos y ahorro acumulado</div>
+      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6, height: 140, position: 'relative', paddingBottom: 20 }}>
+        <svg style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} viewBox="0 0 100 100" preserveAspectRatio="none">
+          <polyline
+            fill="none"
+            stroke="#9ca3af"
+            strokeWidth="0.5"
+            strokeDasharray="1 1"
+            points={accSavings.map((v, i) => `${(i / (months.length - 1)) * 100},${100 - (v / maxAcc) * 80}`).join(' ')}
+          />
+        </svg>
+        {months.map((m, i) => (
+          <div key={m} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, height: '100%', justifyContent: 'flex-end' }}>
+            <div style={{ display: 'flex', gap: 1, alignItems: 'flex-end', height: '100%' }}>
+              <div style={{
+                width: 6, height: `${(income[i] / maxBar) * 100}%`,
+                background: 'linear-gradient(180deg, #60a5fa, #3b82f6)', borderRadius: 2,
+              }} />
+              <div style={{
+                width: 6, height: `${(expense[i] / maxBar) * 100}%`,
+                background: 'linear-gradient(180deg, #fca5a5, #ef4444)', borderRadius: 2,
+              }} />
+            </div>
+            <div style={{ fontSize: 9, color: '#9ca3af', marginTop: 4 }}>{m}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MiniBudgetRow() {
+  return (
+    <div style={{
+      background: 'white', borderRadius: 12, border: '1px solid #e5e7eb',
+      overflow: 'hidden', fontSize: 13,
+    }}>
+      <div style={{
+        display: 'grid', gridTemplateColumns: '1.6fr repeat(4, 1fr)',
+        padding: '10px 14px', background: '#f9fafb', fontWeight: 600,
+        fontSize: 11, color: '#6b7280', textTransform: 'uppercase', letterSpacing: 0.4,
+      }}>
+        <div>Categoría · Abril</div>
+        <div style={{ textAlign: 'right' }}>Pres.</div>
+        <div style={{ textAlign: 'right' }}>Real</div>
+        <div style={{ textAlign: 'right' }}>Dif.</div>
+        <div style={{ textAlign: 'right' }}>%</div>
+      </div>
+      {[
+        { c: 'Supermercado', p: 30000, r: 27500 },
+        { c: 'Salidas', p: 15000, r: 18200 },
+        { c: 'Transporte', p: 12000, r: 8900 },
+      ].map((row) => {
+        const diff = row.p - row.r;
+        const pct = Math.round((row.r / row.p) * 100);
+        return (
+          <div key={row.c} style={{
+            display: 'grid', gridTemplateColumns: '1.6fr repeat(4, 1fr)',
+            padding: '11px 14px', borderTop: '1px solid #f3f4f6',
+          }}>
+            <div style={{ color: '#111827', fontWeight: 500 }}>{row.c}</div>
+            <div style={{ textAlign: 'right', color: '#4b5563' }}>{fmt(row.p)}</div>
+            <div style={{ textAlign: 'right', color: '#4b5563' }}>{fmt(row.r)}</div>
+            <div style={{ textAlign: 'right', color: diff >= 0 ? '#059669' : '#dc2626', fontWeight: 600 }}>
+              {diff >= 0 ? '+' : ''}{fmt(diff)}
+            </div>
+            <div style={{ textAlign: 'right', color: pct > 100 ? '#dc2626' : '#059669', fontWeight: 600 }}>
+              {pct}%
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function NoteCard({ color, title, content }) {
+  return (
+    <div style={{
+      background: 'white', borderRadius: 12, padding: '14px 16px',
+      border: '1px solid #e5e7eb',
+      borderLeft: `4px solid ${color}`,
+      boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
+    }}>
+      <div style={{ fontWeight: 600, fontSize: 14, color: '#111827', marginBottom: 6 }}>{title}</div>
+      <div style={{ fontSize: 12, color: '#6b7280', lineHeight: 1.5 }}>{content}</div>
+      <div style={{ display: 'flex', gap: 8, marginTop: 10, justifyContent: 'flex-end' }}>
+        <span style={{ fontSize: 11, color: '#9ca3af' }}>✏️</span>
+        <span style={{ fontSize: 11, color: '#9ca3af' }}>🗑️</span>
+      </div>
+    </div>
+  );
+}
+
+function NotesGrid() {
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+      <NoteCard color="#10b981" title="🛒 Súper — sábado" content={<>Leche · Pan · Agua · Huevos · Yerba · Tomates · Queso</>} />
+      <NoteCard color="#f59e0b" title="💊 Farmacia" content={<>Ibuprofeno · Alcohol en gel · Vendas · Protector solar</>} />
+      <NoteCard color="#3b82f6" title="🏠 Casa" content={<>Focos LED · Pilas AA · Detergente · Papel higiénico</>} />
+    </div>
+  );
+}
+
+function WhatsAppBubble({ text, from }) {
+  const isUser = from === 'user';
+  return (
+    <div style={{
+      display: 'flex',
+      justifyContent: isUser ? 'flex-end' : 'flex-start',
+      marginBottom: 8,
+    }}>
+      <div style={{
+        background: isUser ? '#dcf8c6' : 'white',
+        padding: '8px 12px',
+        borderRadius: 12,
+        fontSize: 13,
+        maxWidth: '75%',
+        boxShadow: '0 1px 1px rgba(0,0,0,0.06)',
+        color: '#111827',
+        lineHeight: 1.4,
+      }}>
+        {text}
+      </div>
+    </div>
+  );
+}
+
+function WhatsAppMock() {
+  return (
+    <div style={{
+      background: '#e5ddd5',
+      backgroundImage: 'radial-gradient(circle at 20% 30%, rgba(255,255,255,0.3) 0, transparent 40%)',
+      borderRadius: 16,
+      padding: 16,
+      border: '1px solid #d1d5db',
+    }}>
+      <div style={{
+        background: '#075e54', color: 'white', padding: '8px 12px',
+        borderRadius: '10px 10px 0 0', margin: '-16px -16px 12px', fontSize: 13, fontWeight: 500,
+        display: 'flex', alignItems: 'center', gap: 8,
+      }}>
+        <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>M</div>
+        <div>
+          <div>MiTempo</div>
+          <div style={{ fontSize: 10, opacity: 0.8 }}>en línea</div>
+        </div>
+      </div>
+      <WhatsAppBubble from="user" text="dashboard" />
+      <WhatsAppBubble from="bot" text="¡Hola! Acá tenés tu acceso 👇" />
+      <WhatsAppBubble from="bot" text="🔗 mitempo.app/d/xk9m2a" />
+      <WhatsAppBubble from="bot" text="Link válido por 24 hs." />
+    </div>
+  );
+}
+
+Object.assign(window, {
+  StatCard, MiniStatGrid, BudgetBarChart, EvolutionChart,
+  MiniBudgetRow, NoteCard, NotesGrid, WhatsAppMock, fmt,
+});
+
+</script>
+<script type="text/babel" data-presets="react">
+// Visual mockups for the spreadsheet (Drive) chapter
+
+function DriveFileCard() {
+  return (
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: '64px 1fr auto',
+      gap: 18,
+      alignItems: 'center',
+      padding: '20px 22px',
+      background: 'white',
+      border: '1px solid #eef0f2',
+      borderRadius: 16,
+      boxShadow: '0 1px 0 rgba(17,24,39,0.02), 0 8px 24px -16px rgba(17,24,39,0.12)',
+    }}>
+      <div style={{
+        width: 56, height: 56, borderRadius: 12,
+        background: 'linear-gradient(135deg, #15803d 0%, #16a34a 100%)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        boxShadow: '0 6px 14px -4px rgba(22,163,74,0.45)',
+      }}>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="3" width="18" height="18" rx="2" stroke="white" strokeWidth="1.6"></rect>
+          <path d="M3 9h18M3 15h18M9 3v18M15 3v18" stroke="white" strokeWidth="1.4" opacity="0.85"></path>
+        </svg>
+      </div>
+      <div>
+        <div style={{
+          fontSize: 16, fontWeight: 600, color: '#111827',
+          fontFamily: 'DM Sans, sans-serif', letterSpacing: -0.2, marginBottom: 4,
+        }}>
+          MiTempo — Registro de Ingresos y Gastos
+        </div>
+        <div style={{
+          fontSize: 12, color: '#6b7280', display: 'flex', gap: 10, alignItems: 'center',
+          fontFamily: 'JetBrains Mono, monospace', letterSpacing: 0.2,
+        }}>
+          <span>HOJA DE CÁLCULO</span>
+          <span style={{ width: 3, height: 3, background: '#d1d5db', borderRadius: '50%' }}></span>
+          <span>EN TU DRIVE</span>
+          <span style={{ width: 3, height: 3, background: '#d1d5db', borderRadius: '50%' }}></span>
+          <span>SOLO TUYA</span>
+        </div>
+      </div>
+      <div style={{
+        padding: '6px 12px', borderRadius: 999,
+        background: '#ecfdf5', color: '#047857',
+        fontSize: 11, fontWeight: 600, letterSpacing: 0.5, textTransform: 'uppercase',
+        border: '1px solid #a7f3d0',
+      }}>
+        ✓ Conectada
+      </div>
+    </div>
+  );
+}
+
+function SheetTabsMock({ active = 'Ingresos' }) {
+  const tabs = [
+    { name: 'Ingresos', color: '#10b981' },
+    { name: 'Egresos', color: '#ef4444' },
+    { name: 'Categorias', color: '#a855f7' },
+    { name: 'Presupuesto', color: '#f59e0b' },
+  ];
+  return (
+    <div style={{
+      background: '#f1f3f4',
+      borderRadius: 12,
+      padding: '10px 10px 0',
+      border: '1px solid #e5e7eb',
+    }}>
+      <div style={{ display: 'flex', gap: 4, alignItems: 'flex-end' }}>
+        {tabs.map((t) => {
+          const isActive = t.name === active;
+          return (
+            <div key={t.name} style={{
+              padding: '8px 14px',
+              background: isActive ? 'white' : 'transparent',
+              borderRadius: '8px 8px 0 0',
+              fontSize: 12,
+              fontWeight: isActive ? 600 : 500,
+              color: isActive ? '#111827' : '#6b7280',
+              borderBottom: isActive ? `2px solid ${t.color}` : '2px solid transparent',
+              display: 'flex', alignItems: 'center', gap: 6,
+              cursor: 'default',
+            }}>
+              <span style={{
+                width: 7, height: 7, borderRadius: '50%', background: t.color,
+              }}></span>
+              {t.name}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function IngresosSheetMock() {
+  const rows = [
+    ['01/04/2026', 'Sueldo Abril', 'Salario', 850000],
+    ['07/04/2026', 'Freelance diseño', 'Otros ingresos', 120000],
+    ['15/04/2026', 'Devolución AFIP', 'Reintegros', 18500],
+    ['22/04/2026', 'Venta usados', 'Otros ingresos', 35000],
+  ];
+  return (
+    <div style={{ marginTop: -1 }}>
+      <SheetTabsMock active="Ingresos" />
+      <div style={{
+        background: 'white', borderRadius: '0 0 12px 12px',
+        border: '1px solid #e5e7eb', borderTop: 'none', overflow: 'hidden',
+      }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '40px 1.1fr 2fr 1.4fr 1fr',
+          background: '#f8fafc', borderBottom: '1px solid #e5e7eb',
+          fontSize: 11, fontWeight: 600, color: '#374151',
+          fontFamily: 'JetBrains Mono, monospace', letterSpacing: 0.4,
+        }}>
+          <div style={{ padding: '8px 10px', textAlign: 'center', color: '#9ca3af', borderRight: '1px solid #e5e7eb' }}>#</div>
+          <div style={{ padding: '8px 10px', borderRight: '1px solid #e5e7eb' }}>Fecha</div>
+          <div style={{ padding: '8px 10px', borderRight: '1px solid #e5e7eb' }}>Descripción</div>
+          <div style={{ padding: '8px 10px', borderRight: '1px solid #e5e7eb' }}>Categoría</div>
+          <div style={{ padding: '8px 10px', textAlign: 'right' }}>Monto</div>
+        </div>
+        {rows.map((r, i) => (
+          <div key={i} style={{
+            display: 'grid',
+            gridTemplateColumns: '40px 1.1fr 2fr 1.4fr 1fr',
+            borderBottom: i === rows.length - 1 ? 'none' : '1px solid #f1f5f9',
+            fontSize: 13, color: '#1f2937',
+          }}>
+            <div style={{ padding: '10px', textAlign: 'center', color: '#9ca3af', background: '#f8fafc', borderRight: '1px solid #f1f5f9', fontFamily: 'JetBrains Mono, monospace', fontSize: 11 }}>{i + 2}</div>
+            <div style={{ padding: '10px', borderRight: '1px solid #f1f5f9', fontFamily: 'JetBrains Mono, monospace', fontSize: 12, color: '#4b5563' }}>{r[0]}</div>
+            <div style={{ padding: '10px', borderRight: '1px solid #f1f5f9' }}>{r[1]}</div>
+            <div style={{ padding: '10px', borderRight: '1px solid #f1f5f9', color: '#6b7280' }}>{r[2]}</div>
+            <div style={{ padding: '10px', textAlign: 'right', fontVariantNumeric: 'tabular-nums', fontWeight: 600, color: '#047857' }}>
+              ${r[3].toLocaleString('es-AR')}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CategoriasSheetMock() {
+  const rows = [
+    ['sueldos', 'INGRESOS', 'sueldo, salario, haberes'],
+    ['extras', 'INGRESOS', 'extra, adicional, bono'],
+    ['alquileres(como ingreso)', 'INGRESOS', 'alquiler cobrado, renta'],
+    ['comisiones', 'INGRESOS', 'comisión, porcentaje, venta'],
+    ['alquiler', 'HOGAR', 'alquiler, renta, departamento'],
+    ['luz', 'HOGAR', 'luz, edenor, edesur'],
+    ['internet', 'HOGAR', 'wifi, internet, modem'],
+    ['tele', 'HOGAR', 'cable, tv, netflix, streaming'],
+    ['gas', 'HOGAR', 'gas, metrogas, factura'],
+    ['expensas', 'HOGAR', 'expensas, consorcio'],
+  ];
+  const groupColor = (g) => {
+    if (g === 'INGRESOS') return { bg: '#ecfdf5', fg: '#047857' };
+    if (g === 'HOGAR') return { bg: '#eff6ff', fg: '#1d4ed8' };
+    return { bg: '#f3f4f6', fg: '#374151' };
+  };
+  return (
+    <div>
+      <SheetTabsMock active="Categorias" />
+      <div style={{
+        background: 'white', borderRadius: '0 0 12px 12px',
+        border: '1px solid #e5e7eb', borderTop: 'none', overflow: 'hidden',
+      }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '40px 1.4fr 1fr 2.2fr',
+          background: '#f8fafc', borderBottom: '1px solid #e5e7eb',
+          fontSize: 11, fontWeight: 600, color: '#374151',
+          fontFamily: 'JetBrains Mono, monospace', letterSpacing: 0.4,
+        }}>
+          <div style={{ padding: '8px 10px', textAlign: 'center', color: '#9ca3af', borderRight: '1px solid #e5e7eb' }}>#</div>
+          <div style={{ padding: '8px 10px', borderRight: '1px solid #e5e7eb' }}>nombre</div>
+          <div style={{ padding: '8px 10px', borderRight: '1px solid #e5e7eb' }}>grupo</div>
+          <div style={{ padding: '8px 10px' }}>keywords</div>
+        </div>
+        {rows.map((r, i) => {
+          const c = groupColor(r[1]);
+          return (
+            <div key={i} style={{
+              display: 'grid',
+              gridTemplateColumns: '40px 1.4fr 1fr 2.2fr',
+              borderBottom: i === rows.length - 1 ? 'none' : '1px solid #f1f5f9',
+              fontSize: 13, color: '#1f2937',
+            }}>
+              <div style={{ padding: '10px', textAlign: 'center', color: '#9ca3af', background: '#f8fafc', borderRight: '1px solid #f1f5f9', fontFamily: 'JetBrains Mono, monospace', fontSize: 11 }}>{i + 2}</div>
+              <div style={{ padding: '10px', borderRight: '1px solid #f1f5f9', fontWeight: 500 }}>{r[0]}</div>
+              <div style={{ padding: '10px', borderRight: '1px solid #f1f5f9' }}>
+                <span style={{
+                  padding: '2px 8px', borderRadius: 6, fontSize: 11, fontWeight: 700,
+                  background: c.bg, color: c.fg, letterSpacing: 0.4,
+                  fontFamily: 'JetBrains Mono, monospace',
+                }}>{r[1]}</span>
+              </div>
+              <div style={{ padding: '10px', color: '#6b7280', fontSize: 12, fontStyle: 'italic' }}>{r[2]}</div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function FlowDiagram() {
+  const node = (label, sub, color, icon) => (
+    <div style={{
+      flex: 1,
+      padding: '18px 16px',
+      background: 'white',
+      border: `1px solid ${color}30`,
+      borderRadius: 14,
+      textAlign: 'center',
+      position: 'relative',
+    }}>
+      <div style={{
+        width: 40, height: 40, borderRadius: 10,
+        background: color + '15', color,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        margin: '0 auto 10px', fontSize: 20,
+      }}>{icon}</div>
+      <div style={{ fontSize: 13, fontWeight: 600, color: '#111827', marginBottom: 4 }}>{label}</div>
+      <div style={{ fontSize: 11, color: '#6b7280', lineHeight: 1.4 }}>{sub}</div>
+    </div>
+  );
+  const arrow = (
+    <div style={{
+      flexShrink: 0, width: 24, display: 'flex', alignItems: 'center', justifyContent: 'center',
+      color: '#cbd5e1', fontSize: 20,
+    }}>→</div>
+  );
+  return (
+    <div style={{
+      padding: 22,
+      background: 'linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)',
+      border: '1px solid #e5e7eb',
+      borderRadius: 16,
+    }}>
+      <div style={{ display: 'flex', alignItems: 'stretch', gap: 6 }}>
+        {node('Vos', 'Cargás un gasto por WhatsApp o editás la hoja a mano', '#0ea5e9', '✍️')}
+        {arrow}
+        {node('La Hoja', '"MiTempo - Registro de Ingresos y Gastos" en tu Drive', '#22c55e', '📗')}
+        {arrow}
+        {node('Asistente + Dashboard', 'Leen la hoja en vivo y te muestran los números', '#f59e0b', '🪞')}
+      </div>
+      <div style={{
+        marginTop: 14, paddingTop: 14, borderTop: '1px dashed #cbd5e1',
+        fontSize: 12, color: '#475569', textAlign: 'center', lineHeight: 1.5,
+      }}>
+        Una sola fuente de verdad. Si la hoja cambia, el dashboard cambia. Si registrás algo por WhatsApp, la hoja cambia.
+      </div>
+    </div>
+  );
+}
+
+Object.assign(window, {
+  DriveFileCard, SheetTabsMock, IngresosSheetMock, CategoriasSheetMock, FlowDiagram,
+});
+
+</script>
+<script type="text/babel" data-presets="react">
+// Content sections of the manual
+
+function SectionHeader({ eyebrow, title, subtitle, accent }) {
+  return (
+    <div style={{ marginBottom: 40 }}>
+      <div style={{
+        display: 'inline-flex', alignItems: 'center', gap: 8,
+        padding: '5px 11px',
+        background: accent + '15',
+        color: accent,
+        borderRadius: 999,
+        fontSize: 11,
+        fontWeight: 600,
+        letterSpacing: 0.8,
+        textTransform: 'uppercase',
+        marginBottom: 16,
+      }}>
+        <span style={{ width: 6, height: 6, borderRadius: '50%', background: accent }} />
+        {eyebrow}
+      </div>
+      <h1 style={{
+        fontFamily: 'DM Serif Display, serif',
+        fontSize: 52,
+        lineHeight: 1.05,
+        margin: 0,
+        color: '#111827',
+        letterSpacing: -1.5,
+        fontWeight: 400,
+      }}>
+        {title}
+      </h1>
+      {subtitle && (
+        <p style={{
+          fontSize: 19, color: '#4b5563', marginTop: 16, lineHeight: 1.55,
+          maxWidth: 640, fontWeight: 400,
+        }}>
+          {subtitle}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function StepList({ steps }) {
+  return (
+    <ol style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 14 }}>
+      {steps.map((s, i) => (
+        <li key={i} style={{
+          display: 'flex', gap: 16, alignItems: 'flex-start',
+          padding: '16px 18px',
+          background: 'white',
+          borderRadius: 12,
+          border: '1px solid #eef0f2',
+        }}>
+          <div style={{
+            flexShrink: 0,
+            width: 30, height: 30, borderRadius: '50%',
+            background: '#111827', color: 'white',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 13, fontWeight: 600,
+            fontFamily: 'DM Serif Display, serif',
+          }}>
+            {i + 1}
+          </div>
+          <div style={{ paddingTop: 4, fontSize: 15, color: '#1f2937', lineHeight: 1.55 }}>
+            {s}
+          </div>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+function Tip({ icon, children, tone = 'emerald' }) {
+  const tones = {
+    emerald: { bg: '#ecfdf5', border: '#a7f3d0', text: '#065f46' },
+    amber:   { bg: '#fffbeb', border: '#fde68a', text: '#92400e' },
+    coral:   { bg: '#fff7ed', border: '#fed7aa', text: '#9a3412' },
+  };
+  const t = tones[tone];
+  return (
+    <div style={{
+      display: 'flex', gap: 12,
+      padding: '14px 16px',
+      background: t.bg,
+      border: `1px solid ${t.border}`,
+      borderRadius: 12,
+      color: t.text,
+      fontSize: 14,
+      lineHeight: 1.55,
+      margin: '16px 0',
+    }}>
+      <span style={{ fontSize: 18, flexShrink: 0 }}>{icon}</span>
+      <div>{children}</div>
+    </div>
+  );
+}
+
+function Callout({ title, body, color }) {
+  return (
+    <div style={{
+      padding: '18px 20px',
+      borderRadius: 14,
+      background: 'white',
+      border: '1px solid #eef0f2',
+      borderLeft: `3px solid ${color}`,
+    }}>
+      <div style={{ fontWeight: 600, color: '#111827', marginBottom: 6, fontSize: 15 }}>{title}</div>
+      <div style={{ color: '#4b5563', fontSize: 14, lineHeight: 1.6 }}>{body}</div>
+    </div>
+  );
+}
+
+function H2({ children }) {
+  return (
+    <h2 style={{
+      fontFamily: 'DM Serif Display, serif',
+      fontSize: 32,
+      fontWeight: 400,
+      color: '#111827',
+      letterSpacing: -0.8,
+      marginTop: 56, marginBottom: 16,
+      lineHeight: 1.15,
+    }}>
+      {children}
+    </h2>
+  );
+}
+
+function Lede({ children }) {
+  return (
+    <p style={{
+      fontSize: 17, color: '#374151', lineHeight: 1.65, margin: '0 0 24px',
+      maxWidth: 680,
+    }}>
+      {children}
+    </p>
+  );
+}
+
+function P({ children }) {
+  return <p style={{ fontSize: 15, color: '#4b5563', lineHeight: 1.7, margin: '0 0 14px', maxWidth: 680 }}>{children}</p>;
+}
+
+// --------------------- Sections ---------------------
+
+function IntroSection() {
+  return (
+    <div>
+      <SectionHeader
+        eyebrow="Bienvenida"
+        title="Tu plata, clara y en un solo lugar."
+        subtitle="Una guía corta para que en 5 minutos sepas mover el dashboard como si lo hubieras usado siempre. Sin tecnicismos, sin sorpresas."
+        accent="#10b981"
+      />
+
+      <div style={{
+        display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 32, alignItems: 'center',
+        padding: 28,
+        background: 'linear-gradient(135deg, #fefce8 0%, #ecfdf5 100%)',
+        borderRadius: 20,
+        border: '1px solid #f3f4f6',
+        marginBottom: 40,
+      }}>
+        <div>
+          <div style={{ fontSize: 13, color: '#065f46', fontWeight: 600, marginBottom: 8, letterSpacing: 0.5 }}>
+            ¿QUÉ ES EL DASHBOARD?
+          </div>
+          <div style={{ fontFamily: 'DM Serif Display, serif', fontSize: 28, lineHeight: 1.2, color: '#111827', marginBottom: 14, letterSpacing: -0.5 }}>
+            Es una libreta mágica que hace los cálculos por vos.
+          </div>
+          <P>
+            Cada vez que le mandás un gasto o ingreso a MiTempo por WhatsApp, el Dashboard se actualiza solo.
+            Gráficos, totales, tendencias — todo listo sin que levantes un dedo.
+          </P>
+        </div>
+        <WhatsAppMock />
+      </div>
+
+      <H2>Entrar lleva 3 pasos</H2>
+      <StepList steps={[
+        <span>Escribile a MiTempo por WhatsApp <b>"dashboard"</b> o <b>"ver mis gastos"</b>.</span>,
+        <span>Hacé clic en el link que te manda — se abre en tu navegador.</span>,
+        <span>Escribí tu número de WhatsApp con código de país (ej: <b>5491112345678</b>) y apretá <b>Entrar</b>.</span>,
+      ]} />
+
+      <Tip icon="💡" tone="amber">
+        El link dura <b>24 horas</b>. Si se venció, pedí uno nuevo por WhatsApp — es gratis y tarda segundos.
+      </Tip>
+
+      <Tip icon="📗" tone="emerald">
+        <b>Antes de seguir:</b> conviene leer el capítulo <b>"Tu Hoja de Cálculo"</b>. Es la base de todo lo que vas a ver acá — el dashboard y el asistente leen y escriben en una hoja que vive en tu Drive, y entender eso primero hace que todo lo demás caiga por su propio peso.
+      </Tip>
+
+      <H2>Las 4 solapas del dashboard</H2>
+      <Lede>Arriba vas a ver cuatro pestañas. Pensalas como las solapas de una carpeta: cada una cumple una función distinta. Las cuatro reflejan, en formato visual, la información que vive en tu hoja de Drive.</Lede>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
+        <Callout color="#10b981" title="📊 Dashboard" body="El panorama general: cuánto ganaste, cuánto gastaste, cómo vas." />
+        <Callout color="#3b82f6" title="📋 Tablas" body="El detalle fino de cada movimiento, mes por mes." />
+        <Callout color="#f59e0b" title="💰 Presupuesto" body="Tu plan: cuánto querés gastar en cada cosa antes de gastarlo." />
+        <Callout color="#a855f7" title="📝 Notas" body="Recordatorios, metas, reflexiones — tu bloc personal." />
+      </div>
+    </div>
+  );
+}
+
+function HojaSection() {
+  return (
+    <div>
+      <SectionHeader
+        eyebrow="Capítulo 01 · Tu Hoja de Cálculo"
+        title="Una hoja viva en tu Drive."
+        subtitle="Antes de hablar del dashboard conviene entender el corazón de MiTempo: una hoja de cálculo en tu propio Google Drive donde vive cada peso que registrás."
+        accent="#22c55e"
+      />
+
+      <Lede>
+        Cuando empezás a usar MiTempo, lo primero que hace el sistema es crear automáticamente —en <b>tu</b> Google Drive— un archivo con un nombre único:
+      </Lede>
+
+      <div style={{ marginBottom: 36 }}>
+        <window.DriveFileCard />
+      </div>
+
+      <P>
+        Ese archivo no es un detalle técnico ni un repositorio escondido: es <b>la fuente única de verdad</b> de toda tu información financiera dentro de MiTempo. El asistente de WhatsApp escribe ahí cuando le mandás un movimiento, el dashboard lee desde ahí cuando consultás un gráfico, y vos podés abrirlo cuando quieras para revisar, corregir o ajustar. Vive en tu Drive, bajo tu cuenta, con tus permisos.
+      </P>
+
+      <Tip icon="🔐" tone="emerald">
+        <b>Tu cuenta, tu archivo, tus datos.</b> El archivo se crea en <i>tu</i> Drive personal — no en un servidor de un tercero. MiTempo accede solo a esa hoja para leer y escribir lo que vos le pedís.
+      </Tip>
+
+      <H2>Las cuatro hojas que encontrás adentro</H2>
+      <Lede>
+        Al abrir el archivo vas a ver, en la barra inferior, cuatro pestañas. Cada una guarda un tipo de información distinto, y juntas componen la imagen completa de tu economía:
+      </Lede>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14, marginBottom: 8 }}>
+        <Callout
+          color="#10b981"
+          title="📗 Ingresos"
+          body="Cada peso que entró: sueldo, freelance, reintegros, ventas, transferencias recibidas. Una fila por movimiento, con fecha, descripción, categoría y monto."
+        />
+        <Callout
+          color="#ef4444"
+          title="📕 Egresos"
+          body="Cada peso que salió: alquiler, supermercado, transporte, salidas, suscripciones. Misma estructura que Ingresos — fácil de auditar de un vistazo."
+        />
+        <Callout
+          color="#a855f7"
+          title="📙 Categorias"
+          body="El catálogo maestro: la lista de etiquetas que usás para clasificar tus movimientos. Acá decidís qué categorías existen y cómo se llaman."
+        />
+        <Callout
+          color="#f59e0b"
+          title="📒 Presupuesto"
+          body="Tu plan mensual por categoría. Lo que pensás gastar antes de gastarlo. El dashboard lo compara contra Egresos para mostrarte si vas en línea o te estás pasando."
+        />
+      </div>
+
+      <H2>Así se ven, por dentro</H2>
+      <Lede>Para que no haya sorpresas la primera vez que abrís el archivo, este es un ejemplo de la hoja <b>Ingresos</b> con cuatro movimientos cargados:</Lede>
+
+      <div style={{ marginBottom: 28 }}>
+        <window.IngresosSheetMock />
+      </div>
+
+      <Lede>Y la hoja <b>Categorias</b>, que es la que más vas a querer personalizar al principio. Tiene tres columnas:</Lede>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 16 }}>
+        <Callout color="#0ea5e9" title="nombre" body="El nombre exacto de la categoría como vos la querés ver (ej: alquiler, luz, sueldos)." />
+        <Callout color="#0ea5e9" title="grupo" body="A qué familia pertenece: INGRESOS, HOGAR, TRANSPORTE, OCIO… Vos definís los grupos." />
+        <Callout color="#0ea5e9" title="keywords" body="Las palabras que el asistente busca en tus mensajes para asignar el gasto a esta categoría automáticamente." />
+      </div>
+
+      <div style={{ marginBottom: 28 }}>
+        <window.CategoriasSheetMock />
+      </div>
+
+      <Tip icon="🔑" tone="amber">
+        <b>El truco de las <i>keywords</i>:</b> si escribís en WhatsApp <i>"pagué 8000 de gas"</i>, el asistente busca la palabra <b>gas</b> en la columna keywords, encuentra la categoría <i>gas</i> del grupo <i>HOGAR</i>, y la asigna sola. Cuantas más keywords cargues por categoría, más preciso se vuelve.
+      </Tip>
+
+      <P>
+        Los nombres de columna, los formatos y los colores son los que vienen por defecto. <b>No tenés que aprender ninguna fórmula ni respetar un orden secreto:</b> son hojas comunes, con las mismas reglas que cualquier hoja de cálculo de Drive.
+      </P>
+
+      <H2>El asistente y el dashboard miran la misma hoja</H2>
+      <Lede>
+        Esto es lo que hace que MiTempo se sienta consistente: tanto el asistente conversacional como el dashboard web <b>no tienen una base de datos paralela</b>. Ambos leen, en tiempo real, exactamente lo que está escrito en tu hoja.
+      </Lede>
+
+      <window.FlowDiagram />
+
+      <P style={{ marginTop: 24 }}>
+        ¿Qué significa esto en la práctica? Si abrís la hoja un domingo a la noche, corregís un monto que cargaste mal y guardás los cambios, el lunes a la mañana el dashboard ya lo va a reflejar. Si le preguntás al asistente <i>"¿cuánto gasté en supermercado este mes?"</i>, te va a contestar usando los datos actualizados que vos mismo escribiste. <b>No hay desincronización posible — la hoja es la verdad.</b>
+      </P>
+
+      <H2>Editás vos, cuando quieras, lo que quieras</H2>
+      <Lede>
+        Esta es la parte que más le gusta a la gente cuando lo entiende: <b>las cuatro hojas son completamente editables a mano</b>. No están bloqueadas, no son de "solo lectura", no necesitás permisos especiales. Es <i>tu</i> archivo, en <i>tu</i> Drive.
+      </Lede>
+
+      <div style={{
+        display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14, marginTop: 8, marginBottom: 8,
+      }}>
+        <Callout color="#22c55e" title="✍️ Corregir un movimiento" body="¿Cargaste $5.000 cuando eran $500? Abrí la hoja, cambiá la celda, listo. El dashboard se ajusta solo." />
+        <Callout color="#22c55e" title="🗑️ Borrar lo que no va" body="Eliminá filas duplicadas o registros viejos como en cualquier hoja de cálculo. Sin trámite, sin soporte." />
+        <Callout color="#22c55e" title="📥 Cargar movimientos en lote" body="¿Tenés un extracto del banco? Pegá las filas en Egresos. MiTempo las va a tomar como propias." />
+        <Callout color="#22c55e" title="🏷️ Configurar tus categorías" body="Esta es la más poderosa: la hoja Categorias define cómo se etiqueta TODO. Adaptala a tu vida." />
+      </div>
+
+      <Tip icon="🏷️" tone="amber">
+        <b>El detalle clave: la hoja <i>Categorias</i> manda.</b> Si agregás una categoría nueva (por ejemplo, <i>"Mascotas"</i> o <i>"Educación de los chicos"</i>), tanto el asistente como el dashboard la van a reconocer y empezar a usarla la próxima vez que cargues un gasto. No hay que avisarle a nadie — la hoja se sincroniza sola.
+      </Tip>
+
+      <H2>Casos típicos de personalización</H2>
+      <Lede>Para que veas hasta dónde llega la libertad de editar, algunos ejemplos reales que hacen los usuarios la primera semana:</Lede>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        {[
+          ['🛒', 'Renombrar "alquiler" a "renta del depto"', 'Si te resulta más natural llamarle así, cambiale el nombre en la columna "nombre" de la hoja Categorias. El asistente sigue reconociéndola por sus keywords.'],
+          ['🐶', 'Crear una categoría "mascotas"', 'Agregá una fila: nombre = mascotas, grupo = HOGAR (o creá un grupo MASCOTAS), keywords = veterinario, comida perro, arena, paseador. Lista para usar.'],
+          ['💼', 'Separar "sueldo principal" de "sueldo secundario"', 'Si tenés dos trabajos, agregá dos filas en INGRESOS con keywords distintas y vas a ver cuál pesa más en el dashboard.'],
+          ['📊', 'Ajustar el presupuesto a mitad de mes', 'Si en mayo te diste cuenta que $30.000 para "salidas" eran muy pocos, abrí la hoja Presupuesto, subilo a $40.000, y el dashboard recalcula porcentajes y diferencias al instante.'],
+        ].map(([icon, title, body]) => (
+          <div key={title} style={{
+            display: 'grid', gridTemplateColumns: '44px 1fr', gap: 16, alignItems: 'flex-start',
+            padding: '16px 18px', background: 'white', border: '1px solid #eef0f2', borderRadius: 14,
+          }}>
+            <div style={{
+              width: 40, height: 40, borderRadius: 10,
+              background: '#ecfdf5', fontSize: 20,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>{icon}</div>
+            <div>
+              <div style={{ fontWeight: 600, color: '#111827', fontSize: 15, marginBottom: 4 }}>{title}</div>
+              <div style={{ fontSize: 14, color: '#4b5563', lineHeight: 1.6 }}>{body}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <H2>Buenas prácticas al editar a mano</H2>
+      <Lede>La hoja es libre, pero un par de cuidados simples evitan dolores de cabeza después:</Lede>
+
+      <StepList steps={[
+        <span><b>No borres los encabezados.</b> La primera fila de cada hoja describe las columnas. Si la borrás, MiTempo se confunde al leer.</span>,
+        <span><b>Respetá el formato de fecha</b> (DD/MM/AAAA). Es el mismo formato que usa el asistente al cargar tus gastos por WhatsApp.</span>,
+        <span><span>Cuando crees una categoría nueva en <b>Categorias</b>, escribila <i>idéntica</i> en Ingresos o Egresos cuando la uses — así los totales por categoría salen limpios.</span></span>,
+        <span><b>Hacé una copia de seguridad cada tanto.</b> Drive guarda historial automáticamente, pero <i>Archivo → Hacer una copia</i> nunca está de más antes de un cambio grande.</span>,
+        <span><b>Cerrá la hoja al terminar.</b> Si la dejás abierta en otra computadora mientras MiTempo escribe, podés perder el último cambio. Mejor cerrarla cuando no la estás usando.</span>,
+      ]} />
+
+      <Tip icon="🧭" tone="coral">
+        <b>¿Y si rompo algo sin querer?</b> Drive guarda <i>todas</i> las versiones del archivo. Andá a <i>Archivo → Historial de versiones</i>, elegí una versión anterior y restaurala. Es prácticamente imposible perder datos de forma definitiva.
+      </Tip>
+
+      <div style={{
+        marginTop: 48, padding: 28,
+        background: 'linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%)',
+        borderRadius: 20, border: '1px solid #bbf7d0',
+      }}>
+        <div style={{ fontSize: 13, fontWeight: 600, color: '#047857', marginBottom: 10, letterSpacing: 0.5 }}>
+          EN UNA FRASE
+        </div>
+        <div style={{
+          fontFamily: 'DM Serif Display, serif', fontSize: 26, lineHeight: 1.25, color: '#111827',
+          letterSpacing: -0.5, marginBottom: 8,
+        }}>
+          La hoja es tuya. MiTempo es la lupa que la lee.
+        </div>
+        <P>
+          El dashboard, los gráficos y el asistente son interfaces sobre <b>tus</b> datos. Si mañana decidís dejar de usar MiTempo, te llevás la hoja entera con todo el historial — sin migraciones, sin exportaciones raras, sin permisos que pedirle a nadie.
+        </P>
+      </div>
+    </div>
+  );
+}
+
+function DashboardSection() {
+  return (
+    <div>
+      <SectionHeader
+        eyebrow="Capítulo 02 · Dashboard"
+        title="El panel de tu auto financiero."
+        subtitle="De un vistazo sabés si todo marcha bien o si hay algo para revisar. Esta es la primera pantalla que ves al entrar."
+        accent="#10b981"
+      />
+
+      <H2>Las 4 tarjetas de arriba</H2>
+      <Lede>Los cuatro números que más importan, siempre visibles. Así se ven:</Lede>
+      <MiniStatGrid />
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14, marginTop: 24 }}>
+        <Callout
+          color="#10b981"
+          title="💚 Ingresos del mes"
+          body="Todo lo que entró: sueldo, freelances, transferencias. La flechita indica si ganaste más o menos que el mes pasado."
+        />
+        <Callout
+          color="#ef4444"
+          title="🔴 Egresos del mes"
+          body="Todo lo que salió: supermercado, alquiler, salidas. Si la flecha sube mucho, es momento de revisar."
+        />
+        <Callout
+          color="#3b82f6"
+          title="🔵 Balance neto"
+          body="Ingresos menos egresos. Verde = te sobró plata. Rojo = gastaste más de lo que ganaste."
+        />
+        <Callout
+          color="#f59e0b"
+          title="🟡 Tasa de ahorro"
+          body="Qué porcentaje de lo que ganaste NO gastaste. La meta ideal: 30% o más."
+        />
+      </div>
+
+      <Tip icon="🎯" tone="emerald">
+        <b>¿Qué tasa de ahorro es buena?</b> Verde (30%+) excelente · Amarillo (menos de 30%) puede mejorar · Rojo (negativo) gastaste más de lo que ganaste.
+      </Tip>
+
+      <H2>Gráfico: Presupuesto vs Real</H2>
+      <Lede>
+        Compara cuánto <b>planeabas</b> gastar con cuánto <b>realmente</b> gastaste en cada categoría. Si la barra verde se pasa del límite, te estás yendo de presupuesto.
+      </Lede>
+      <BudgetBarChart />
+      <Tip icon="💡" tone="amber">
+        Este gráfico solo aparece si cargaste un presupuesto en la pestaña <b>Presupuesto</b>.
+      </Tip>
+
+      <H2>Evolución anual</H2>
+      <Lede>Un gráfico grande con barras (ingresos y egresos por mes) y una línea punteada que muestra tu <b>ahorro acumulado</b> en todo el año. Si la línea sube, vas por buen camino.</Lede>
+      <EvolutionChart />
+
+      <H2>Ranking y resumen mensual</H2>
+      <Lede>Abajo del gráfico vas a encontrar una <b>tabla con los últimos 12 meses</b> (ingresos, egresos, ahorro y %) y un <b>ranking de categorías</b> para ver dónde se te escapa más plata durante el año.</Lede>
+    </div>
+  );
+}
+
+function TablasSection() {
+  return (
+    <div>
+      <SectionHeader
+        eyebrow="Capítulo 03 · Tablas"
+        title="Cuando querés el detalle fino."
+        subtitle="Es como pedirle al banco el extracto completo. Cada movimiento, cada categoría, mes por mes — leído directamente desde tu hoja de Drive."
+        accent="#3b82f6"
+      />
+
+      <Tip icon="📗" tone="emerald">
+        Recordá: todo lo que ves en esta pestaña sale de las hojas <b>Ingresos</b> y <b>Egresos</b> de tu archivo en Drive. Si algún dato no cuadra, abrí la hoja, corregí la fila y volvé acá — la tabla se va a recalcular sola.
+      </Tip>
+
+      <H2>Elegí el mes que querés ver</H2>
+      <Lede>Arriba a la derecha hay un desplegable con los meses del año. Elegí uno y toda la pestaña se actualiza. Simple.</Lede>
+
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 10,
+        padding: 14, background: 'white', borderRadius: 12, border: '1px solid #eef0f2',
+        marginBottom: 24,
+      }}>
+        <span style={{ fontSize: 12, color: '#6b7280' }}>Mes:</span>
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 8,
+          padding: '7px 14px', background: '#f9fafb',
+          border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13, fontWeight: 500,
+        }}>
+          Abril 2026 <span style={{ color: '#9ca3af' }}>▾</span>
+        </div>
+      </div>
+
+      <H2>Top 5 categorías</H2>
+      <Lede>Las cinco categorías en las que más gastaste ese mes, de mayor a menor. Útil para ver de un vistazo dónde se va el grueso de tu plata.</Lede>
+
+      <div style={{
+        background: 'white', border: '1px solid #eef0f2', borderRadius: 12, overflow: 'hidden',
+      }}>
+        {[
+          ['Alquiler', 80000, '#ef4444'],
+          ['Supermercado', 35000, '#f97316'],
+          ['Gasolina', 15000, '#f59e0b'],
+          ['Salidas', 12000, '#10b981'],
+          ['Ropa', 8000, '#3b82f6'],
+        ].map(([name, amount, color], i, arr) => {
+          const max = arr[0][1];
+          const pct = (amount / max) * 100;
+          return (
+            <div key={name} style={{
+              display: 'grid', gridTemplateColumns: '32px 1fr auto',
+              alignItems: 'center', gap: 14,
+              padding: '14px 16px', borderTop: i === 0 ? 'none' : '1px solid #f3f4f6',
+            }}>
+              <div style={{
+                width: 26, height: 26, borderRadius: 6,
+                background: '#f9fafb', color: '#6b7280',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 12, fontFamily: 'DM Serif Display, serif',
+              }}>{i + 1}</div>
+              <div>
+                <div style={{ fontSize: 14, color: '#111827', fontWeight: 500, marginBottom: 4 }}>{name}</div>
+                <div style={{ height: 6, background: '#f3f4f6', borderRadius: 999, overflow: 'hidden' }}>
+                  <div style={{ width: `${pct}%`, height: '100%', background: color, borderRadius: 999 }} />
+                </div>
+              </div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: '#111827', fontVariantNumeric: 'tabular-nums' }}>
+                ${amount.toLocaleString('es-AR')}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <H2>Comparativo mes anterior vs actual</H2>
+      <Lede>Una tabla que pone al lado lo que gastaste el mes pasado y este, con el cambio porcentual.</Lede>
+
+      <div style={{
+        background: 'white', border: '1px solid #eef0f2', borderRadius: 12, overflow: 'hidden',
+      }}>
+        <div style={{
+          display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 0.8fr 0.8fr',
+          padding: '11px 16px', background: '#f9fafb', fontSize: 11, fontWeight: 600,
+          color: '#6b7280', textTransform: 'uppercase', letterSpacing: 0.5,
+        }}>
+          <div>Categoría</div>
+          <div style={{ textAlign: 'right' }}>Mes ant.</div>
+          <div style={{ textAlign: 'right' }}>Mes act.</div>
+          <div style={{ textAlign: 'right' }}>MoM%</div>
+          <div style={{ textAlign: 'right' }}>% Ing.</div>
+        </div>
+        {[
+          { c: 'Supermercado', p: 32000, a: 35000, ing: 23 },
+          { c: 'Transporte', p: 18000, a: 15000, ing: 10 },
+          { c: 'Salidas', p: 9000, a: 12000, ing: 8 },
+        ].map((r) => {
+          const mom = ((r.a - r.p) / r.p) * 100;
+          return (
+            <div key={r.c} style={{
+              display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 0.8fr 0.8fr',
+              padding: '13px 16px', borderTop: '1px solid #f3f4f6',
+              fontSize: 13, alignItems: 'center',
+            }}>
+              <div style={{ color: '#111827', fontWeight: 500 }}>{r.c}</div>
+              <div style={{ textAlign: 'right', color: '#4b5563', fontVariantNumeric: 'tabular-nums' }}>${r.p.toLocaleString('es-AR')}</div>
+              <div style={{ textAlign: 'right', color: '#4b5563', fontVariantNumeric: 'tabular-nums' }}>${r.a.toLocaleString('es-AR')}</div>
+              <div style={{ textAlign: 'right', color: mom > 0 ? '#dc2626' : '#059669', fontWeight: 600 }}>
+                {mom > 0 ? '+' : ''}{mom.toFixed(0)}%
+              </div>
+              <div style={{ textAlign: 'right', color: '#6b7280' }}>{r.ing}%</div>
+            </div>
+          );
+        })}
+      </div>
+
+      <Tip icon="📖" tone="amber">
+        <b>¿Qué es "MoM"?</b> Significa <i>Month over Month</i> (mes sobre mes). Es el cambio respecto al mes anterior. Verde = bajaste, rojo = subiste.
+      </Tip>
+
+      <H2>Desglose por grupo</H2>
+      <Lede>Hacé clic en un grupo (ej: "Vivienda") para abrirlo como un cajón y ver <b>cada transacción individual</b>: fecha, descripción y monto.</Lede>
+    </div>
+  );
+}
+
+function PresupuestoSection() {
+  return (
+    <div>
+      <SectionHeader
+        eyebrow="Capítulo 04 · Presupuesto ⭐"
+        title="La pestaña más importante."
+        subtitle="Acá es donde tomás el control de tu plata. Te va a llevar 10 minutos la primera vez, y te va a cambiar la relación con tus gastos."
+        accent="#f59e0b"
+      />
+
+      <div style={{
+        background: 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)',
+        borderRadius: 20, padding: 28,
+        border: '1px solid #fde68a',
+        marginBottom: 40,
+      }}>
+        <div style={{ fontSize: 13, fontWeight: 600, color: '#92400e', marginBottom: 8, letterSpacing: 0.5 }}>
+          PARA ENTENDERLO DE RAÍZ
+        </div>
+        <div style={{ fontFamily: 'DM Serif Display, serif', fontSize: 28, lineHeight: 1.2, color: '#111827', marginBottom: 14, letterSpacing: -0.5 }}>
+          Imaginá que te dan $5.000 para toda la semana.
+        </div>
+        <P>
+          Vos decidís <i>de antemano</i>: $2.000 para el kiosco, $1.500 para el colectivo, $1.000 para el almuerzo, $500 por si surge algo. El miércoles ya llevás $1.800 en el kiosco — sabés que te quedan $200 hasta el domingo. <b>No te sorprende quedarte sin plata.</b>
+        </P>
+        <P>
+          Un presupuesto es exactamente eso: <b>decidir cuánto vas a gastar en cada cosa antes de gastarlo.</b>
+        </P>
+      </div>
+
+      <H2>La tabla del presupuesto</H2>
+      <Lede>Una fila por categoría, una columna por mes. Dentro de cada mes hay <b>4 sub-columnas</b> que conviene entender bien:</Lede>
+
+      <MiniBudgetRow />
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14, marginTop: 24 }}>
+        <Callout color="#3b82f6" title="📌 Pres. — Presupuesto" body="El número que vos escribís. Tu plan, tu límite. Hacé clic en la celda y editalo." />
+        <Callout color="#10b981" title="📌 Real — Gasto real" body="Se llena solo con los gastos que registrás por WhatsApp. No lo tocás." />
+        <Callout color="#f59e0b" title="📌 Dif. — Diferencia" body="Presupuesto menos real. Verde = te sobró. Rojo = te pasaste del plan." />
+        <Callout color="#a855f7" title="📌 % — Porcentaje usado" body="Cuánto del presupuesto ya consumiste. 100% = justo. 120% = te pasaste 20%." />
+      </div>
+
+      <H2>Cómo cargar tu primer presupuesto</H2>
+      <StepList steps={[
+        <span>Abrí la pestaña <b>Presupuesto</b>.</span>,
+        <span>Buscá la categoría que querés presupuestar (ej: <i>Supermercado</i>).</span>,
+        <span>Hacé clic en el número bajo el mes que querés (ej: la columna <i>Mayo</i>).</span>,
+        <span>Escribí el monto que planeás gastar (ej: <b>35000</b>).</span>,
+        <span>Repetí para todas las categorías y meses que te interesen.</span>,
+        <span>Apretá <b>Guardar presupuesto</b> (botón verde arriba a la derecha).</span>,
+      ]} />
+
+      <Tip icon="🌱" tone="emerald">
+        <b>Empezá chico.</b> No tenés que completar todas las categorías ni todos los meses. Arrancá con <b>2 o 3 categorías</b> donde sabés que necesitás control. En 2 meses ajustás.
+      </Tip>
+
+      <H2>Cuatro ejemplos reales</H2>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{
+          padding: '20px 22px', borderRadius: 14, background: 'white',
+          border: '1px solid #eef0f2',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+            <span style={{
+              width: 26, height: 26, borderRadius: 6, background: '#fef3c7', color: '#92400e',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 13, fontWeight: 600, fontFamily: 'DM Serif Display, serif',
+            }}>1</span>
+            <div style={{ fontWeight: 600, fontSize: 16, color: '#111827' }}>El susto de fin de mes que ya no pasa</div>
+          </div>
+          <P>
+            Pusiste $30.000 en "Salidas y entretenimiento". El día 15 ya llevás $26.000 (87%). El dashboard te lo muestra y decidís: <i>"este finde salgo menos"</i> o <i>"tranquilo, me quedan $4.000"</i>. Decidís antes, no después.
+          </P>
+        </div>
+
+        <div style={{
+          padding: '20px 22px', borderRadius: 14, background: 'white',
+          border: '1px solid #eef0f2',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+            <span style={{
+              width: 26, height: 26, borderRadius: 6, background: '#fef3c7', color: '#92400e',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 13, fontWeight: 600, fontFamily: 'DM Serif Display, serif',
+            }}>2</span>
+            <div style={{ fontWeight: 600, fontSize: 16, color: '#111827' }}>El mes de vacaciones</div>
+          </div>
+          <P>
+            Sabés que diciembre vas a gastar más en regalos y viajes. Subís el presupuesto <b>solo en diciembre</b>: Regalos $20.000 (en vez de $5.000), Transporte $15.000. El dashboard no te "regaña" en diciembre — lo planeaste.
+          </P>
+        </div>
+
+        <div style={{
+          padding: '20px 22px', borderRadius: 14, background: 'white',
+          border: '1px solid #eef0f2',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+            <span style={{
+              width: 26, height: 26, borderRadius: 6, background: '#fef3c7', color: '#92400e',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 13, fontWeight: 600, fontFamily: 'DM Serif Display, serif',
+            }}>3</span>
+            <div style={{ fontWeight: 600, fontSize: 16, color: '#111827' }}>Descubrí dónde se escapa la plata</div>
+          </div>
+          <P>
+            Cargás $10.000 en "Cafés y snacks" porque parece razonable. Al mes siguiente el Real marca $18.500 — casi el doble. Sin el presupuesto como referencia nunca te hubieras dado cuenta. Ahora decidís: ¿bajo el consumo o subo el plan?
+          </P>
+        </div>
+
+        <div style={{
+          padding: '20px 22px', borderRadius: 14, background: 'white',
+          border: '1px solid #eef0f2',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+            <span style={{
+              width: 26, height: 26, borderRadius: 6, background: '#fef3c7', color: '#92400e',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 13, fontWeight: 600, fontFamily: 'DM Serif Display, serif',
+            }}>4</span>
+            <div style={{ fontWeight: 600, fontSize: 16, color: '#111827' }}>Meta de ahorro para un viaje</div>
+          </div>
+          <P>
+            Querés guardar $50.000 por mes. Repartís el límite de gastos entre tus categorías y el dashboard te avisa todo el mes si vas bien. Al terminar el año, en la columna <b>Anual</b>, ves si cumpliste la meta.
+          </P>
+        </div>
+      </div>
+
+      <H2>Por qué vale la pena</H2>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginTop: 8 }}>
+        {[
+          ['Decidís antes, no después', 'Sabés cuánto tenés para ropa antes de entrar a la tienda.'],
+          ['Sin sorpresas de fin de mes', 'El dashboard te avisa durante el mes si te pasás.'],
+          ['Entendés tus patrones', 'En 3 meses ves en qué siempre te pasás y ajustás.'],
+          ['Definís prioridades', 'Más plata a lo que importa, menos a los caprichos.'],
+          ['Celebrás los ahorros', 'Cuando ves columnas en verde, es concreto, no una sensación.'],
+          ['Planificás el año entero', 'Te preparás para los meses caros (diciembre, vacaciones).'],
+        ].map(([t, b]) => (
+          <div key={t} style={{
+            padding: '14px 16px', borderRadius: 12,
+            background: '#ecfdf5', border: '1px solid #a7f3d0',
+          }}>
+            <div style={{ fontSize: 14, fontWeight: 600, color: '#065f46', marginBottom: 4 }}>✓ {t}</div>
+            <div style={{ fontSize: 13, color: '#047857', lineHeight: 1.5 }}>{b}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function NotasSection() {
+  return (
+    <div>
+      <SectionHeader
+        eyebrow="Capítulo 05 · Notas"
+        title="Tus listas rápidas."
+        subtitle="El lugar para anotar lo que tenés que comprar, recordar o no olvidar. Tu bloc de notas personal dentro del dashboard."
+        accent="#a855f7"
+      />
+
+      <H2>¿Para qué se usa?</H2>
+      <Lede>Son tus <b>listas rápidas</b>: lo que te falta comprar, lo que tenés que acordarte, lo que no querés olvidar. El uso más común son listas de compras.</Lede>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginBottom: 32 }}>
+        <Callout color="#10b981" title="🛒 Lista del súper" body={<>Leche, pan, agua, huevos, yerba, tomates...</>} />
+        <Callout color="#f59e0b" title="💊 Farmacia" body={<>Ibuprofeno, alcohol en gel, vendas.</>} />
+        <Callout color="#3b82f6" title="🏠 Para la casa" body={<>Focos, pilas AA, detergente, papel higiénico.</>} />
+        <Callout color="#a855f7" title="📋 Recordatorios" body={<>Pagar expensas el 10, llamar al plomero, renovar seguro.</>} />
+      </div>
+
+      <H2>Cómo se ven tus notas</H2>
+      <NotesGrid />
+
+      <H2>Crear, editar, borrar</H2>
+      <StepList steps={[
+        <span>Apretá <b>+ Nueva nota</b> (arriba a la derecha).</span>,
+        <span>Completá el <b>título</b> (corto, descriptivo) y el <b>contenido</b> (libre).</span>,
+        <span>Apretá <b>Guardar</b>. La nota aparece en la grilla.</span>,
+        <span>En cada nota tenés <b>✏️ Editar</b> y <b>🗑️ Borrar</b> (te pide confirmación antes).</span>,
+      ]} />
+
+      <Tip icon="🎨" tone="coral">
+        <b>¿Y el color de la franja lateral?</b> Es decorativo. No significa nada especial — solo hace que la sección se vea más linda.
+      </Tip>
+    </div>
+  );
+}
+
+function TipsSection() {
+  return (
+    <div>
+      <SectionHeader
+        eyebrow="Cierre"
+        title="Detalles que te van a ahorrar tiempo."
+        subtitle="Cinco cosas que conviene tener en cuenta después de las primeras semanas."
+        accent="#0ea5e9"
+      />
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        {[
+          ['🤖', 'El dashboard no inventa datos', 'Todo lo que ves vino de lo que registraste por WhatsApp. Si mandás pocos gastos, vas a ver pocos datos. Cuanto más usás MiTempo, más útil se vuelve.'],
+          ['📭', '¿No ves nada todavía?', 'Si entrás y está vacío, es normal al principio. Empezá a registrar gastos por WhatsApp y en minutos van a aparecer.'],
+          ['📱', 'Instalalo como app', 'Desde el celular, el navegador te va a ofrecer "Agregar a pantalla de inicio". Aceptá y queda como una app más — sin pasar por la tienda.'],
+          ['🔒', 'Tus datos son solo tuyos', 'Solo vos podés ver tu dashboard. Nadie más tiene acceso a tu información financiera.'],
+          ['💬', 'MiTempo también responde desde el chat', 'Podés preguntarle "¿cuánto gasté este mes?" o "mostrá mis gastos de abril" sin abrir el dashboard.'],
+        ].map(([icon, title, body]) => (
+          <div key={title} style={{
+            display: 'grid', gridTemplateColumns: '48px 1fr', gap: 18,
+            padding: '18px 22px',
+            background: 'white', border: '1px solid #eef0f2', borderRadius: 14,
+          }}>
+            <div style={{
+              width: 44, height: 44, borderRadius: 10,
+              background: '#f9fafb', fontSize: 22,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>{icon}</div>
+            <div>
+              <div style={{ fontWeight: 600, color: '#111827', fontSize: 16, marginBottom: 4 }}>{title}</div>
+              <div style={{ fontSize: 14, color: '#4b5563', lineHeight: 1.6 }}>{body}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div style={{
+        marginTop: 56, padding: 32,
+        background: 'linear-gradient(135deg, #111827 0%, #1f2937 100%)',
+        borderRadius: 20, color: 'white',
+        textAlign: 'center',
+      }}>
+        <div style={{ fontSize: 13, opacity: 0.6, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 10 }}>
+          ¿Tenés dudas?
+        </div>
+        <div style={{ fontFamily: 'DM Serif Display, serif', fontSize: 32, letterSpacing: -0.8, marginBottom: 14 }}>
+          Preguntale a MiTempo por WhatsApp.
+        </div>
+        <div style={{ fontSize: 15, opacity: 0.75, maxWidth: 520, margin: '0 auto', lineHeight: 1.6 }}>
+          Escribile cosas como "¿cuánto gasté este mes?", "mostrá mis gastos de abril" o "quiero ver mi dashboard".
+        </div>
+        <div style={{ marginTop: 24, fontSize: 12, opacity: 0.4, letterSpacing: 0.5 }}>
+          Manual actualizado · Abril 2026 · MiTempo v2
+        </div>
+      </div>
+    </div>
+  );
+}
+
+Object.assign(window, {
+  IntroSection, HojaSection, DashboardSection, TablasSection,
+  PresupuestoSection, NotasSection, TipsSection,
+});
+
+</script>
 
 <script type="text/babel">
 const { useState, useEffect } = React;
