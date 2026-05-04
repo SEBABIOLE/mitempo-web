@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Soporte · MiTempo.app</title>
+  <meta name="description" content="¿Tenés una consulta, problema o sugerencia? Contactá al equipo de MiTempo.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: #faf8f4;
+      color: #111827;
+      -webkit-font-smoothing: antialiased;
+      font-feature-settings: "ss01" on, "cv11" on;
+      line-height: 1.5;
+    }
+    ::selection { background: #a7f3d0; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+    .serif { font-family: 'DM Serif Display', serif; font-weight: 400; letter-spacing: -0.5px; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* HEADER */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      background: rgba(250, 248, 244, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 0;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
+    .brand-logo {
+      width: 40px; height: 40px; border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .brand-name { font-family: 'DM Serif Display', serif; font-size: 22px; letter-spacing: -0.3px; }
+    .nav-links { display: flex; align-items: center; gap: 28px; }
+    .nav-links a {
+      color: #4b5563; text-decoration: none; font-size: 14px; font-weight: 500;
+      transition: color 0.15s;
+    }
+    .nav-links a:hover { color: #111827; }
+    .cta {
+      background: #10b981; color: white; padding: 9px 18px;
+      border-radius: 10px; font-size: 14px; font-weight: 600;
+      text-decoration: none; transition: all 0.15s;
+      box-shadow: 0 2px 8px rgba(16,185,129,0.25);
+    }
+    .cta:hover { background: #059669; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(16,185,129,0.35); }
+
+    /* MAIN */
+    main { padding: 120px 0 80px; min-height: calc(100vh - 160px); }
+
+    /* HERO corto */
+    .page-hero {
+      text-align: center;
+      padding-bottom: 48px;
+    }
+    .page-hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 52px;
+      letter-spacing: -1.5px;
+      margin: 0 0 16px;
+      line-height: 1.1;
+    }
+    .page-hero h1 em {
+      font-style: normal;
+      color: #10b981;
+    }
+    .page-hero p {
+      font-size: 18px;
+      color: #6b7280;
+      margin: 0;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* FORM CARD */
+    .form-wrap {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .form-card {
+      background: #fff;
+      border: 1px solid #eef0f2;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.05);
+    }
+
+    .field { margin-bottom: 20px; }
+    .field label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      font-size: 15px;
+      color: #111827;
+      background: #fafafa;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      appearance: none;
+    }
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16,185,129,0.12);
+      background: #fff;
+    }
+    .field input.error,
+    .field select.error,
+    .field textarea.error {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239,68,68,0.10);
+    }
+    .field textarea { resize: vertical; min-height: 120px; line-height: 1.6; }
+    .field-error {
+      font-size: 12px;
+      color: #ef4444;
+      margin-top: 4px;
+      display: none;
+    }
+    .field-error.visible { display: block; }
+
+    /* Select arrow */
+    .select-wrap { position: relative; }
+    .select-wrap::after {
+      content: '';
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      width: 0; height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 6px solid #9ca3af;
+      pointer-events: none;
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: #10b981;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 24px;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      box-shadow: 0 4px 14px rgba(16,185,129,0.3);
+      margin-top: 8px;
+    }
+    .btn-submit:hover:not(:disabled) {
+      background: #059669;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(16,185,129,0.35);
+    }
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ESTADOS */
+    .alert {
+      padding: 14px 18px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 20px;
+      display: none;
+    }
+    .alert.visible { display: block; }
+    .alert-error {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #b91c1c;
+    }
+
+    .success-state {
+      text-align: center;
+      padding: 40px 20px;
+      display: none;
+    }
+    .success-state.visible { display: block; }
+    .success-icon {
+      font-size: 52px;
+      margin-bottom: 16px;
+      display: block;
+    }
+    .success-state h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28px;
+      letter-spacing: -0.5px;
+      margin: 0 0 12px;
+    }
+    .success-state p {
+      color: #6b7280;
+      font-size: 16px;
+      margin: 0 0 24px;
+    }
+    .success-state a {
+      color: #10b981;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .success-state a:hover { text-decoration: underline; }
+
+    /* FOOTER */
+    footer { padding: 48px 0 32px; }
+    .footer-inner {
+      display: flex; flex-direction: column; align-items: center; gap: 20px;
+    }
+    .footer-links { display: flex; gap: 28px; flex-wrap: wrap; justify-content: center; }
+    .footer-links a { color: #6b7280; text-decoration: none; font-size: 14px; }
+    .footer-links a:hover { color: #111827; }
+    .footer-copy { color: #9ca3af; font-size: 12px; font-family: 'JetBrains Mono', monospace; }
+
+    /* MOBILE */
+    @media (max-width: 900px) {
+      .container { padding: 0 20px; }
+      .nav-links a:not(.cta) { display: none; }
+      .page-hero h1 { font-size: 36px; }
+      .form-card { padding: 28px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <a href="index.html" class="brand">
+      <img src="Logo con blanco.png" alt="MiTempo.app" class="brand-logo">
+      <div class="brand-name">MiTempo</div>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html#que-hace">¿Qué hace?</a>
+      <a href="index.html#planes">Planes</a>
+      <a href="index.html#faq">Preguntas</a>
+      <a href="registro.html" class="cta">Probar gratis</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <div class="page-hero">
+      <h1>¿En qué podemos <em>ayudarte?</em></h1>
+      <p>Completá el formulario y te respondemos en menos de 24 hs.</p>
+    </div>
+
+    <div class="form-wrap">
+      <div class="form-card">
+
+        <div class="alert alert-error" id="alert-error">
+          Algo salió mal al enviar tu consulta. Intentá de nuevo o escribinos a <strong>soporte@mitempo.app</strong>.
+        </div>
+
+        <form id="soporte-form" novalidate>
+          <div class="field">
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" autocomplete="name">
+            <div class="field-error" id="err-nombre">Ingresá tu nombre.</div>
+          </div>
+
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="tu@email.com" autocomplete="email">
+            <div class="field-error" id="err-email">Ingresá un email válido.</div>
+          </div>
+
+          <div class="field">
+            <label for="tipo">Tipo de consulta</label>
+            <div class="select-wrap">
+              <select id="tipo" name="tipo">
+                <option value="Problema técnico">Problema técnico</option>
+                <option value="Pregunta sobre mi suscripción">Pregunta sobre mi suscripción</option>
+                <option value="Sugerencia">Sugerencia</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="mensaje">Mensaje</label>
+            <textarea id="mensaje" name="mensaje" placeholder="Contanos con detalle tu consulta o problema…"></textarea>
+            <div class="field-error" id="err-mensaje">El mensaje debe tener al menos 20 caracteres.</div>
+          </div>
+
+          <button type="submit" class="btn-submit" id="btn-submit">Enviar consulta</button>
+        </form>
+
+        <div class="success-state" id="success-state">
+          <span class="success-icon">✅</span>
+          <h2>¡Consulta recibida!</h2>
+          <p>Te respondemos en menos de 24 hs al email que ingresaste.</p>
+          <a href="index.html">← Volver al inicio</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container footer-inner">
+    <a href="index.html" class="brand">
+      <img src="Logo con blanco.png" alt="MiTempo.app" class="brand-logo">
+      <div class="brand-name">MiTempo</div>
+    </a>
+    <div class="footer-links">
+      <a href="index.html#planes">Planes</a>
+      <a href="politicas.html">Privacidad</a>
+      <a href="terminos.html">Términos</a>
+      <a href="soporte.html">Soporte</a>
+    </div>
+    <div class="footer-copy">© 2026 MITEMPO.APP</div>
+  </div>
+</footer>
+
+<script>
+  const WEBHOOK_URL = 'https://sebabiole.app.n8n.cloud/webhook/soporte-mitempo';
+
+  const form = document.getElementById('soporte-form');
+  const btn = document.getElementById('btn-submit');
+  const alertError = document.getElementById('alert-error');
+  const successState = document.getElementById('success-state');
+
+  function showError(fieldId, errId) {
+    document.getElementById(fieldId).classList.add('error');
+    document.getElementById(errId).classList.add('visible');
+  }
+  function clearError(fieldId, errId) {
+    document.getElementById(fieldId).classList.remove('error');
+    document.getElementById(errId).classList.remove('visible');
+  }
+
+  function validate() {
+    let valid = true;
+    const nombre = document.getElementById('nombre').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const mensaje = document.getElementById('mensaje').value.trim();
+
+    if (!nombre) { showError('nombre', 'err-nombre'); valid = false; }
+    else clearError('nombre', 'err-nombre');
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showError('email', 'err-email'); valid = false;
+    } else clearError('email', 'err-email');
+
+    if (mensaje.length < 20) { showError('mensaje', 'err-mensaje'); valid = false; }
+    else clearError('mensaje', 'err-mensaje');
+
+    return valid;
+  }
+
+  async function sendData(payload) {
+    const controller = new AbortController();
+    const t = setTimeout(() => controller.abort(), 10000);
+    try {
+      const res = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        signal: controller.signal
+      });
+      clearTimeout(t);
+      return res.ok;
+    } catch (e) {
+      clearTimeout(t);
+      try {
+        navigator.sendBeacon(WEBHOOK_URL, JSON.stringify(payload));
+        return true;
+      } catch (_) {
+        return false;
+      }
+    }
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    alertError.classList.remove('visible');
+    if (!validate()) return;
+
+    btn.disabled = true;
+    btn.textContent = 'Enviando…';
+
+    const payload = {
+      nombre: document.getElementById('nombre').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      tipo: document.getElementById('tipo').value,
+      mensaje: document.getElementById('mensaje').value.trim()
+    };
+
+    const ok = await sendData(payload);
+
+    if (ok) {
+      form.style.display = 'none';
+      successState.classList.add('visible');
+    } else {
+      btn.disabled = false;
+      btn.textContent = 'Enviar consulta';
+      alertError.classList.add('visible');
+    }
+  });
+</script>
+
+</body>
+</html>
