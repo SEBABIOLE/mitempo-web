@@ -1356,15 +1356,18 @@ function cerrarConfirmar() {
 
 async function confirmarBorrar() {
   if (!_deletingNota) return;
-  const phone = localStorage.getItem('mitempo_phone') || '';
+  const phone   = localStorage.getItem('mitempo_phone') || '';
+  const notaId  = _deletingNota.id;
+  const notaIdx = NOTAS.findIndex(n => n.id === notaId);
   cerrarConfirmar();
   try {
     await fetch(NOTAS_URL, {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ accion: 'borrar', id: _deletingNota.id, phone }),
+      body:    JSON.stringify({ accion: 'borrar', id: notaId, phone }),
     });
-    await loadNotas();
+    if (notaIdx !== -1) NOTAS.splice(notaIdx, 1);
+    renderNotas();
   } catch(e) {
     console.error('Error borrando nota:', e);
   }
