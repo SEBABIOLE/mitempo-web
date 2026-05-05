@@ -1195,7 +1195,11 @@ async function loadNotas() {
   const phone = localStorage.getItem('mitempo_phone') || '';
   if (!phone) { NOTAS = []; renderNotas(); return; }
   try {
-    const res  = await fetch(`${NOTAS_URL}?phone=${encodeURIComponent(phone)}`);
+    const res  = await fetch(NOTAS_URL, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ accion: 'ver', phone }),
+    });
     const json = await res.json();
     NOTAS = json.error ? [] : (json.notas || []);
   } catch(e) {
@@ -1315,8 +1319,20 @@ async function guardarNota() {
       errEl.textContent = 'Error al guardar. Intentá de nuevo.';
       errEl.classList.remove('hidden');
     } else {
-      cerrarModalNota();
-      await loadNotas();
+      if (_editingNota) {
+        // Update local array directly — no need to re-fetch from n8n
+        const idx = NOTAS.findIndex(n => n.id === _editingNota.id);
+        if (idx !== -1) {
+          NOTAS[idx] = { ...NOTAS[idx], titulo, contenido,
+            fecha_modificacion: new Date().toISOString().replace('T',' ').slice(0,19) };
+        }
+        cerrarModalNota();
+        renderNotas();
+      } else {
+        // New note: fetch from n8n to get server-assigned id (fecha_creacion)
+        cerrarModalNota();
+        await loadNotas();
+      }
     }
   } catch(e) {
     errEl.textContent = 'Error de conexión.';
