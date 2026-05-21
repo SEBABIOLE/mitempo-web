@@ -1233,7 +1233,7 @@ function renderNotas() {
   }
   empty.classList.add('hidden');
 
-  grid.innerHTML = NOTAS.map((nota, i) => {
+  grid.innerHTML = NOTAS.filter(n => n && n.id).map((nota, i) => {
     const colorCls = NOTA_COLORS[i % NOTA_COLORS.length];
     const fechaRel = fechaRelativa(nota.fecha_modificacion || nota.fecha_creacion);
     return `
@@ -1360,9 +1360,9 @@ async function confirmarBorrar() {
   if (!_deletingNota) return;
   const phone   = localStorage.getItem('mitempo_phone') || '';
   const notaId  = _deletingNota.id;
-  const notaIdx = NOTAS.findIndex(n => n.id === notaId);
   cerrarConfirmar();
   try {
+    const notaIdx = NOTAS.findIndex(n => n && n.id === notaId);
     await fetch(NOTAS_URL, {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
