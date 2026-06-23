@@ -1,4 +1,4 @@
-const CACHE = 'mitempo-dash-v3';
+const CACHE = 'mitempo-dash-v4';
 const SHELL = ['/dashboard.html'];
 
 self.addEventListener('install', e =>
