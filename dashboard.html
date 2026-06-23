@@ -92,6 +92,29 @@
     .nota-accent-0{border-left-color:#f59e0b} .nota-accent-1{border-left-color:#10b981}
     .nota-accent-2{border-left-color:#38bdf8} .nota-accent-3{border-left-color:#a78bfa}
     .nota-accent-4{border-left-color:#f87171} .nota-accent-5{border-left-color:#94a3b8}
+    /* ── Deudas ── */
+    .deuda-progress-bg{background:#e9ecef;border-radius:4px;height:8px;overflow:hidden;}
+    .deuda-progress-fill{height:100%;border-radius:4px;background:#34a853;transition:width .4s;}
+    .venc-urgent{color:#ea4335;font-weight:600;}
+    .venc-soon{color:#f59e0b;font-weight:600;}
+    /* ── Inversiones ── */
+    .inv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;}
+    .inv-card{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.08);padding:16px;border-top:3px solid #4e79a7;}
+    .inv-rend-pos{color:#34a853;font-weight:700;}
+    .inv-rend-neg{color:#ea4335;font-weight:700;}
+    /* ── Banco ── */
+    .banco-state{display:none;}
+    .banco-state.active{display:block;}
+    .upload-zone{border:2px dashed #d1d5db;border-radius:12px;padding:40px 24px;text-align:center;cursor:pointer;transition:all .2s;background:#fafafa;}
+    .upload-zone:hover,.upload-zone.dragover{border-color:#4e79a7;background:#eff6ff;}
+    .upload-zone input[type=file]{display:none;}
+    .spinner{width:36px;height:36px;border:4px solid #e5e7eb;border-top-color:#4e79a7;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .spinner-wrap{text-align:center;padding:60px 24px;}
+    .review-table th,.review-table td{border:1px solid #e5e7eb;padding:6px 10px;font-size:12px;}
+    .review-table th{background:#f9fafb;font-weight:600;}
+    .toast{position:fixed;bottom:24px;right:24px;background:#1e293b;color:#fff;border-radius:8px;padding:12px 20px;font-size:13px;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,.2);transition:opacity .3s;}
+    .toast.hidden{opacity:0;pointer-events:none;}
   </style>
 </head>
 <body class="bg-gray-100 text-gray-800 text-sm">
@@ -112,6 +135,9 @@
   <button class="tab-btn flex-1 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('dashboard',this)">Dashboard</button>
   <button class="tab-btn flex-1 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('presupuesto',this)">Presupuesto</button>
   <button class="tab-btn flex-1 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('notas',this)">Notas <span id="notasBadge" class="hidden ml-1 bg-slate-200 text-slate-600 text-xs font-bold px-1.5 py-0.5 rounded-full"></span></button>
+  <button class="tab-btn flex-1 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('deudas',this)">Deudas</button>
+  <button class="tab-btn flex-1 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('inversiones',this)">Inversiones</button>
+  <button class="tab-btn flex-1 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('banco',this)">Banco</button>
 </nav>
 
 <!-- ── Content ── -->
@@ -366,6 +392,104 @@
     </div>
   </div>
 
+  <!-- ──────────────── DEUDAS ──────────────── -->
+  <div id="deudas" class="tab-section hidden">
+    <div class="bg-blue-50 border-l-4 border-blue-400 rounded px-4 py-2.5 mb-4 text-blue-800 text-xs">
+      📋 Deudas leídas en tiempo real desde tu Google Sheet. Las barras muestran el avance de pago de cada partida.
+    </div>
+    <div id="deudas-kpis" class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4"></div>
+    <div class="bg-white rounded-xl shadow-sm overflow-x-auto">
+      <table class="w-full text-xs border-collapse">
+        <thead class="bg-gray-50 border-b border-gray-200">
+          <tr>
+            <th class="px-3 py-2 text-left font-semibold text-gray-600">Partida</th>
+            <th class="px-3 py-2 text-left font-semibold text-gray-600">Ubicación</th>
+            <th class="px-3 py-2 text-right font-semibold text-gray-600">Deuda Total</th>
+            <th class="px-3 py-2 text-right font-semibold text-gray-600">Pagado</th>
+            <th class="px-3 py-2 text-right font-semibold text-gray-600">Pendiente</th>
+            <th class="px-3 py-2 text-right font-semibold text-gray-600">Cuota</th>
+            <th class="px-3 py-2 text-left font-semibold text-gray-600">Vencimiento</th>
+            <th class="px-3 py-2 text-left font-semibold text-gray-600">Progreso</th>
+            <th class="px-3 py-2 text-left font-semibold text-gray-600">Notas</th>
+          </tr>
+        </thead>
+        <tbody id="deudas-tbody">
+          <tr><td colspan="9" class="text-center text-gray-400 py-6">Cargando…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ──────────────── INVERSIONES ──────────────── -->
+  <div id="inversiones" class="tab-section hidden">
+    <div class="bg-green-50 border-l-4 border-green-400 rounded px-4 py-2.5 mb-4 text-green-800 text-xs">
+      📈 Inversiones leídas en tiempo real desde tu Google Sheet. El rendimiento % es el retorno sobre el capital invertido.
+    </div>
+    <div id="inv-kpis" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4"></div>
+    <div id="inv-grid" class="inv-grid">
+      <div class="text-center text-gray-400 py-6" style="grid-column:1/-1">Cargando…</div>
+    </div>
+  </div>
+
+  <!-- ──────────────── BANCO ──────────────── -->
+  <div id="banco" class="tab-section hidden">
+    <div class="bg-indigo-50 border-l-4 border-indigo-400 rounded px-4 py-2.5 mb-4 text-indigo-800 text-xs">
+      🏦 Subí una captura de tu extracto bancario. La IA extrae los movimientos y los clasifica por categoría para que los revises antes de guardar.
+    </div>
+
+    <div id="banco-idle" class="banco-state active">
+      <div class="bg-white rounded-xl shadow-sm p-6 max-w-xl mx-auto">
+        <div class="upload-zone" id="uploadZone"
+          onclick="document.getElementById('fileInput').click()"
+          ondragover="event.preventDefault();this.classList.add('dragover')"
+          ondragleave="this.classList.remove('dragover')"
+          ondrop="handleFileDrop(event)">
+          <div class="text-5xl mb-3">🏦</div>
+          <p class="font-semibold text-gray-700 mb-1">Arrastrá o hacé clic para seleccionar</p>
+          <p class="text-xs text-gray-400 mb-3">Captura de pantalla o imagen de tu extracto bancario</p>
+          <small class="text-gray-300">PNG, JPG, JPEG · máx. 10 MB</small>
+          <input type="file" id="fileInput" accept="image/png,image/jpeg,image/jpg" onchange="handleFileSelect(event)">
+          <br><button class="mt-4 bg-slate-800 text-white text-xs font-semibold px-5 py-2 rounded-lg hover:bg-slate-900 transition" onclick="event.stopPropagation();document.getElementById('fileInput').click()">Elegir archivo</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="banco-loading" class="banco-state">
+      <div class="spinner-wrap">
+        <div class="spinner"></div>
+        <p class="mt-4 text-gray-500 text-sm">La IA está leyendo tu extracto bancario…</p>
+        <p class="text-gray-400 text-xs">Puede tardar hasta 30 segundos</p>
+      </div>
+    </div>
+
+    <div id="banco-review" class="banco-state">
+      <div class="bg-white rounded-xl shadow-sm p-4">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <h3 class="text-sm font-bold text-gray-700">Revisá los movimientos detectados</h3>
+            <span id="txn-count" class="text-xs text-gray-400"></span>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="cancelReview()" class="text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition">Cancelar</button>
+            <button onclick="confirmarTransacciones()" class="text-xs bg-slate-800 text-white font-semibold px-4 py-1.5 rounded-lg hover:bg-slate-900 transition">Confirmar y guardar</button>
+          </div>
+        </div>
+        <div class="overflow-x-auto max-h-96 overflow-y-auto">
+          <table class="review-table w-full border-collapse">
+            <thead>
+              <tr>
+                <th>✓</th><th>Fecha</th><th>Descripción</th><th style="text-align:right">Monto</th><th>Categoría</th>
+              </tr>
+            </thead>
+            <tbody id="review-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
 </main>
 
 <!-- ── iOS install banner ── -->
@@ -381,6 +505,8 @@
 const WEBHOOK_URL   = 'https://sebabiole.app.n8n.cloud/webhook/dashboard-data';
 const SAVE_URL      = 'https://sebabiole.app.n8n.cloud/webhook/dashboard-save-budget';
 const NOTAS_URL     = 'https://sebabiole.app.n8n.cloud/webhook/dashboard-notas';
+const BANCO_UPLOAD_URL  = 'https://sebabiole.app.n8n.cloud/webhook/banco-upload';
+const BANCO_CONFIRM_URL = 'https://sebabiole.app.n8n.cloud/webhook/banco-confirmar';
 const MESES_NOM     = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const MESES_CORTO   = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 const CAT_COLORS    = ['#4e79a7','#f28e2b','#e15759','#76b7b2','#59a14f','#b07aa1','#9c755f','#bab0ac','#499894','#d4a373'];
@@ -490,7 +616,7 @@ function showState(st) {
   $('stateLogin').classList.toggle('hidden', st !== 'login');
   $('stateEmpty').classList.toggle('hidden', st !== 'empty');
   // Show/hide tabs content
-  ['presupuesto','dashboard','tablas','notas'].forEach(id => {
+  ['presupuesto','dashboard','tablas','notas','deudas','inversiones','banco'].forEach(id => {
     $(id).classList.toggle('hidden', st !== 'data');
     if (st !== 'data') $(id).classList.remove('active');
   });
@@ -589,6 +715,8 @@ function renderAll() {
   renderDashboard();
   renderTablasInit();
   if (DATA.notas) { NOTAS = DATA.notas; renderNotas(); } else { loadNotas(); }
+  if (DATA.deudas)      renderDeudas(DATA.deudas);
+  if (DATA.inversiones) renderInversiones(DATA.inversiones);
 }
 
 // ══════════════════════════════════════════════════
@@ -1373,6 +1501,224 @@ async function confirmarBorrar() {
   } catch(e) {
     console.error('Error borrando nota:', e);
   }
+}
+
+// ══════════════════════════════════════════════════
+//  DEUDAS
+// ══════════════════════════════════════════════════
+function renderDeudas(deudas) {
+  const totalDeuda     = deudas.reduce((s,d) => s + (d.deuda_total||0), 0);
+  const totalPendiente = deudas.reduce((s,d) => s + (d.pendiente||0), 0);
+  const totalCuota     = deudas.reduce((s,d) => s + (d.cuota||0), 0);
+
+  $('deudas-kpis').innerHTML = `
+    <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-rose-400">
+      <div class="text-xs text-gray-500 font-medium mb-1">Deuda Total</div>
+      <div class="text-xl font-bold text-gray-800">${pesos(totalDeuda)}</div>
+      <div class="text-xs text-gray-400 mt-1">${deudas.length} partidas</div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-amber-400">
+      <div class="text-xs text-gray-500 font-medium mb-1">Pendiente</div>
+      <div class="text-xl font-bold text-gray-800">${pesos(totalPendiente)}</div>
+      <div class="text-xs text-gray-400 mt-1">${totalDeuda>0?Math.round(totalPendiente/totalDeuda*100):0}% restante</div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-purple-400">
+      <div class="text-xs text-gray-500 font-medium mb-1">Cuota Mensual Total</div>
+      <div class="text-xl font-bold text-gray-800">${pesos(totalCuota)}</div>
+      <div class="text-xs text-gray-400 mt-1">estimado</div>
+    </div>`;
+
+  const now = new Date();
+  const tbody = $('deudas-tbody');
+  if (!deudas.length) {
+    tbody.innerHTML = '<tr><td colspan="9" class="text-center text-gray-400 py-6">Sin deudas registradas</td></tr>';
+    return;
+  }
+  tbody.innerHTML = deudas.map(d => {
+    const pctPagado = d.deuda_total > 0 ? Math.round((d.pagado||0) / d.deuda_total * 100) : 0;
+    let vencCls = '', vencTxt = d.vencimiento || '—';
+    if (d.vencimiento) {
+      const parts = String(d.vencimiento).split('/');
+      const vd = parts.length === 3
+        ? new Date(parseInt(parts[2]), parseInt(parts[1])-1, parseInt(parts[0]))
+        : new Date(String(d.vencimiento));
+      if (!isNaN(vd)) {
+        const diff = Math.round((vd - now) / 86400000);
+        if (diff < 15) vencCls = 'venc-urgent';
+        else if (diff < 30) vencCls = 'venc-soon';
+      }
+    }
+    return `<tr class="border-b border-gray-100 hover:bg-gray-50">
+      <td class="px-3 py-2 text-gray-700">${d.partida}</td>
+      <td class="px-3 py-2 text-gray-500">${d.ubicacion||'—'}</td>
+      <td class="px-3 py-2 text-right font-medium">${pesos(d.deuda_total)}</td>
+      <td class="px-3 py-2 text-right text-green-600">${pesos(d.pagado||0)}</td>
+      <td class="px-3 py-2 text-right text-rose-500">${pesos(d.pendiente||0)}</td>
+      <td class="px-3 py-2 text-right">${pesos(d.cuota||0)}</td>
+      <td class="px-3 py-2 ${vencCls}">${vencTxt}</td>
+      <td class="px-3 py-2" style="min-width:80px">
+        <div class="deuda-progress-bg"><div class="deuda-progress-fill" style="width:${pctPagado}%"></div></div>
+        <span class="text-[10px] text-gray-400">${pctPagado}%</span>
+      </td>
+      <td class="px-3 py-2 text-gray-400 text-[11px]">${d.notas||''}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════
+//  INVERSIONES
+// ══════════════════════════════════════════════════
+function renderInversiones(inversiones) {
+  const totalInvertido  = inversiones.reduce((s,i) => s + (i.invertido||0), 0);
+  const totalActual     = inversiones.reduce((s,i) => s + (i.valor_actual||0), 0);
+  const rendGlobal      = totalInvertido > 0 ? (totalActual - totalInvertido) / totalInvertido * 100 : 0;
+
+  $('inv-kpis').innerHTML = `
+    <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-green-400">
+      <div class="text-xs text-gray-500 font-medium mb-1">Valor Total Cartera</div>
+      <div class="text-xl font-bold text-gray-800">${pesos(totalActual)}</div>
+      <div class="text-xs text-gray-400 mt-1">invertido: ${pesos(totalInvertido)}</div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-blue-400">
+      <div class="text-xs text-gray-500 font-medium mb-1">Rendimiento Global</div>
+      <div class="text-xl font-bold ${rendGlobal>=0?'text-green-600':'text-rose-500'}">${rendGlobal>=0?'+':''}${rendGlobal.toFixed(2)}%</div>
+      <div class="text-xs text-gray-400 mt-1">${inversiones.length} posiciones</div>
+    </div>`;
+
+  if (!inversiones.length) {
+    $('inv-grid').innerHTML = '<div class="text-center text-gray-400 py-6" style="grid-column:1/-1">Sin inversiones registradas</div>';
+    return;
+  }
+  const PLAT_COLORS = { 'Cocos Capital':'#1a56db', 'Pionex':'#f59e0b', 'Lemon':'#22c55e', 'Balanz':'#6366f1', 'default':'#6b7280' };
+  $('inv-grid').innerHTML = inversiones.map(inv => {
+    const color = PLAT_COLORS[inv.plataforma] || PLAT_COLORS.default;
+    const rend  = inv.rendimiento * (inv.rendimiento < 1 ? 100 : 1);
+    const rendCls = rend >= 0 ? 'inv-rend-pos' : 'inv-rend-neg';
+    return `<div class="inv-card" style="border-top-color:${color}">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-[11px] font-bold uppercase tracking-wide" style="color:${color}">${inv.plataforma}</span>
+        <span class="text-[10px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">${inv.tipo||''}</span>
+      </div>
+      <div class="font-bold text-gray-800 text-sm mb-3">${inv.activo}</div>
+      <div class="space-y-1 text-xs">
+        <div class="flex justify-between"><span class="text-gray-500">Invertido</span><span class="font-medium">${pesos(inv.invertido)}</span></div>
+        <div class="flex justify-between"><span class="text-gray-500">Valor actual</span><span class="font-medium">${pesos(inv.valor_actual)}</span></div>
+        <div class="flex justify-between"><span class="text-gray-500">Rendimiento</span><span class="${rendCls}">${rend>=0?'+':''}${rend.toFixed(2)}%</span></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════
+//  BANCO
+// ══════════════════════════════════════════════════
+let _bancoTxns = [];
+
+function setBancoState(st) {
+  ['banco-idle','banco-loading','banco-review'].forEach(id => {
+    const el = $(id);
+    if (el) el.classList.toggle('active', id === 'banco-' + st);
+  });
+}
+
+function handleFileSelect(e) { const f = e.target.files?.[0]; if (f) processFile(f); }
+function handleFileDrop(e) {
+  e.preventDefault();
+  $('uploadZone').classList.remove('dragover');
+  const f = e.dataTransfer.files?.[0];
+  if (f && f.type.startsWith('image/')) processFile(f);
+}
+
+async function processFile(file) {
+  setBancoState('loading');
+  try {
+    const base64 = await new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload = () => res(r.result.split(',')[1]);
+      r.onerror = rej;
+      r.readAsDataURL(file);
+    });
+    const phone = localStorage.getItem('mitempo_phone') || '';
+    const resp = await fetch(`${BANCO_UPLOAD_URL}?phone=${encodeURIComponent(phone)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ file_base64: base64, file_type: file.type, phone }),
+    });
+    const data = await resp.json();
+    const txns = data.transacciones || data;
+    if (!Array.isArray(txns) || !txns.length) {
+      alert('No se detectaron movimientos. Intentá con otra imagen.');
+      setBancoState('idle');
+      return;
+    }
+    _bancoTxns = txns;
+    renderReview(txns);
+    setBancoState('review');
+  } catch(e) {
+    console.error(e);
+    alert('Error al procesar la imagen. Intentá de nuevo.');
+    setBancoState('idle');
+  }
+}
+
+function renderReview(txns) {
+  $('txn-count').textContent = `${txns.length} movimiento${txns.length!==1?'s':''} detectado${txns.length!==1?'s':''}`;
+  const cats = DATA?.categorias_egreso || [];
+  $('review-tbody').innerHTML = txns.map((t,i) => `<tr>
+    <td><input type="checkbox" data-idx="${i}" checked style="accent-color:#1e293b"></td>
+    <td>${t.fecha||''}</td>
+    <td>${t.desc||t.descripcion||''}</td>
+    <td style="text-align:right;font-weight:600">${pesos(t.monto||0)}</td>
+    <td>
+      <select data-idx="${i}" data-field="categoria" style="font-size:11px;border:1px solid #e5e7eb;border-radius:4px;padding:2px 4px">
+        ${cats.map(c => `<option value="${c}" ${(t.categoria||t.category||'')===c?'selected':''}>${c}</option>`).join('')}
+        <option value="${t.categoria||t.category||''}" ${!cats.includes(t.categoria||t.category||'')?'selected':''}>${t.categoria||t.category||'Sin categoría'}</option>
+      </select>
+    </td>
+  </tr>`).join('');
+}
+
+function cancelReview() {
+  setBancoState('idle');
+  $('fileInput').value = '';
+  _bancoTxns = [];
+}
+
+async function confirmarTransacciones() {
+  const phone = localStorage.getItem('mitempo_phone') || '';
+  const rows  = document.querySelectorAll('#review-tbody tr');
+  const selected = [];
+  rows.forEach(row => {
+    const cb  = row.querySelector('input[type=checkbox]');
+    if (!cb || !cb.checked) return;
+    const idx = parseInt(cb.dataset.idx);
+    const catSel = row.querySelector('select[data-field=categoria]');
+    const txn = { ..._bancoTxns[idx] };
+    if (catSel) txn.categoria = catSel.value;
+    selected.push(txn);
+  });
+  if (!selected.length) { alert('Seleccioná al menos un movimiento.'); return; }
+  try {
+    const resp = await fetch(`${BANCO_CONFIRM_URL}?phone=${encodeURIComponent(phone)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone, transacciones: selected }),
+    });
+    const data = await resp.json();
+    const n = data.saved || selected.length;
+    showToast(`✅ ${n} movimiento${n!==1?'s':''} guardado${n!==1?'s':''}`);
+    cancelReview();
+  } catch(e) {
+    console.error(e);
+    alert('Error al guardar. Intentá de nuevo.');
+  }
+}
+
+function showToast(msg) {
+  const el = $('toast');
+  el.textContent = msg;
+  el.classList.remove('hidden');
+  setTimeout(() => el.classList.add('hidden'), 3500);
 }
 </script>
 </body>
