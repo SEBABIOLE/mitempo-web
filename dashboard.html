@@ -138,13 +138,13 @@
 
 <!-- ── Tabs ── -->
 <nav class="tabs-nav bg-white border-b border-gray-200 flex overflow-x-auto">
-  <button class="tab-btn active flex-none sm:flex-1 whitespace-nowrap px-4 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('tablas',this)">Tablas</button>
+  <button id="tabBtnTablas" class="tab-btn active flex-none sm:flex-1 whitespace-nowrap px-4 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('tablas',this)">Tablas</button>
   <button class="tab-btn flex-none sm:flex-1 whitespace-nowrap px-4 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('dashboard',this)">Dashboard</button>
   <button class="tab-btn flex-none sm:flex-1 whitespace-nowrap px-4 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('presupuesto',this)">Presupuesto</button>
   <button class="tab-btn flex-none sm:flex-1 whitespace-nowrap px-4 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('notas',this)">Notas <span id="notasBadge" class="hidden ml-1 bg-slate-200 text-slate-600 text-xs font-bold px-1.5 py-0.5 rounded-full"></span></button>
-  <button class="tab-btn flex-none sm:flex-1 whitespace-nowrap px-4 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('deudas',this)">Deudas</button>
-  <button class="tab-btn flex-none sm:flex-1 whitespace-nowrap px-4 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('inversiones',this)">Inversiones</button>
-  <button class="tab-btn flex-none sm:flex-1 whitespace-nowrap px-4 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('banco',this)">Banco</button>
+  <button id="tabBtnDeudas" class="tab-btn flex-none sm:flex-1 whitespace-nowrap px-4 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('deudas',this)">Deudas</button>
+  <button id="tabBtnInversiones" class="tab-btn flex-none sm:flex-1 whitespace-nowrap px-4 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('inversiones',this)">Inversiones</button>
+  <button id="tabBtnBanco" class="tab-btn flex-none sm:flex-1 whitespace-nowrap px-4 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('banco',this)">Banco</button>
 </nav>
 
 <!-- ── Content ── -->
@@ -519,6 +519,11 @@ const MESES_CORTO   = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oc
 const CAT_COLORS    = ['#4e79a7','#f28e2b','#e15759','#76b7b2','#59a14f','#b07aa1','#9c755f','#bab0ac','#499894','#d4a373'];
 const NOTA_COLORS   = ['nota-accent-0','nota-accent-1','nota-accent-2','nota-accent-3','nota-accent-4','nota-accent-5'];
 
+// Módulos en beta interna: visibles solo para estos números (10 dígitos, sin 0/15/54/9).
+// No se venden todavía — se ocultan en la UI para el resto de los usuarios.
+const OWNER_PHONES  = ['3382416087'];
+const OWNER_ONLY_TABS = ['deudas', 'inversiones', 'banco'];
+
 // ══════════════════════════════════════════════════
 //  MOCK DATA (used when ?demo=1)
 // ══════════════════════════════════════════════════
@@ -642,6 +647,19 @@ function showTab(id, btn) {
   if (btn) btn.classList.add('active');
 }
 
+// Muestra Deudas/Inversiones/Banco solo si el número que entró es un OWNER_PHONE.
+// Si el usuario tenía uno de esos tabs abierto y deja de ser owner (logout/otro numero), vuelve a Tablas.
+function applyOwnerFeatures(phone) {
+  const isOwner = OWNER_PHONES.includes(phone);
+  const ids = { deudas: 'tabBtnDeudas', inversiones: 'tabBtnInversiones', banco: 'tabBtnBanco' };
+  Object.values(ids).forEach(btnId => $(btnId)?.classList.toggle('hidden', !isOwner));
+
+  const active = document.querySelector('.tab-section.active');
+  if (!isOwner && active && OWNER_ONLY_TABS.includes(active.id)) {
+    showTab('tablas', $('tabBtnTablas'));
+  }
+}
+
 // ══════════════════════════════════════════════════
 //  AUTH — Login por número de teléfono
 // ══════════════════════════════════════════════════
@@ -717,6 +735,7 @@ function renderAll() {
   const mesNom = MESES_NOM[DATA.mes_actual - 1] || 'mes';
   $('headerSub').textContent = `${DATA.user_name || ''} · ${mesNom} ${DATA.anio}`;
 
+  applyOwnerFeatures(localStorage.getItem('mitempo_phone') || '');
   showState('data');
   renderPresupuesto();
   renderDashboard();
