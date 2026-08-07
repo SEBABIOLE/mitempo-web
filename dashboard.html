@@ -20,6 +20,13 @@
   <style>
     body { font-family: 'Inter', sans-serif; }
 
+    /* ── Tabs: scroll horizontal en mobile, sin scrollbar visible ── */
+    .tabs-nav {
+      scrollbar-width: none;      /* Firefox */
+      -ms-overflow-style: none;   /* IE/Edge viejo */
+    }
+    .tabs-nav::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+
     /* ── Sticky col A in presupuesto table ── */
     .col-cat {
       position: sticky;
@@ -130,14 +137,14 @@
 </header>
 
 <!-- ── Tabs ── -->
-<nav class="bg-white border-b border-gray-200 flex">
-  <button class="tab-btn active flex-1 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('tablas',this)">Tablas</button>
-  <button class="tab-btn flex-1 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('dashboard',this)">Dashboard</button>
-  <button class="tab-btn flex-1 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('presupuesto',this)">Presupuesto</button>
-  <button class="tab-btn flex-1 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('notas',this)">Notas <span id="notasBadge" class="hidden ml-1 bg-slate-200 text-slate-600 text-xs font-bold px-1.5 py-0.5 rounded-full"></span></button>
-  <button class="tab-btn flex-1 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('deudas',this)">Deudas</button>
-  <button class="tab-btn flex-1 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('inversiones',this)">Inversiones</button>
-  <button class="tab-btn flex-1 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('banco',this)">Banco</button>
+<nav class="tabs-nav bg-white border-b border-gray-200 flex overflow-x-auto">
+  <button class="tab-btn active flex-none sm:flex-1 whitespace-nowrap px-4 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('tablas',this)">Tablas</button>
+  <button class="tab-btn flex-none sm:flex-1 whitespace-nowrap px-4 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('dashboard',this)">Dashboard</button>
+  <button class="tab-btn flex-none sm:flex-1 whitespace-nowrap px-4 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('presupuesto',this)">Presupuesto</button>
+  <button class="tab-btn flex-none sm:flex-1 whitespace-nowrap px-4 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('notas',this)">Notas <span id="notasBadge" class="hidden ml-1 bg-slate-200 text-slate-600 text-xs font-bold px-1.5 py-0.5 rounded-full"></span></button>
+  <button class="tab-btn flex-none sm:flex-1 whitespace-nowrap px-4 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('deudas',this)">Deudas</button>
+  <button class="tab-btn flex-none sm:flex-1 whitespace-nowrap px-4 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('inversiones',this)">Inversiones</button>
+  <button class="tab-btn flex-none sm:flex-1 whitespace-nowrap px-4 text-center py-2.5 font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700 text-xs sm:text-sm" onclick="showTab('banco',this)">Banco</button>
 </nav>
 
 <!-- ── Content ── -->
