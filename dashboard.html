@@ -186,16 +186,16 @@
         Enviar código
       </button>
       <p id="loginError" class="text-xs text-rose-500 mt-3 hidden"></p>
-      <p class="text-xs text-gray-400 mt-4">Te mandamos un código de acceso por WhatsApp al número que usás en MiTempo (sin el 0 ni el 15, solo los 10 dígitos)</p>
+      <p class="text-xs text-gray-400 mt-4">Te mandamos un código de acceso por mail a la casilla registrada para ese número en MiTempo (sin el 0 ni el 15, solo los 10 dígitos)</p>
     </div>
   </div>
 
-  <!-- ──────────────── LOGIN (paso 2: codigo OTP) ──────────────── -->
+  <!-- ──────────────── LOGIN (paso 2: codigo por mail) ──────────────── -->
   <div id="stateOtp" class="hidden flex flex-col items-center justify-center py-16">
     <div class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-sm text-center">
-      <div class="text-4xl mb-3">💬</div>
-      <h1 class="text-xl font-bold text-slate-800 mb-1">Revisá tu WhatsApp</h1>
-      <p class="text-sm text-gray-400 mb-6">Te mandamos un código de 6 dígitos a <strong id="otpPhoneShown"></strong></p>
+      <div class="text-4xl mb-3">📧</div>
+      <h1 class="text-xl font-bold text-slate-800 mb-1">Revisá tu mail</h1>
+      <p class="text-sm text-gray-400 mb-6">Te mandamos un código de 6 dígitos al mail registrado para <strong id="otpPhoneShown"></strong></p>
       <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 text-left">
         Código de acceso
       </label>
@@ -538,8 +538,9 @@ const SAVE_URL      = 'https://sebabiole.app.n8n.cloud/webhook/dashboard-save-bu
 const NOTAS_URL     = 'https://sebabiole.app.n8n.cloud/webhook/dashboard-notas';
 const BANCO_UPLOAD_URL  = 'https://sebabiole.app.n8n.cloud/webhook/banco-upload';
 const BANCO_CONFIRM_URL = 'https://sebabiole.app.n8n.cloud/webhook/banco-confirmar';
-const OTP_REQUEST_URL   = 'https://sebabiole.app.n8n.cloud/webhook/dashboard-otp-request';
-const OTP_VERIFY_URL    = 'https://sebabiole.app.n8n.cloud/webhook/dashboard-otp-verify';
+const LOGIN_REQUEST_URL = 'https://sebabiole.app.n8n.cloud/webhook/dashboard-login-request';
+const LOGIN_VERIFY_URL  = 'https://sebabiole.app.n8n.cloud/webhook/dashboard-login-verify';
+const LOGOUT_URL        = 'https://sebabiole.app.n8n.cloud/webhook/dashboard-logout';
 const MESES_NOM     = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const MESES_CORTO   = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 const CAT_COLORS    = ['#4e79a7','#f28e2b','#e15759','#76b7b2','#59a14f','#b07aa1','#9c755f','#bab0ac','#499894','#d4a373'];
@@ -688,7 +689,10 @@ function applyOwnerFeatures(phone) {
 }
 
 // ══════════════════════════════════════════════════
-//  AUTH — Login por número de WhatsApp + código OTP
+//  AUTH — Login por número + código de acceso por mail.
+//  La sesión queda "recordada" en este dispositivo sin vencimiento
+//  (localStorage guarda solo el token — nada de teléfono). Se corta
+//  únicamente con "Salir", que revoca el token en el servidor.
 // ══════════════════════════════════════════════════
 let _pendingPhone = '';
 
@@ -698,19 +702,22 @@ async function loadData() {
 
   if (demo) { DATA = MOCK; renderAll(); return; }
 
-  // Sesion guardada de un login anterior (token valido hasta 30 dias) -> entra directo
-  const savedPhone = localStorage.getItem('mitempo_phone');
+  // Dispositivo ya verificado antes -> entra directo, sin pedir nada.
   const savedToken = localStorage.getItem('mitempo_token');
-  if (savedPhone && savedToken) {
+  if (savedToken) {
     showState('loading');
-    await fetchWithPhone(savedPhone, savedToken);
+    await fetchWithToken(savedToken);
     return;
   }
 
   showState('login');
 }
 
-// Paso 1: pide un codigo de 6 digitos por WhatsApp para el numero ingresado.
+// mitempo_phone queda cacheado localmente (lo devuelve el login-verify) solo
+// para que presupuesto/notas/banco -- que todavia esperan {phone,token} en el
+// body -- sigan andando sin tocarlos. La sesion en si se valida por token.
+
+// Paso 1: pide un codigo de 6 digitos por mail para el numero ingresado.
 // resend=true cuando se llama desde "Reenviar codigo" en la pantalla del paso 2.
 async function solicitarCodigo(resend) {
   const phone = resend ? _pendingPhone : (($('phoneInput').value || '').replace(/\D/g, '').slice(-10));
@@ -722,26 +729,17 @@ async function solicitarCodigo(resend) {
   $('otpError').classList.add('hidden');
   showState('loading');
   try {
-    const res  = await fetch(OTP_REQUEST_URL, {
+    const res  = await fetch(LOGIN_REQUEST_URL, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ phone })
     });
     const json = await res.json();
 
     if (json.error === 'user_not_found') {
-      showLoginError('Número no encontrado. Verificá que sea el mismo número que usás en WhatsApp.');
+      showLoginError('Número no encontrado. Verificá que sea el mismo número que usás en MiTempo.');
       return;
     }
-    if (json.error === 'subscription_inactive') {
-      showLoginError('Tu suscripción no está activa. Escribile a MiTempo por WhatsApp.');
-      return;
-    }
-    if (json.error === 'rate_limited') {
-      showLoginError(json.message || 'Ya pediste varios códigos. Esperá unos minutos.');
-      return;
-    }
-    if (json.ok === false) {
-      // p.ej. whatsapp_unavailable: la ventana de 24hs de WhatsApp esta cerrada
+    if (json.error) {
       showLoginError(json.message || 'No pudimos mandarte el código. Intentá de nuevo.');
       return;
     }
@@ -760,25 +758,25 @@ async function solicitarCodigo(resend) {
 async function verificarCodigo() {
   const code = ($('otpCodeInput').value || '').replace(/\D/g, '');
   if (code.length !== 6) {
-    showOtpError('Ingresá el código de 6 dígitos que te mandamos por WhatsApp');
+    showOtpError('Ingresá el código de 6 dígitos que te mandamos por mail');
     return;
   }
   $('otpError').classList.add('hidden');
   showState('loading');
   try {
-    const res  = await fetch(OTP_VERIFY_URL, {
+    const res  = await fetch(LOGIN_VERIFY_URL, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ phone: _pendingPhone, code })
     });
     const json = await res.json();
 
-    if (!json.ok) {
+    if (!json.success) {
       showOtpError(json.message || 'Código incorrecto.');
       return;
     }
-    localStorage.setItem('mitempo_phone', json.phone);
     localStorage.setItem('mitempo_token', json.token);
-    await fetchWithPhone(json.phone, json.token);
+    localStorage.setItem('mitempo_phone', json.phone || _pendingPhone);
+    await fetchWithToken(json.token);
   } catch (e) {
     console.error(e);
     showOtpError('Error de conexión. Verificá tu internet e intentá de nuevo.');
@@ -806,27 +804,27 @@ function showOtpError(msg) {
   showState('otp');
 }
 
-async function fetchWithPhone(phone, token) {
+async function fetchWithToken(token) {
   try {
-    const res  = await fetch(`${WEBHOOK_URL}?phone=${encodeURIComponent(phone)}&token=${encodeURIComponent(token)}`);
+    const res  = await fetch(`${WEBHOOK_URL}?token=${encodeURIComponent(token)}`);
     const json = await res.json();
 
     if (json.error === 'invalid_session') {
-      // Token vencido o invalido (p.ej. sesion vieja de otro dispositivo) -> pedir login de nuevo
-      localStorage.removeItem('mitempo_phone');
+      // Token vencido, revocado o invalido -> pedir login de nuevo en este dispositivo
       localStorage.removeItem('mitempo_token');
-      showLoginError('Tu sesión venció. Pedí un código nuevo.');
+      localStorage.removeItem('mitempo_phone');
+      showLoginError('Tu sesión venció o se cerró. Pedí un código nuevo.');
       return;
     }
     if (json.error === 'user_not_found') {
-      localStorage.removeItem('mitempo_phone');
       localStorage.removeItem('mitempo_token');
-      showLoginError('Número no encontrado. Verificá que sea el mismo número que usás en WhatsApp.');
+      localStorage.removeItem('mitempo_phone');
+      showLoginError('Número no encontrado. Verificá que sea el mismo número que usás en MiTempo.');
       return;
     }
     if (json.error === 'subscription_inactive') {
-      localStorage.removeItem('mitempo_phone');
       localStorage.removeItem('mitempo_token');
+      localStorage.removeItem('mitempo_phone');
       showLoginError('Tu suscripción no está activa. Escribile a MiTempo por WhatsApp.');
       return;
     }
@@ -842,13 +840,24 @@ async function fetchWithPhone(phone, token) {
   }
 }
 
-function logout() {
-  localStorage.removeItem('mitempo_phone');
+async function logout() {
+  const token = localStorage.getItem('mitempo_token');
   localStorage.removeItem('mitempo_token');
+  localStorage.removeItem('mitempo_phone');
   DATA = null;
   showState('login');
   $('headerSub').textContent = '';
   setTimeout(() => $('phoneInput')?.focus(), 100);
+  // Revoca el token en el servidor -- como la sesion no vence sola, esta es
+  // la unica forma de cortar el acceso de este dispositivo.
+  if (token) {
+    try {
+      await fetch(LOGOUT_URL, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token })
+      });
+    } catch (e) { console.error(e); }
+  }
 }
 
 // ══════════════════════════════════════════════════
