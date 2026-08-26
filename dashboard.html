@@ -690,9 +690,10 @@ function applyOwnerFeatures(phone) {
 
 // ══════════════════════════════════════════════════
 //  AUTH — Login por número + código de acceso por mail.
-//  La sesión queda "recordada" en este dispositivo sin vencimiento
-//  (localStorage guarda solo el token — nada de teléfono). Se corta
-//  únicamente con "Salir", que revoca el token en el servidor.
+//  La sesión queda "recordada" en este dispositivo y se renueva sola
+//  mientras se usa; vence a los 30 días de inactividad (auditoría
+//  2026-08-25). "Salir" la corta de inmediato, revocando el token
+//  en el servidor.
 // ══════════════════════════════════════════════════
 let _pendingPhone = '';
 
@@ -806,7 +807,9 @@ function showOtpError(msg) {
 
 async function fetchWithToken(token) {
   try {
-    const res  = await fetch(`${WEBHOOK_URL}?token=${encodeURIComponent(token)}`);
+    // Auditoría 2026-08-25: el token viaja por header Authorization, no por query string —
+    // antes quedaba en logs de servidor/proxy, historial del navegador y cabecera Referer.
+    const res  = await fetch(WEBHOOK_URL, { headers: { Authorization: `Bearer ${token}` } });
     const json = await res.json();
 
     if (json.error === 'invalid_session') {
@@ -848,8 +851,9 @@ async function logout() {
   showState('login');
   $('headerSub').textContent = '';
   setTimeout(() => $('phoneInput')?.focus(), 100);
-  // Revoca el token en el servidor -- como la sesion no vence sola, esta es
-  // la unica forma de cortar el acceso de este dispositivo.
+  // Revoca el token en el servidor -- la sesion ahora vence sola a los 30 dias
+  // de inactividad (auditoria 2026-08-25), pero esta sigue siendo la unica forma
+  // de cortar el acceso de este dispositivo de inmediato.
   if (token) {
     try {
       await fetch(LOGOUT_URL, {
@@ -1802,7 +1806,9 @@ async function processFile(file) {
     });
     const phone = localStorage.getItem('mitempo_phone') || '';
     const token = localStorage.getItem('mitempo_token') || '';
-    const resp = await fetch(`${BANCO_UPLOAD_URL}?phone=${encodeURIComponent(phone)}&token=${encodeURIComponent(token)}`, {
+    // Auditoría 2026-08-25: phone/token ya viajaban en el body — sacados de la URL, donde quedaban
+    // duplicados sin necesidad (logs/historial). El backend ya prioriza body sobre query.
+    const resp = await fetch(BANCO_UPLOAD_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ file_base64: base64, file_type: file.type, phone, token }),
@@ -1863,7 +1869,8 @@ async function confirmarTransacciones() {
   });
   if (!selected.length) { alert('Seleccioná al menos un movimiento.'); return; }
   try {
-    const resp = await fetch(`${BANCO_CONFIRM_URL}?phone=${encodeURIComponent(phone)}&token=${encodeURIComponent(token)}`, {
+    // Auditoría 2026-08-25: mismo fix que Banco Upload — phone/token solo en el body.
+    const resp = await fetch(BANCO_CONFIRM_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ phone, token, transacciones: selected }),
