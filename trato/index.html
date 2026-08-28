@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trato · Presupuestos y facturación con IA · MiTempo</title>
+<meta name="description" content="Presupuestá por chat con ayuda de IA y facturá de verdad, con CAE real de ARCA. Facturas recurrentes, situación fiscal y multi-usuario, todo en un dashboard.">
+<meta property="og:title" content="Trato · Presupuestos y facturación con IA">
+<meta property="og:image" content="https://mitempo.app/logo-mitempo.png">
+<link rel="icon" type="image/png" href="../logo-mitempo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/theme.css">
+<script defer src="../assets/motion.js"></script>
+<style>
+:root{
+  --bg:#171421; --surface:#1e1a2b; --border:#2e2840;
+  --text-soft:#c9c4d6; --text-mute:#a7a1b8; --text-faint:#8b859c;
+  --accent-1:#b3576b; --accent-2:#d69aa6; --on-accent:#2a1016;
+}
+
+.how-grid-4{grid-template-columns:repeat(4,1fr)}
+
+.planes{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.planes-3{grid-template-columns:repeat(3,1fr)}
+.plan{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:26px 22px;display:flex;flex-direction:column;position:relative;transition:border-color .18s,transform .18s}
+.plan:hover{border-color:var(--accent-2);transform:translateY(-2px)}
+.plan.featured{border:2px solid var(--accent-2);box-shadow:0 0 24px rgba(179,87,107,0.25)}
+.plan-badge{position:absolute;top:-11px;left:20px;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:var(--on-accent);font-size:10px;padding:4px 10px;border-radius:5px;font-weight:800;letter-spacing:.3px;text-transform:uppercase}
+.plan h3{font-size:19px;font-weight:700;margin:0 0 4px;color:#fff}
+.plan-tag{font-size:12.5px;color:var(--text-mute);margin-bottom:18px;font-weight:600}
+.plan-features{list-style:none;padding:0;margin:0 0 22px;flex-grow:1}
+.plan-features li{display:flex;align-items:flex-start;gap:8px;font-size:13.5px;margin-bottom:9px;line-height:1.5;color:var(--text-mute)}
+.plan-features li svg{flex-shrink:0;margin-top:3px}
+.plan-price{font-family:'JetBrains Mono',monospace;font-size:22px;margin:0;font-weight:700;color:#fff}
+.plan-price-sub{font-size:11.5px;color:var(--text-faint);margin-bottom:16px;font-weight:600}
+.plan-btn{display:block;text-align:center;padding:11px 18px;border-radius:8px;font-weight:700;font-size:13.5px;text-decoration:none;border:1px solid var(--border);color:#fff}
+.plan-btn:hover{border-color:var(--accent-2)}
+.plan-btn.primary{background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:var(--on-accent);border-color:transparent;font-weight:800}
+.plan-btn.primary:hover{filter:brightness(1.08)}
+
+/* dashboard hero mockup */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,0.4)}
+.panel-bar{height:38px;background:#12101c;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;padding:0 14px}
+.panel-dot{width:10px;height:10px;border-radius:50%;background:var(--border)}
+.panel-url{flex:1;margin-left:8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-mute);padding:4px 12px;font-weight:600}
+.panel-body{padding:20px}
+.panel-kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+.panel-kpi{border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.panel-kpi-label{font-size:9.5px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.4px;font-weight:700;margin-bottom:5px}
+.panel-kpi-val{font-size:17px;font-weight:700;color:#fff}
+.panel-kpi-val.green{color:#34d399}
+.inv-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid var(--border);font-size:12.5px}
+.inv-row:first-of-type{border-top:none}
+.inv-row b{display:block;font-size:12.5px;color:#fff}
+.inv-row span{font-size:11px;color:var(--text-mute)}
+.inv-amt{text-align:right}
+.inv-amt b{color:#fff;font-size:13px}
+.inv-tag{display:block;margin-top:2px;font-size:9.5px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;color:#34d399}
+
+@media(max-width:960px){
+.how-grid-4{grid-template-columns:1fr}
+.chat-float{display:none}
+.planes{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header>
+<div class="container nav">
+<a href="index.html" class="brand"><div class="brand-mark"><img src="../logo-mitempo.png" alt="MiTempo"></div><div class="brand-name">Trato<small>by MiTempo</small></div></a>
+<nav class="nav-links">
+<a href="../index.html">← MiTempo</a>
+<a href="#funciones">Funciones</a>
+<a href="#como-funciona">Cómo funciona</a>
+<a href="#precios" class="cta">Ver precios</a>
+</nav>
+<button class="nav-burger" aria-label="Menú" aria-expanded="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+</div>
+</header>
+
+<main>
+<section class="hero">
+<div class="container hero-grid">
+<div>
+<div class="hero-kicker">Presupuestos y facturación con IA</div>
+<h1>Presupuestá por chat. Facturá de verdad.</h1>
+<p>Le mandás un mensaje, una foto de tu lista de precios o un audio, y la IA te arma el presupuesto. Cuando el cliente acepta, se convierte en factura con CAE real de ARCA — no una planilla que después hay que cargar a mano.</p>
+<div class="hero-actions">
+<a href="#precios" class="btn-primary">Ver precios</a>
+<a href="#como-funciona" class="btn-ghost">Cómo funciona</a>
+</div>
+<div class="hero-note">Facturación real, no una simulación.</div>
+</div>
+<div class="hero-visual">
+<img src="../assets/mascota-trato-hero.png" alt="Trato, el personaje del producto" class="mascot-hero">
+<div class="panel">
+<div class="panel-bar"><div class="panel-dot"></div><div class="panel-dot"></div><div class="panel-dot"></div><div class="panel-url">dashboard.trato.mitempo.app</div></div>
+<div class="panel-body">
+<div class="panel-kpis">
+<div class="panel-kpi"><div class="panel-kpi-label">Facturado este mes</div><div class="panel-kpi-val">$2.412.000</div></div>
+<div class="panel-kpi"><div class="panel-kpi-label">Pendiente de cobro</div><div class="panel-kpi-val green">$0</div></div>
+</div>
+<div class="inv-row"><div><b>Factura C · #0002</b><span>10/8 · Ferretería Del Sur</span></div><div class="inv-amt"><b>$912.000</b><span class="inv-tag">Cobrada</span></div></div>
+<div class="inv-row"><div><b>Factura C · #0001</b><span>3/8 · Estudio Contable Rivas</span></div><div class="inv-amt"><b>$1.500.000</b><span class="inv-tag">Cobrada</span></div></div>
+</div>
+</div>
+<div class="chat-float">
+<div class="chat-head"><img src="../logo-mitempo.png" alt=""><div><b>Trato</b><span>en línea</span></div></div>
+<div class="chat-body">
+<div class="msg out">🎤 nota de voz — presupuesto para Ferretería Del Sur<small>14:20</small></div>
+<div class="msg in">Presupuesto #0047 armado con tu lista de precios. ¿Lo mando?<small>14:20</small></div>
+<div class="msg out">Sí, mandalo<small>14:21</small></div>
+<div class="msg in">Enviado. Cuando lo acepte, te genero la factura con CAE.<small>14:21</small></div>
+<div class="msg in">Aceptado y facturado. Factura C #0002 — CAE emitido.<small>14:32</small></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="reveal">
+<div class="container">
+<div class="section-head">
+<div class="kicker">Para quién</div>
+<h2 class="section-title">Comercios, talleres y prestadores de servicios que facturan seguido.</h2>
+<p class="section-sub">Si cotizás y facturás desde el local, el taller o la obra, Trato te lo hace desde el chat.</p>
+</div>
+<div class="audience">
+<div class="audience-card reveal"><div class="audience-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1-5h16l1 5"/><path d="M4 9v11a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9"/><path d="M9 21v-6h6v6"/></svg></div><b>Ferreterías y comercios</b><span>Presupuesto con tu catálogo</span></div>
+<div class="audience-card reveal"><div class="audience-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div><b>Talleres mecánicos y oficios</b><span>Plomería, electricidad, service</span></div>
+<div class="audience-card reveal"><div class="audience-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div><b>Diseño y consultoría</b><span>Propuestas profesionales</span></div>
+<div class="audience-card reveal"><div class="audience-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M4 20V8l8-5 8 5v12"/><path d="M9 20v-6h6v6"/></svg></div><b>Contratistas</b><span>Obras y refacciones</span></div>
+<div class="audience-card reveal"><div class="audience-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><b>Monotributistas</b><span>Sin miedo a pasarse de categoría</span></div>
+</div>
+</div>
+</section>
+
+<section id="funciones" class="reveal" style="background:var(--surface)">
+<div class="container">
+<div class="section-head">
+<div class="kicker">Funciones</div>
+<h2 class="section-title">Del presupuesto a la factura con CAE, sin escalas.</h2>
+</div>
+<div class="features">
+<div class="feature reveal">
+<div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+<h3>Presupuestos por chat con IA</h3>
+<p>Le mandás texto, una foto de tu lista de precios o un audio. La IA extrae los ítems y arma el presupuesto — usando tus precios, no inventados.</p>
+</div>
+<div class="feature reveal">
+<div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+<h3>Factura electrónica real</h3>
+<p>Factura A, B o C según corresponda, con CAE real de ARCA, notas de crédito e IVA discriminado. No una simulación.</p>
+</div>
+<div class="feature reveal">
+<div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2.1l4 4-4 4"/><path d="M3 12.2v-2a4 4 0 0 1 4-4h12.8M7 21.9l-4-4 4-4"/><path d="M21 11.8v2a4 4 0 0 1-4 4H4.2"/></svg></div>
+<h3>Facturas recurrentes</h3>
+<p>Alquileres y cobros fijos se facturan solos cada mes, en la fecha que elijas — con conversión USD→ARS automática si el contrato está en dólares.</p>
+</div>
+<div class="feature reveal">
+<div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+<h3>Situación fiscal al día</h3>
+<p>Si sos Monotributista, Trato sigue tu facturación acumulada contra el tope de tu categoría y te avisa antes de pasarte.</p>
+</div>
+<div class="feature reveal">
+<div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+<h3>Multi-usuario con permisos</h3>
+<p>Invitás colaboradores con permisos por sección: quién ve facturas, situación fiscal o clientes. No es "todos ven todo".</p>
+</div>
+<div class="feature reveal">
+<div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg></div>
+<h3>Firma digital y pago directo</h3>
+<p>El cliente firma y paga con Mercado Pago en el mismo documento. La plata entra al instante.</p>
+</div>
+<div class="feature reveal">
+<div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></div>
+<h3>Catálogo y clientes por Excel</h3>
+<p>Importás tu lista de productos y tu cartera de clientes desde una planilla. Arrancás con todo cargado, no de cero.</p>
+</div>
+</div>
+</div>
+</section>
+
+<section id="como-funciona" class="how reveal">
+<div class="container">
+<div class="section-head">
+<div class="kicker">Cómo funciona</div>
+<h2 class="section-title">Cuatro pasos, cero planillas.</h2>
+</div>
+<div class="how-grid how-grid-4">
+<div class="how-step"><div class="how-num">01</div><h3>Le contás por chat</h3><p>Texto, foto de tu lista de precios o un audio — como le hablarías a tu ayudante.</p><div class="example">🎤 Presupuesto para Ferretería Del Sur</div></div>
+<div class="how-step"><div class="how-num">02</div><h3>La IA arma el presupuesto</h3><p>Reconoce tu catálogo y usa tus precios. Listo para enviar en segundos.</p></div>
+<div class="how-step"><div class="how-num">03</div><h3>El cliente firma y paga</h3><p>Desde su celular, con Mercado Pago en el mismo documento.</p></div>
+<div class="how-step"><div class="how-num">04</div><h3>Se factura solo</h3><p>Factura con CAE real de ARCA al momento de aceptar. Nada para cargar a mano.</p></div>
+</div>
+</div>
+</section>
+
+<section class="reveal" style="padding-top:0">
+<div class="container">
+<div class="section-head">
+<div class="kicker">Caso real</div>
+<h2 class="section-title">Un electricista que dejó de facturar a mano.</h2>
+</div>
+<div class="case-card">
+<div>
+<span class="case-tag">Electricista monotributista · GBA</span>
+<h3>Antes: presupuesto en Word, factura a fin de mes. Ahora: todo al momento.</h3>
+<p>Terminaba la visita, prometía "te paso precio esta semana" y facturaba a mano a fin de mes, sin llevar cuenta de cuánto le quedaba de categoría. Para cuando mandaba el presupuesto, el cliente ya había cerrado con otro.</p>
+<p>Con Trato cotiza por chat antes de subirse al auto. El cliente firma y paga con Mercado Pago, y la factura con CAE real sale sola — sin miedo a pasarse de categoría de Monotributo.</p>
+</div>
+<div class="case-results">
+<div class="case-result"><b>2 min</b><span>de visita a presupuesto enviado</span></div>
+<div class="case-result"><b>100%</b><span>de facturas con CAE, sin cargarlas a mano</span></div>
+<div class="case-result"><b>0</b><span>sustos con el tope de categoría</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="precios" class="reveal" style="padding-top:0">
+<div class="container">
+<div class="section-head centered">
+<div class="kicker">Precios</div>
+<h2 class="section-title">Un plan para cada nivel de facturación.</h2>
+<p class="section-sub">15 días de prueba en cualquier plan. Cancelás cuando quieras.</p>
+</div>
+<div class="planes planes-3">
+<div class="plan">
+<h3>Inicial</h3>
+<div class="plan-tag">Lo básico para empezar</div>
+<ul class="plan-features">
+<li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Presupuestos por chat con IA</li>
+<li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Facturación electrónica con CAE</li>
+<li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Ficha de clientes</li>
+<li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Firma digital y pago con Mercado Pago</li>
+</ul>
+<div class="plan-price">$6.990</div><div class="plan-price-sub">por mes</div>
+<a href="https://trato.mitempo.app/login" class="plan-btn">Elegir Inicial</a>
+</div>
+<div class="plan featured">
+<div class="plan-badge">Más elegido</div>
+<h3>Avanzado</h3>
+<div class="plan-tag">Para facturar sin sustos</div>
+<ul class="plan-features">
+<li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Todo lo del Inicial</li>
+<li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Factura A/B, notas de crédito</li>
+<li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Catálogo con costeo (costo + margen)</li>
+<li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Situación fiscal y tope de categoría</li>
+<li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Facturas recurrentes</li>
+</ul>
+<div class="plan-price">$9.990</div><div class="plan-price-sub">por mes</div>
+<a href="https://trato.mitempo.app/login" class="plan-btn primary">Elegir Avanzado</a>
+</div>
+<div class="plan">
+<h3>Total</h3>
+<div class="plan-tag">Para equipos</div>
+<ul class="plan-features">
+<li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Todo lo del Avanzado</li>
+<li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Multi-usuario con permisos por sección</li>
+<li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Facturación masiva a varios clientes</li>
+<li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Importación de clientes y productos desde Excel</li>
+</ul>
+<div class="plan-price">$13.990</div><div class="plan-price-sub">por mes</div>
+<a href="https://trato.mitempo.app/login" class="plan-btn">Elegir Total</a>
+</div>
+</div>
+</div>
+</section>
+
+<section id="demo" class="reveal" style="padding-top:0">
+<div class="container">
+<div class="cta-band">
+<div>
+<h3>Probá Trato gratis.</h3>
+<p>Entrá con tu cuenta, cargá tu catálogo y armá tu primer presupuesto en minutos. 15 días de prueba, sin tarjeta.</p>
+</div>
+<a href="https://trato.mitempo.app/login" class="btn-primary">Empezar gratis</a>
+</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="container footer-inner">
+<a href="../index.html" class="brand"><div class="brand-mark"><img src="../logo-mitempo.png" alt="MiTempo"></div><div class="brand-name">MiTempo</div></a>
+<div class="footer-links">
+<a href="../control-de-gastos/index.html">Control de Gastos</a>
+<a href="../gestion-de-negocio/index.html">Gestión de Negocio</a>
+<a href="/terminos.html">Términos</a>
+<a href="/politicas.html">Privacidad</a>
+<a href="mailto:contacto@mitempo.app">Contacto</a>
+</div>
+<div class="footer-copy">© 2026 MiTempo.app</div>
+</div>
+</footer>
+
+</body>
+</html>
