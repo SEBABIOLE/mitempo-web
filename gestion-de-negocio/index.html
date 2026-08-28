@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boss · Gestión de Negocio · MiTempo</title>
+<meta name="description" content="Clientes organizados, negocio en orden. Agenda, reportes y chat — todo por WhatsApp. Sin apps extra.">
+<meta property="og:title" content="Gestión de Negocio · MiTempo">
+<meta property="og:image" content="https://mitempo.app/logo-mitempo.png">
+<link rel="icon" type="image/png" href="../logo-mitempo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/theme.css">
+<script defer src="../assets/motion.js"></script>
+<style>
+:root{
+  --bg:#171421; --surface:#1e1a2b; --border:#2e2840;
+  --text-soft:#c9c4d6; --text-mute:#a7a1b8; --text-faint:#8b859c;
+  --accent-1:#3b6fe0; --accent-2:#7fa8ff; --on-accent:#0c1730;
+}
+
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,0.4)}
+.panel-bar{height:38px;background:#12101c;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;padding:0 14px}
+.panel-dot{width:10px;height:10px;border-radius:50%;background:var(--border)}
+.panel-url{flex:1;margin-left:8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-mute);padding:4px 12px;font-weight:600}
+.panel-body{padding:20px}
+.panel-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.panel-kpi{border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.panel-kpi-label{font-size:9.5px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.4px;font-weight:700;margin-bottom:5px}
+.panel-kpi-val{font-size:18px;font-weight:700;color:#fff}
+.client-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--border);font-size:12.5px}
+.client-row:first-of-type{border-top:none}
+.client-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.client-row b{display:block;font-size:12.5px;color:#fff}
+.client-row span{font-size:11px;color:var(--text-mute)}
+.client-tag{margin-left:auto;font-size:10px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:3px 8px;border-radius:5px}
+.tag-hoy{background:rgba(52,211,153,0.15);color:#34d399}
+.tag-pend{background:rgba(255,184,74,0.15);color:#ffb84a}
+.how-grid-4{grid-template-columns:repeat(4,1fr)}
+
+@media(max-width:960px){
+.panel-kpis{grid-template-columns:1fr 1fr 1fr}
+.chat-float{display:none}
+.how-grid-4{grid-template-columns:1fr}
+.section-head + div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important}
+}
+</style>
+</head>
+<body>
+<header>
+<div class="container nav">
+<a href="index.html" class="brand"><div class="brand-mark"><img src="../logo-mark.png" alt="MiTempo"></div><div class="brand-name">Boss<small>Gestión de Negocio</small></div></a>
+<nav class="nav-links">
+<a href="../index.html">← MiTempo</a>
+<a href="#funciones">Funciones</a>
+<a href="#caso">Caso real</a>
+<a href="#precios" class="cta">Ver precios</a>
+</nav>
+<button class="nav-burger" aria-label="Menú" aria-expanded="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+</div>
+</header>
+
+<main>
+<section class="hero">
+<div class="container hero-grid">
+<div>
+<div class="hero-kicker">Boss · Gestión de Negocio</div>
+<h1>Clientes organizados, negocio en orden.</h1>
+<p>Agenda, reportes y chat — todo por WhatsApp. Sin apps extra, sin planillas, sin perder turnos.</p>
+<div class="hero-actions">
+<a href="#precios" class="btn-primary">Ver precios</a>
+<a href="#caso" class="btn-ghost">Ver caso real</a>
+</div>
+<div class="hero-note">Demo personalizada · Te respondemos en el día</div>
+</div>
+<div class="hero-visual">
+<img src="../assets/mascota-boss-hero.png" alt="Boss, el personaje de Gestión de Negocio" class="mascot-hero">
+<div class="panel">
+<div class="panel-bar">
+<div class="panel-dot"></div><div class="panel-dot"></div><div class="panel-dot"></div>
+<div class="panel-url">mitempo.app/negocio</div>
+</div>
+<div class="panel-body">
+<div class="panel-kpis">
+<div class="panel-kpi"><div class="panel-kpi-label">Clientes</div><div class="panel-kpi-val">24</div></div>
+<div class="panel-kpi"><div class="panel-kpi-label">Turnos hoy</div><div class="panel-kpi-val">6</div></div>
+<div class="panel-kpi"><div class="panel-kpi-label">Ventas · mes</div><div class="panel-kpi-val">$412k</div></div>
+</div>
+<div class="client-row"><div class="client-avatar" style="background:#3b6fe0">ML</div><div><b>María López</b><span>Taller iniciación · Martes 18 hs</span></div><span class="client-tag tag-hoy">Hoy</span></div>
+<div class="client-row"><div class="client-avatar" style="background:#22c55e">JR</div><div><b>Julián Ríos</b><span>Clase regular · Jueves 19 hs</span></div><span class="client-tag tag-pend">Seña pend.</span></div>
+<div class="client-row"><div class="client-avatar" style="background:#d97706">AS</div><div><b>Ana Suárez</b><span>Pieza por encargo · Entrega 15/8</span></div><span class="client-tag tag-hoy">Al día</span></div>
+</div>
+</div>
+<div class="chat-float">
+<div class="chat-head"><img src="../logo-mitempo.png" alt=""><div><b>MiTempo</b><span>en línea</span></div></div>
+<div class="chat-body">
+<div class="msg out">Nuevo cliente — María López, taller de iniciación<small>11:02</small></div>
+<div class="msg in">Agregada. Le mando la confirmación del turno del martes 18 hs y el recordatorio el día anterior.<small>11:02</small></div>
+<div class="msg out">¿Cómo venimos este mes?<small>11:10</small></div>
+<div class="msg in">$412.000 en ventas, 24 clientes activos, 3 señas pendientes.<small>11:10</small></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="reveal">
+<div class="container">
+<div class="section-head">
+<div class="kicker">Para quién</div>
+<h2 class="section-title">Pensado para negocios con clientes que vuelven.</h2>
+<p class="section-sub">Si manejás turnos, encargos o clases, esto te ahorra horas por semana.</p>
+<div class="hero-note" style="margin-top:14px">Clase perdida no es clase regalada: Boss reasigna el lugar antes de que quede vacío.</div>
+</div>
+<div class="audience">
+<div class="audience-card reveal"><div class="audience-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01M15 9h.01"/></svg></div><b>Talleres</b><span>Cerámica, yoga, fitness</span></div>
+<div class="audience-card reveal"><div class="audience-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.3-6.2-4.5-6.2 4.5 2.4-7.3L2 9.4h7.6z"/></svg></div><b>Salones de belleza</b><span>Turnos y clientas frecuentes</span></div>
+<div class="audience-card reveal"><div class="audience-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div><b>Consultorías</b><span>Sesiones y seguimiento</span></div>
+<div class="audience-card reveal"><div class="audience-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1-5h16l1 5"/><path d="M4 9v11a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9"/><path d="M9 21v-6h6v6"/></svg></div><b>Rotiserías y comercios</b><span>Pedidos y encargos</span></div>
+<div class="audience-card reveal"><div class="audience-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3L2 8l10 5 10-5z"/><path d="M6 10v6c0 1 2.7 3 6 3s6-2 6-3v-6"/></svg></div><b>Estudios</b><span>Abogacía, contabilidad</span></div>
+</div>
+</div>
+</section>
+
+<section id="funciones" class="reveal" style="background:var(--surface)">
+<div class="container">
+<div class="section-head">
+<div class="kicker">Funciones</div>
+<h2 class="section-title">Tu negocio, en un solo chat.</h2>
+</div>
+<div class="features">
+<div class="feature reveal">
+<div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+<h3>Lista de clientes</h3>
+<p>Cada cliente con su historial, contacto directo y notas. "Nuevo cliente María López" y ya está cargada.</p>
+</div>
+<div class="feature reveal">
+<div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+<h3>Agenda compartida</h3>
+<p>Turnos y clases en un calendario que ven todos los que trabajan con vos. Sin superposiciones.</p>
+</div>
+<div class="feature reveal">
+<div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+<h3>Chat con cada cliente</h3>
+<p>Confirmaciones, avisos y seguimiento por WhatsApp, desde el mismo número que ya usás.</p>
+</div>
+<div class="feature reveal">
+<div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8"/><rect x="12" y="6" width="3" height="12"/><rect x="17" y="13" width="3" height="5"/></svg></div>
+<h3>Reportes de ventas</h3>
+<p>Cuánto vendiste, quiénes vinieron, qué quedó pendiente. Preguntáselo al chat y listo.</p>
+</div>
+<div class="feature reveal">
+<div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+<h3>Recordatorios automáticos</h3>
+<p>Cada cliente recibe su recordatorio antes del turno. Menos ausencias, menos huecos en la agenda.</p>
+</div>
+<div class="feature reveal">
+<div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+<h3>Asistencia y lista de espera</h3>
+<p>Marcás quién vino a cada clase. Si alguien falta, el lugar se libera solo y se lo ofrecemos a quien está esperando para recuperar una clase. Ningún hueco se pierde.</p>
+</div>
+</div>
+</div>
+</section>
+
+<section class="reveal" style="padding-top:28px">
+<div class="container">
+<div class="section-head">
+<div class="kicker">Asistencia</div>
+<h2 class="section-title">Ningún lugar vacío, ninguna clase perdida.</h2>
+<p class="section-sub">El dolor de fondo en talleres, academias y estudios con alumnos fijos: alguien falta y el lugar se pierde. Boss lo resuelve solo.</p>
+</div>
+<div class="how-grid how-grid-4">
+<div class="how-step"><div class="how-num">01</div><h3>Confirma la asistencia</h3><p>Horas antes de cada clase, el bot le manda un mensaje a cada alumno preguntando si va a venir.</p></div>
+<div class="how-step"><div class="how-num">02</div><h3>Registra quién falta</h3><p>Con la respuesta, anota la asistencia y el lugar queda libre en el momento si alguien avisa que no viene.</p></div>
+<div class="how-step"><div class="how-num">03</div><h3>Avisa a la lista de espera</h3><p>El primero en la lista de espera recibe el aviso para ocupar el lugar liberado.</p></div>
+<div class="how-step"><div class="how-num">04</div><h3>O el alumno pide recuperar</h3><p>Quien quiere recuperar una clase perdida también puede escribir directo, y se le asigna un lugar disponible.</p></div>
+</div>
+<div class="section-head" style="margin-top:56px">
+<div class="kicker">Las dos apps</div>
+<h2 class="section-title">Un panel para vos, una app para tus alumnos.</h2>
+<p class="section-sub">Vos ves ocupación, pagos y turnos. Ellos confirman asistencia y piden recuperar clases, sin escribirte a vos directamente.</p>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">
+<div class="panel">
+<div class="panel-bar"><div class="panel-dot"></div><div class="panel-dot"></div><div class="panel-dot"></div><div class="panel-url">dashboard.tallerdearte.mitempo.app</div></div>
+<img src="../assets/shot-turnos-c.png" alt="Panel del dueño: ocupación de turnos" style="width:100%;display:block">
+</div>
+<div class="panel">
+<div class="panel-bar"><div class="panel-dot"></div><div class="panel-dot"></div><div class="panel-dot"></div><div class="panel-url">tallerdearte.mitempo.app</div></div>
+<img src="../assets/shot-alumna-c.png" alt="App de la alumna: confirmar asistencia y recuperar clase" style="width:100%;display:block">
+</div>
+</div>
+</div></section>
+
+<section id="caso" class="reveal">
+<div class="container">
+<div class="section-head">
+<div class="kicker">Caso real</div>
+<h2 class="section-title">Un Taller de Arte que dejó el cuaderno.</h2>
+</div>
+<div class="case-card">
+<div>
+<span class="case-tag">Taller de Arte · Buenos Aires</span>
+<h3>De cuaderno y memoria a todo por WhatsApp.</h3>
+<p>Un taller con más de 20 alumnas regulares llevaba las inscripciones, señas y encargos en un cuaderno. Turnos que se pisaban, señas que no se anotaban y horas por semana respondiendo los mismos mensajes.</p>
+<p>Con Gestión de Negocio, cada alumna nueva se carga con un mensaje, los recordatorios de clase salen solos y las señas y encargos quedan registrados con su estado. El reporte del mes se pide por chat.</p>
+</div>
+<div class="case-results">
+<div class="case-result"><b>-80%</b><span>menos ausencias con recordatorios</span></div>
+<div class="case-result"><b>5 hs</b><span>ahorradas por semana en mensajes</span></div>
+<div class="case-result"><b>100%</b><span>de señas y encargos registrados</span></div>
+</div>
+</div>
+<div class="case-card" style="margin-top:24px">
+<div>
+<span class="case-tag">Academia de inglés · Rosario</span>
+<h3>Clases que se recuperan solas.</h3>
+<p>Con alumnos en distintos horarios, cada ausencia era una clase pagada y perdida: sin registro de quién había venido, no había forma de saber qué lugar estaba libre para ofrecer una recuperación.</p>
+<p>Boss toma asistencia clase por clase. Si un alumno falta, el cupo se libera solo y se ofrece por WhatsApp a quien está esperando para recuperar una clase.</p>
+</div>
+<div class="case-results">
+<div class="case-result"><b>0</b><span>clases pagadas que se pierden sin uso</span></div>
+<div class="case-result"><b>-60%</b><span>menos huecos en el horario semanal</span></div>
+<div class="case-result"><b>3 min</b><span>para reasignar un lugar liberado</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="precios" class="reveal" style="padding-top:0">
+<div class="container">
+<div class="cta-band">
+<div>
+<h3>Plan a medida de tu negocio.</h3>
+<p>Gestión de Negocio se adapta a cómo trabajás: rubro, cantidad de clientes y qué querés automatizar. Contanos de tu negocio y te pasamos precio en el día.</p>
+</div>
+<a href="#consulta" class="btn-primary">Consultar precio</a>
+</div>
+</div>
+</section>
+
+<section id="consulta" class="reveal" style="padding-top:0">
+<div class="container">
+<div class="section-head centered">
+<div class="kicker">Consulta</div>
+<h2 class="section-title">Contanos de tu negocio.</h2>
+<p class="section-sub">Sin compromiso. Te respondemos con una propuesta y precio.</p>
+</div>
+<div class="form-wrap">
+<form class="form-card" id="consultaForm">
+<div class="form-row"><label for="f-nombre">Tu nombre</label><input id="f-nombre" type="text" required placeholder="Ej: Laura Fernández"></div>
+<div class="form-row"><label for="f-negocio">Tu negocio</label><input id="f-negocio" type="text" required placeholder="Ej: Taller de Arte, 20 alumnas"></div>
+<div class="form-row"><label for="f-whatsapp">Tu WhatsApp</label><input id="f-whatsapp" type="tel" required placeholder="Ej: 1123456789"></div>
+<div class="form-row"><label for="f-mensaje">¿Qué te gustaría resolver?</label><textarea id="f-mensaje" rows="4" placeholder="Ej: Pierdo turnos porque anoto todo en un cuaderno…"></textarea></div>
+<button type="submit">Enviar consulta</button>
+<div class="form-note">Se abre tu correo con el mensaje armado — solo apretás enviar.</div>
+</form>
+</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="container footer-inner">
+<a href="../index.html" class="brand"><div class="brand-mark"><img src="../logo-mark.png" alt="MiTempo"></div><div class="brand-name">MiTempo</div></a>
+<div class="footer-links">
+<a href="../control-de-gastos/index.html">Control de Gastos</a>
+<a href="/terminos.html">Términos</a>
+<a href="/politicas.html">Privacidad</a>
+<a href="mailto:contacto@mitempo.app">Contacto</a>
+</div>
+<div class="footer-copy">© 2026 MiTempo.app</div>
+</div>
+</footer>
+
+<script>
+document.getElementById('consultaForm').addEventListener('submit',function(e){
+e.preventDefault();
+const v=id=>document.getElementById(id).value.trim();
+const body=encodeURIComponent(`Nombre: ${v('f-nombre')}\nNegocio: ${v('f-negocio')}\nWhatsApp: ${v('f-whatsapp')}\n\n${v('f-mensaje')}`);
+window.location.href=`mailto:contacto@mitempo.app?subject=${encodeURIComponent('Consulta Gestión de Negocio')}&body=${body}`;
+});
+</script>
+</body>
+</html>

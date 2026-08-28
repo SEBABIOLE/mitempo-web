@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Servicios · Automatizaciones a medida · MiTempo</title>
+<meta name="description" content="Si lo hacés todos los días a mano, lo podemos automatizar. Bots, integraciones y flujos a medida para tu negocio.">
+<meta property="og:title" content="Servicios · Automatizaciones a medida · MiTempo">
+<meta property="og:image" content="https://mitempo.app/logo-mitempo.png">
+<link rel="icon" type="image/png" href="../logo-mitempo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/theme.css">
+<script defer src="../assets/motion.js"></script>
+<style>
+:root{
+  --bg:#171421; --surface:#1e1a2b; --border:#2e2840;
+  --text-soft:#c9c4d6; --text-mute:#a7a1b8; --text-faint:#8b859c;
+  --accent-1:#14b8a6; --accent-2:#2dd4bf; --on-accent:#062825;
+}
+
+@media(min-width:961px){.hero-grid{grid-template-columns:1fr 0.95fr}}
+.flow-panel{background:#0e0c16;border:1px solid var(--border);border-radius:14px;padding:28px;box-shadow:0 30px 70px rgba(0,0,0,0.4)}
+.flow-title{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--text-faint);font-weight:500;letter-spacing:.6px;text-transform:uppercase;margin-bottom:18px}
+.flow-node{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 16px;display:flex;align-items:center;gap:12px;position:relative}
+.flow-node b{color:#fff;font-size:13px;display:block}
+.flow-node span{color:var(--text-mute);font-size:11px}
+.flow-ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.flow-connector{width:2px;height:18px;background:var(--border);margin-left:43px}
+.flow-status{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.4px;text-transform:uppercase;padding:3px 8px;border-radius:5px;background:rgba(45,212,191,0.15);color:var(--accent-2)}
+
+.cases{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.case{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:28px 26px;display:flex;flex-direction:column}
+.case>.case-tag{align-self:flex-start}
+.case h3{font-size:17.5px;font-weight:700;margin:0 0 14px;color:#fff}
+.case-block{margin-bottom:12px}
+.case-block b{display:block;font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.5px;font-weight:800;margin-bottom:3px}
+.case-block p{font-size:13.5px;color:var(--text-mute);line-height:1.55;margin:0}
+.case .case-result{margin-top:auto;background:rgba(45,212,191,0.1);border:1px solid rgba(45,212,191,0.3);border-radius:10px;padding:12px 14px;font-size:13px;font-weight:700;color:var(--accent-2);text-align:left}
+
+.process-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.process-step{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px 20px}
+.process-num{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--accent-2);margin-bottom:12px}
+.process-step h3{font-size:15px;font-weight:700;margin:0 0 6px;color:#fff}
+.process-step p{color:var(--text-mute);font-size:12.5px;line-height:1.55;margin:0}
+
+@media(max-width:960px){
+.case-grid{grid-template-columns:1fr}
+.process-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header>
+<div class="container nav">
+<a href="index.html" class="brand"><div class="brand-mark"><img src="../logo-mark.png" alt="MiTempo"></div><div class="brand-name">Servicios<small>by MiTempo</small></div></a>
+<nav class="nav-links">
+<a href="../index.html">← MiTempo</a>
+<a href="#que-hacemos">Qué hacemos</a>
+<a href="#casos">Casos reales</a>
+<a href="#proceso">Proceso</a>
+<a href="#presupuesto" class="cta">Contanos tu proceso</a>
+</nav>
+<button class="nav-burger" aria-label="Menú" aria-expanded="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+</div>
+</header>
+
+<main>
+<section class="hero">
+<div class="container hero-grid">
+<div>
+<div class="hero-kicker">Automatizaciones a medida</div>
+<h1>Si lo hacés todos los días a mano, lo podemos automatizar.</h1>
+<p>Mails que mandás uno por uno, planillas de Excel que cargás a la noche, clientes que tenés que perseguir, informes que armás cada lunes. Eso. Todo eso.</p>
+<div class="hero-actions">
+<a href="#presupuesto" class="btn-primary">Contanos tu proceso</a>
+<a href="#casos" class="btn-ghost">Ver casos reales</a>
+</div>
+<div class="hero-note">Sin compromiso · Te respondemos en el día</div>
+</div>
+<div class="flow-panel">
+<div class="flow-title">Flujo de automatización · en vivo</div>
+<div class="flow-node"><div class="flow-ico" style="background:#12331f;color:#3ecf8e"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div><b>WhatsApp — mensaje entrante</b><span>"Quiero reservar para el sábado"</span></div><span class="flow-status">OK</span></div>
+<div class="flow-connector"></div>
+<div class="flow-node"><div class="flow-ico" style="background:#2a1f3d;color:#b39dfa"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v6M12 17v6M4.2 4.2l4.3 4.3M15.5 15.5l4.3 4.3M1 12h6M17 12h6M4.2 19.8l4.3-4.3M15.5 8.5l4.3-4.3"/></svg></div><div><b>MiTempo — procesamiento IA</b><span>Detecta intención: reserva · sábado 20 hs</span></div><span class="flow-status">OK</span></div>
+<div class="flow-connector"></div>
+<div class="flow-node"><div class="flow-ico" style="background:#1f2c3d;color:#7ab8f5"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div><div><b>Google Calendar — turno creado</b><span>Sábado 20:00 · Mesa para 4</span></div><span class="flow-status">OK</span></div>
+<div class="flow-connector"></div>
+<div class="flow-node"><div class="flow-ico" style="background:#12331f;color:#3ecf8e"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg></div><div><b>Respuesta automática</b><span>"¡Listo! Te esperamos el sábado a las 20"</span></div><span class="flow-status">OK</span></div>
+</div>
+</div>
+</section>
+
+<section id="que-hacemos" class="reveal">
+<div class="container">
+<div class="section-head">
+<div class="kicker">Qué hacemos</div>
+<h2 class="section-title">Si es repetitivo, se puede automatizar.</h2>
+<p class="section-sub">Trabajamos con las herramientas que ya usás. Nada de licencias caras ni sistemas que nadie entiende.</p>
+</div>
+<div class="features">
+<div class="feature reveal">
+<div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><path d="M8 16h.01M16 16h.01"/></svg></div>
+<h3>Bots personalizados</h3>
+<p>Por WhatsApp o Telegram: responden consultas, toman pedidos y agendan turnos con tu tono y tus reglas.</p>
+</div>
+<div class="feature reveal">
+<div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+<h3>Integraciones</h3>
+<p>Conectamos tus herramientas entre sí: CRM ↔ facturación, tienda ↔ stock, planillas ↔ lo que sea.</p>
+</div>
+<div class="feature reveal">
+<div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8"/><rect x="12" y="6" width="3" height="12"/><rect x="17" y="13" width="3" height="5"/></svg></div>
+<h3>Dashboards custom</h3>
+<p>Paneles con tus datos reales, actualizados solos. Como el de MiTempo, pero diseñado para tu operación.</p>
+</div>
+<div class="feature reveal">
+<div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+<h3>Automatización de procesos</h3>
+<p>Carga de datos, reportes, seguimientos, facturación recurrente — las tareas que hoy te comen horas.</p>
+</div>
+<div class="feature reveal">
+<div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+<h3>Atención 24/7</h3>
+<p>Chatbots que atienden consultas frecuentes a cualquier hora y derivan a un humano cuando hace falta.</p>
+</div>
+<div class="feature reveal">
+<div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.3-6.2-4.5-6.2 4.5 2.4-7.3L2 9.4h7.6z"/></svg></div>
+<h3>Lo que se te ocurra</h3>
+<p>Si podés describirlo en un mensaje, probablemente podamos automatizarlo. Contanos tu caso.</p>
+</div>
+</div>
+</div>
+</section>
+
+<section id="casos" class="cases reveal">
+<div class="container">
+<div class="section-head">
+<div class="kicker">Casos reales</div>
+<h2 class="section-title">Empezamos con casos reales, como estos.</h2>
+<p class="section-sub">No somos una agencia gigante con cientos de clientes. Somos un equipo chico que automatiza procesos concretos, uno por uno, y los deja funcionando.</p>
+</div>
+<div class="case-grid">
+<div class="case reveal">
+<span class="case-tag">Taller de Arte</span>
+<h3>De agenda manual a bot con turnos.</h3>
+<div class="case-block"><b>Problema</b><p>Agenda en cuaderno, clientes desorganizados y horas respondiendo los mismos mensajes.</p></div>
+<div class="case-block"><b>Solución</b><p>Bot de WhatsApp con agenda automática, recordatorios y registro de señas.</p></div>
+<div class="case-result">Menos llamadas repetidas y una agenda que se maneja sola.</div>
+</div>
+<div class="case reveal">
+<span class="case-tag">Consultora inmobiliaria</span>
+<h3>Presupuestos que se arman solos.</h3>
+<div class="case-block"><b>Problema</b><p>Cada tasación y propuesta se armaba a mano en Word. Días de demora por operación.</p></div>
+<div class="case-block"><b>Solución</b><p>Generador automático de presupuestos con firma digital integrada.</p></div>
+<div class="case-result">Presupuestos que salen en minutos, no en días.</div>
+</div>
+<div class="case reveal">
+<span class="case-tag">E-commerce</span>
+<h3>Todos los pedidos, un solo lugar.</h3>
+<div class="case-block"><b>Problema</b><p>Órdenes entrando por Shopify, WhatsApp y email a la vez. Pedidos que se perdían.</p></div>
+<div class="case-block"><b>Solución</b><p>Centralización de canales con notificaciones y estados automáticos.</p></div>
+<div class="case-result">Todos los pedidos en un solo lugar, sin copiar y pegar.</div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="proceso" class="reveal">
+<div class="container">
+<div class="section-head">
+<div class="kicker">Proceso de trabajo</div>
+<h2 class="section-title">De la idea a la automatización funcionando.</h2>
+</div>
+<div class="process-grid">
+<div class="process-step reveal"><div class="process-num">01</div><h3>Consulta inicial</h3><p>Analizamos tu negocio y detectamos qué conviene automatizar primero.</p></div>
+<div class="process-step reveal"><div class="process-num">02</div><h3>Propuesta</h3><p>Te mostramos qué es posible, en cuánto tiempo y con presupuesto cerrado.</p></div>
+<div class="process-step reveal"><div class="process-num">03</div><h3>Desarrollo</h3><p>Armamos la automatización y la probamos con tus datos reales.</p></div>
+<div class="process-step reveal"><div class="process-num">04</div><h3>Capacitación</h3><p>Te enseñamos a usarla y a ajustarla. Queda tuya, no rehén nuestra.</p></div>
+<div class="process-step reveal"><div class="process-num">05</div><h3>Soporte</h3><p>Te acompañamos con mantenimiento y mejoras cuando las necesites.</p></div>
+</div>
+</div>
+</section>
+
+<section class="reveal" style="padding-top:0">
+<div class="container">
+<div class="cta-band">
+<div>
+<h3>Desde $5.000 hasta proyectos custom.</h3>
+<p>Una integración simple no cuesta lo mismo que un CRM completo — por eso cotizamos cada proyecto por separado, gratis y sin compromiso. Nos contás tu proceso, te decimos qué se puede automatizar y cuánto sale.</p>
+</div>
+<a href="#presupuesto" class="btn-primary">Contanos tu proceso</a>
+</div>
+</div>
+</section>
+
+<section id="presupuesto" class="reveal" style="padding-top:0">
+<div class="container">
+<div class="section-head centered">
+<div class="kicker">Contanos tu proceso</div>
+<h2 class="section-title">¿Qué hacés a mano todos los días?</h2>
+<p class="section-sub">Contanos cómo lo hacés hoy, aunque te parezca un desastre. De ahí salen las mejores automatizaciones.</p>
+</div>
+<div class="form-wrap">
+<form class="form-card" id="proyectoForm">
+<div class="form-row"><label for="f-nombre">Tu nombre</label><input id="f-nombre" type="text" required placeholder="Ej: Andrés Gómez"></div>
+<div class="form-row"><label for="f-empresa">Tu empresa o negocio</label><input id="f-empresa" type="text" required placeholder="Ej: Distribuidora de bebidas, 8 empleados"></div>
+<div class="form-row"><label for="f-whatsapp">Tu WhatsApp</label><input id="f-whatsapp" type="tel" required placeholder="Ej: 1123456789"></div>
+<div class="form-row"><label for="f-proyecto">¿Qué hacés a mano hoy?</label><textarea id="f-proyecto" rows="5" required placeholder="Ej: Cargamos los pedidos a mano desde WhatsApp a una planilla, y los repartos se arman en papel…"></textarea></div>
+<button type="submit">Contanos tu proceso</button>
+<div class="form-note">Se abre tu correo con el mensaje armado — solo apretás enviar.</div>
+</form>
+</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="container footer-inner">
+<a href="../index.html" class="brand"><div class="brand-mark"><img src="../logo-mark.png" alt="MiTempo"></div><div class="brand-name">MiTempo</div></a>
+<div class="footer-links">
+<a href="../control-de-gastos/index.html">Control de Gastos</a>
+<a href="../gestion-de-negocio/index.html">Gestión de Negocio</a>
+<a href="../trato/index.html">Trato</a>
+<a href="/terminos.html">Términos</a>
+<a href="/politicas.html">Privacidad</a>
+</div>
+<div class="footer-copy">© 2026 MiTempo.app</div>
+</div>
+</footer>
+
+<script>
+document.getElementById('proyectoForm').addEventListener('submit',function(e){
+e.preventDefault();
+const v=id=>document.getElementById(id).value.trim();
+const body=encodeURIComponent(`Nombre: ${v('f-nombre')}\nEmpresa: ${v('f-empresa')}\nWhatsApp: ${v('f-whatsapp')}\n\nProyecto:\n${v('f-proyecto')}`);
+window.location.href=`mailto:contacto@mitempo.app?subject=${encodeURIComponent('Presupuesto de automatización')}&body=${body}`;
+});
+</script>
+</body>
+</html>
