@@ -24,7 +24,7 @@
 .logos-strip{padding:22px 0;border-bottom:1px solid var(--border)}
 .logos-row{display:flex;justify-content:center;gap:44px;flex-wrap:wrap;color:var(--text-faint);font-size:12.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
 
-.products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.products-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
 .product-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:30px 26px;display:flex;flex-direction:column;transition:border-color .18s,transform .18s;position:relative}
 .product-card:hover{border-color:var(--accent-2);transform:translateY(-2px)}
 .product-badge{position:absolute;top:22px;right:22px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;padding:4px 9px;border-radius:5px;background:rgba(255,255,255,0.06);color:var(--accent-2)}
@@ -65,6 +65,7 @@
 <a class="dd-item" href="control-de-gastos/index.html"><div class="dd-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div><div><b>Control de Gastos</b><span>Tu gestor financiero + agenda por WhatsApp</span></div></a>
 <a class="dd-item" href="gestion-de-negocio/index.html"><div class="dd-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><b>Gestión de Negocio</b><span>Clientes, agenda y reportes por WhatsApp</span></div></a>
 <a class="dd-item" href="trato/index.html"><div class="dd-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></div><div><b>Trato</b><span>Presupuestos y facturas en segundos</span></div></a>
+<a class="dd-item" href="https://cobrosolo.mitempo.app"><div class="dd-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div><b>CobroSolo</b><span>Cobranza automática por WhatsApp</span></div></a>
 <a class="dd-item" href="servicios/index.html"><div class="dd-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div><div><b>Servicios</b><span>Automatizaciones a medida con n8n</span></div></a>
 </div>
 </div>
@@ -102,7 +103,7 @@
 <div class="container">
 <div class="section-head">
 <div class="kicker">Productos</div>
-<h2 class="section-title">Una plataforma, tres soluciones.</h2>
+<h2 class="section-title">Una plataforma, cuatro soluciones.</h2>
 <p class="section-sub">Cada producto resuelve un problema puntual. Empezá por uno y sumá los demás cuando los necesites.</p>
 </div>
 <div class="products-grid">
@@ -132,6 +133,17 @@
 <div class="product-tagline">Presupuestos en segundos.</div>
 <p>Documentos profesionales por WhatsApp con firma digital y pago directo. El cliente firma y paga al instante.</p>
 <a href="trato/index.html" class="product-link" style="color:#d69aa6">Ver producto →</a>
+</div>
+<div class="product-card reveal">
+<span class="product-badge">Disponible</span>
+<div class="product-icon" style="background:linear-gradient(135deg,#1f9d6b,#5fd6a0);border-radius:50%;display:flex;align-items:center;justify-content:center;width:44px;height:44px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#08211a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+</div>
+<div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:#5fd6a0;margin-bottom:4px">"CobroSolo"</div>
+<h3>CobroSolo</h3>
+<div class="product-tagline">Que te paguen, sin insistir.</div>
+<p>Recordatorios automáticos por WhatsApp hasta que te paguen, con o sin Mercado Pago de por medio.</p>
+<a href="https://cobrosolo.mitempo.app" class="product-link" style="color:#5fd6a0">Ver producto →</a>
 </div>
 </div>
 </div>
