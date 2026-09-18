@@ -171,6 +171,7 @@
 <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Calendario básico</li>
 <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Agendado por voz o texto</li>
 <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Recordatorios automáticos</li>
+<li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Hasta 50 mensajes de WhatsApp por mes</li>
 </ul>
 <div class="plan-price" id="precio-bronce"><span class="precio-valor">—</span></div><div class="plan-price-sub">por mes</div>
 <a href="../registro.html?p=bronce" class="plan-btn">Elegir Bronce</a>
@@ -181,6 +182,7 @@
 <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Todo lo del Bronce</li>
 <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Notas por mensaje (ej: lista de compras del súper)</li>
 <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Conversaciones naturales</li>
+<li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Hasta 150 mensajes de WhatsApp por mes</li>
 </ul>
 <div class="plan-price" id="precio-plata"><span class="precio-valor">—</span></div><div class="plan-price-sub">por mes</div>
 <a href="../registro.html?p=plata" class="plan-btn">Elegir Plata</a>
@@ -193,6 +195,7 @@
 <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Dashboard + presupuestos</li>
 <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Alertas de ahorro</li>
 <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Reportes mensuales</li>
+<li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Hasta 400 mensajes de WhatsApp por mes</li>
 </ul>
 <div class="plan-price" id="precio-oro"><span class="precio-valor">—</span></div><div class="plan-price-sub">por mes</div>
 <a href="../registro.html?p=oro" class="plan-btn primary">Elegir Oro</a>
@@ -203,6 +206,7 @@
 <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Todo lo del Oro</li>
 <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Hasta 2 usuarios</li>
 <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Cuenta compartida</li>
+<li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Hasta 600 mensajes de WhatsApp por mes (ambos incluidos)</li>
 </ul>
 <div class="plan-price" id="precio-duo"><span class="precio-valor">—</span></div><div class="plan-price-sub">por mes · ambos incluidos</div>
 <a href="../registro.html?p=duo" class="plan-btn">Elegir Dúo</a>
@@ -261,7 +265,7 @@
 
 <script>
 (function(){
-const API='https://sebabiole.app.n8n.cloud/webhook/planes';
+const API='https://n8n.mitempo.app/webhook/planes';
 fetch(API).then(r=>r.json()).then(planes=>{
 planes.forEach(p=>{const el=document.getElementById('precio-'+p.plan_slug);if(el)el.querySelector('.precio-valor').textContent=p.label;});
 }).catch(()=>{document.querySelectorAll('.precio-valor').forEach(el=>el.textContent='Consultá');});
