@@ -32,7 +32,7 @@
       throw new Error('user_id inválido');
     }
 
-    const MP_CHECKOUT = 'https://sebabiole.app.n8n.cloud/webhook/mp/checkout';
+    const MP_CHECKOUT = 'https://n8n.mitempo.app/webhook/mp/checkout';
     const url = new URL(MP_CHECKOUT);
     url.searchParams.set('user_id', user_id);
     url.searchParams.set('plan_slug', plan);
