@@ -45,9 +45,9 @@
     
     <div class="pt-4 border-t">
       <p class="text-xs text-gray-500 text-center">
-        ¿No recibiste el mensaje? Esperá 30 segundos y 
-        <a href="#" id="resendLink" class="text-green-600 hover:text-green-700 font-medium">
-          envialo nuevamente
+        ¿No recibiste el mensaje? Escribile
+        <a href="https://wa.me/5493382674705?text=REENVIAR" id="resendLink" class="text-green-600 hover:text-green-700 font-medium" target="_blank" rel="noopener">
+          "REENVIAR" al WhatsApp de MiTempo
         </a>
       </p>
     </div>
@@ -63,31 +63,6 @@
     document.getElementById('planPhone').textContent =
       `Plan: ${plan.charAt(0).toUpperCase() + plan.slice(1)} | WhatsApp: +549${phone}`;
     
-    // Manejar reenvío
-    document.getElementById('resendLink').addEventListener('click', async (e) => {
-      e.preventDefault();
-      
-      const link = e.target;
-      link.textContent = 'Enviando...';
-      link.classList.add('opacity-50', 'cursor-not-allowed');
-      
-      try {
-        // Llamar al webhook /iniciar para reenviar el mensaje
-        await fetch(`https://sebabiole.app.n8n.cloud/webhook/iniciar?u=549${phone}`, {
-          method: 'GET',
-          mode: 'no-cors'
-        });
-        
-        link.textContent = 'Mensaje reenviado ✓';
-        setTimeout(() => {
-          link.textContent = 'envialo nuevamente';
-          link.classList.remove('opacity-50', 'cursor-not-allowed');
-        }, 3000);
-      } catch (error) {
-        link.textContent = 'Error. Intentá nuevamente';
-        link.classList.remove('opacity-50', 'cursor-not-allowed');
-      }
-    });
   </script>
 </body>
 </html>
