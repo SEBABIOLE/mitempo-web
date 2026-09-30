@@ -1,24 +1,69 @@
 <!DOCTYPE html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/Logo%20con%20blanco.png">
-    <link rel="shortcut icon" href="/Logo%20con%20blanco.png">
-    <title>Redireccionando a Google...</title>
-    <script>
-      const params = new URLSearchParams(window.location.search);
-      const userId = params.get("u") || "sin_dato";
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="/Logo%20con%20blanco.png">
+  <link rel="shortcut icon" href="/Logo%20con%20blanco.png">
+  <link rel="apple-touch-icon" href="/Logo%20con%20blanco.png">
+  <title>Conectá tu cuenta de Google | MiTiempo.app</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #f3f4f6; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white w-full max-w-md rounded-xl shadow-lg p-6 space-y-6">
+    <div class="text-center">
+      <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 mb-4">
+        <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+      </div>
+      <h1 class="text-2xl font-semibold">Conectá tu cuenta de Google</h1>
+    </div>
 
-      const clientId = "395746584240-ue4uh3k5p0a24db69jkhsq7at95ns0gv.apps.googleusercontent.com";
-      const redirectUri = encodeURIComponent("https://n8n.mitempo.app/webhook/google-callback");
-      const scope = encodeURIComponent("https://www.googleapis.com/auth/calendar.app.created https://www.googleapis.com/auth/drive.file");
+    <p class="text-sm text-gray-600 text-center">
+      Para que tu asistente pueda gestionar tu calendario, necesitamos que autorices el acceso desde tu cuenta de Google.
+    </p>
 
-      const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent&state=${userId}`;
+    <div class="bg-blue-50 rounded-lg p-4 space-y-2">
+      <p class="text-sm text-blue-800">
+        🔒 En el siguiente paso vas a ver la página <strong>oficial de Google</strong> (el sitio dice
+        <strong>accounts.google.com</strong>) pidiéndote tu contraseña.
+      </p>
+      <p class="text-sm text-blue-800">
+        Es normal: Google te pide confirmar tu identidad para dar acceso a una app externa. Nosotros
+        <strong>nunca vemos ni guardamos</strong> tu contraseña — solo la recibe Google.
+      </p>
+    </div>
 
+    <button
+      id="continueBtn"
+      class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg transition"
+    >
+      Continuar a Google
+    </button>
+
+    <p class="text-xs text-gray-400 text-center">
+      Vas a poder revisar los permisos exactos que pide MiTiempo antes de aceptar.
+    </p>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get("u") || "sin_dato";
+
+    const clientId = "395746584240-ue4uh3k5p0a24db69jkhsq7at95ns0gv.apps.googleusercontent.com";
+    const redirectUri = encodeURIComponent("https://n8n.mitempo.app/webhook/google-callback");
+    const scope = encodeURIComponent("https://www.googleapis.com/auth/calendar.app.created https://www.googleapis.com/auth/drive.file");
+
+    const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent&state=${userId}`;
+
+    document.getElementById("continueBtn").addEventListener("click", () => {
       window.location.href = oauthUrl;
-    </script>
-  </head>
-  <body>
-    <p>Redirigiendo a Google para vincular tu cuenta...</p>
-  </body>
+    });
+  </script>
+</body>
 </html>
