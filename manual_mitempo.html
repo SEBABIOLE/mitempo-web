@@ -200,6 +200,23 @@
     .sidebar { position: static; height: auto; }
     .main { padding: 32px 24px 80px; }
   }
+
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  @media (max-width: 640px) {
+    .main { padding: 24px 16px 64px; max-width: 100%; }
+    .topbar { flex-wrap: wrap; row-gap: 8px; }
+    h1 { font-size: 32px !important; letter-spacing: -0.5px !important; }
+    h2 { font-size: 23px !important; margin-top: 40px !important; }
+    .rgrid-2, .rgrid-3, .stat-grid, .intro-grid { grid-template-columns: 1fr !important; }
+    .flow-diagram { flex-direction: column !important; }
+    .flow-arrow { transform: rotate(90deg); }
+    .drive-card { grid-template-columns: 48px 1fr !important; row-gap: 10px; }
+    .drive-card > *:nth-child(3) { grid-column: 1 / -1; justify-self: start; }
+    .footer-nav { flex-direction: column; }
+    .footer-btn { min-width: 0; width: 100%; }
+    .footer-btn.next { text-align: left; }
+  }
 </style>
 </head>
 <body>
@@ -254,7 +271,7 @@ function StatCard({ color, label, value, delta, deltaDir, icon }) {
 
 function MiniStatGrid() {
   return (
-    <div style={{
+    <div className="stat-grid" style={{
       display: 'grid',
       gridTemplateColumns: 'repeat(4, 1fr)',
       gap: 10,
@@ -350,7 +367,8 @@ function EvolutionChart() {
         Evolución anual
       </div>
       <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 16 }}>Ingresos, egresos y ahorro acumulado</div>
-      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6, height: 140, position: 'relative', paddingBottom: 20 }}>
+      <div className="table-scroll">
+      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6, height: 140, position: 'relative', paddingBottom: 20, minWidth: 480 }}>
         <svg style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} viewBox="0 0 100 100" preserveAspectRatio="none">
           <polyline
             fill="none"
@@ -376,15 +394,17 @@ function EvolutionChart() {
           </div>
         ))}
       </div>
+      </div>
     </div>
   );
 }
 
 function MiniBudgetRow() {
   return (
+    <div className="table-scroll">
     <div style={{
       background: 'white', borderRadius: 12, border: '1px solid #e5e7eb',
-      overflow: 'hidden', fontSize: 13,
+      overflow: 'hidden', fontSize: 13, minWidth: 480,
     }}>
       <div style={{
         display: 'grid', gridTemplateColumns: '1.6fr repeat(4, 1fr)',
@@ -422,6 +442,7 @@ function MiniBudgetRow() {
         );
       })}
     </div>
+    </div>
   );
 }
 
@@ -445,7 +466,7 @@ function NoteCard({ color, title, content }) {
 
 function NotesGrid() {
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+    <div className="rgrid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
       <NoteCard color="#10b981" title="🛒 Súper — sábado" content={<>Leche · Pan · Agua · Huevos · Yerba · Tomates · Queso</>} />
       <NoteCard color="#f59e0b" title="💊 Farmacia" content={<>Ibuprofeno · Alcohol en gel · Vendas · Protector solar</>} />
       <NoteCard color="#3b82f6" title="🏠 Casa" content={<>Focos LED · Pilas AA · Detergente · Papel higiénico</>} />
@@ -516,7 +537,7 @@ Object.assign(window, {
 
 function DriveFileCard() {
   return (
-    <div style={{
+    <div className="drive-card" style={{
       display: 'grid',
       gridTemplateColumns: '64px 1fr auto',
       gap: 18,
@@ -617,7 +638,8 @@ function IngresosSheetMock() {
     ['22/04/2026', 'Venta usados', 'Otros ingresos', 35000],
   ];
   return (
-    <div style={{ marginTop: -1 }}>
+    <div className="table-scroll">
+    <div style={{ marginTop: -1, minWidth: 560 }}>
       <SheetTabsMock active="Ingresos" />
       <div style={{
         background: 'white', borderRadius: '0 0 12px 12px',
@@ -654,6 +676,7 @@ function IngresosSheetMock() {
         ))}
       </div>
     </div>
+    </div>
   );
 }
 
@@ -676,7 +699,8 @@ function CategoriasSheetMock() {
     return { bg: '#f3f4f6', fg: '#374151' };
   };
   return (
-    <div>
+    <div className="table-scroll">
+    <div style={{ minWidth: 520 }}>
       <SheetTabsMock active="Categorias" />
       <div style={{
         background: 'white', borderRadius: '0 0 12px 12px',
@@ -718,6 +742,7 @@ function CategoriasSheetMock() {
         })}
       </div>
     </div>
+    </div>
   );
 }
 
@@ -743,7 +768,7 @@ function FlowDiagram() {
     </div>
   );
   const arrow = (
-    <div style={{
+    <div className="flow-arrow" style={{
       flexShrink: 0, width: 24, display: 'flex', alignItems: 'center', justifyContent: 'center',
       color: '#cbd5e1', fontSize: 20,
     }}>→</div>
@@ -755,7 +780,7 @@ function FlowDiagram() {
       border: '1px solid #e5e7eb',
       borderRadius: 16,
     }}>
-      <div style={{ display: 'flex', alignItems: 'stretch', gap: 6 }}>
+      <div className="flow-diagram" style={{ display: 'flex', alignItems: 'stretch', gap: 6 }}>
         {node('Vos', 'Cargás un gasto por WhatsApp o editás la hoja a mano', '#0ea5e9', '✍️')}
         {arrow}
         {node('La Hoja', '"MiTempo - Registro de Ingresos y Gastos" en tu Drive', '#22c55e', '📗')}
@@ -934,7 +959,7 @@ function IntroSection() {
         accent="#10b981"
       />
 
-      <div style={{
+      <div className="intro-grid" style={{
         display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 32, alignItems: 'center',
         padding: 28,
         background: 'linear-gradient(135deg, #fefce8 0%, #ecfdf5 100%)',
@@ -975,7 +1000,7 @@ function IntroSection() {
       <H2>Las 4 solapas del dashboard</H2>
       <Lede>Arriba vas a ver cuatro pestañas. Pensalas como las solapas de una carpeta: cada una cumple una función distinta. Las cuatro reflejan, en formato visual, la información que vive en tu hoja de Drive.</Lede>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
+      <div className="rgrid-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
         <Callout color="#10b981" title="📊 Dashboard" body="El panorama general: cuánto ganaste, cuánto gastaste, cómo vas." />
         <Callout color="#3b82f6" title="📋 Tablas" body="El detalle fino de cada movimiento, mes por mes." />
         <Callout color="#f59e0b" title="💰 Presupuesto" body="Tu plan: cuánto querés gastar en cada cosa antes de gastarlo." />
@@ -1016,7 +1041,7 @@ function HojaSection() {
         Al abrir el archivo vas a ver, en la barra inferior, cuatro pestañas. Cada una guarda un tipo de información distinto, y juntas componen la imagen completa de tu economía:
       </Lede>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14, marginBottom: 8 }}>
+      <div className="rgrid-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14, marginBottom: 8 }}>
         <Callout
           color="#10b981"
           title="📗 Ingresos"
@@ -1048,7 +1073,7 @@ function HojaSection() {
 
       <Lede>Y la hoja <b>Categorias</b>, que es la que más vas a querer personalizar al principio. Tiene tres columnas:</Lede>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 16 }}>
+      <div className="rgrid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 16 }}>
         <Callout color="#0ea5e9" title="nombre" body="El nombre exacto de la categoría como vos la querés ver (ej: alquiler, luz, sueldos)." />
         <Callout color="#0ea5e9" title="grupo" body="A qué familia pertenece: INGRESOS, HOGAR, TRANSPORTE, OCIO… Vos definís los grupos." />
         <Callout color="#0ea5e9" title="keywords" body="Las palabras que el asistente busca en tus mensajes para asignar el gasto a esta categoría automáticamente." />
@@ -1082,7 +1107,7 @@ function HojaSection() {
         Esta es la parte que más le gusta a la gente cuando lo entiende: <b>las cuatro hojas son completamente editables a mano</b>. No están bloqueadas, no son de "solo lectura", no necesitás permisos especiales. Es <i>tu</i> archivo, en <i>tu</i> Drive.
       </Lede>
 
-      <div style={{
+      <div className="rgrid-2" style={{
         display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14, marginTop: 8, marginBottom: 8,
       }}>
         <Callout color="#22c55e" title="✍️ Corregir un movimiento" body="¿Cargaste $5.000 cuando eran $500? Abrí la hoja, cambiá la celda, listo. El dashboard se ajusta solo." />
@@ -1173,7 +1198,7 @@ function DashboardSection() {
       <Lede>Los cuatro números que más importan, siempre visibles. Así se ven:</Lede>
       <MiniStatGrid />
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14, marginTop: 24 }}>
+      <div className="rgrid-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14, marginTop: 24 }}>
         <Callout
           color="#10b981"
           title="💚 Ingresos del mes"
@@ -1295,8 +1320,9 @@ function TablasSection() {
       <H2>Comparativo mes anterior vs actual</H2>
       <Lede>Una tabla que pone al lado lo que gastaste el mes pasado y este, con el cambio porcentual.</Lede>
 
+      <div className="table-scroll">
       <div style={{
-        background: 'white', border: '1px solid #eef0f2', borderRadius: 12, overflow: 'hidden',
+        background: 'white', border: '1px solid #eef0f2', borderRadius: 12, overflow: 'hidden', minWidth: 480,
       }}>
         <div style={{
           display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 0.8fr 0.8fr',
@@ -1331,6 +1357,7 @@ function TablasSection() {
             </div>
           );
         })}
+      </div>
       </div>
 
       <Tip icon="📖" tone="amber">
@@ -1378,7 +1405,7 @@ function PresupuestoSection() {
 
       <MiniBudgetRow />
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14, marginTop: 24 }}>
+      <div className="rgrid-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14, marginTop: 24 }}>
         <Callout color="#3b82f6" title="📌 Pres. — Presupuesto" body="El número que vos escribís. Tu plan, tu límite. Hacé clic en la celda y editalo." />
         <Callout color="#10b981" title="📌 Real — Gasto real" body="Se llena solo con los gastos que registrás por WhatsApp. No lo tocás." />
         <Callout color="#f59e0b" title="📌 Dif. — Diferencia" body="Presupuesto menos real. Verde = te sobró. Rojo = te pasaste del plan." />
@@ -1472,7 +1499,7 @@ function PresupuestoSection() {
       </div>
 
       <H2>Por qué vale la pena</H2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginTop: 8 }}>
+      <div className="rgrid-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginTop: 8 }}>
         {[
           ['Decidís antes, no después', 'Sabés cuánto tenés para ropa antes de entrar a la tienda.'],
           ['Sin sorpresas de fin de mes', 'El dashboard te avisa durante el mes si te pasás.'],
@@ -1507,7 +1534,7 @@ function NotasSection() {
       <H2>¿Para qué se usa?</H2>
       <Lede>Son tus <b>listas rápidas</b>: lo que te falta comprar, lo que tenés que acordarte, lo que no querés olvidar. El uso más común son listas de compras.</Lede>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginBottom: 32 }}>
+      <div className="rgrid-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginBottom: 32 }}>
         <Callout color="#10b981" title="🛒 Lista del súper" body={<>Leche, pan, agua, huevos, yerba, tomates...</>} />
         <Callout color="#f59e0b" title="💊 Farmacia" body={<>Ibuprofeno, alcohol en gel, vendas.</>} />
         <Callout color="#3b82f6" title="🏠 Para la casa" body={<>Focos, pilas AA, detergente, papel higiénico.</>} />
