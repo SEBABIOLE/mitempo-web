@@ -2,3 +2,5 @@ User-agent: *
 Disallow: /registro.html
 Disallow: /activar.html
 Disallow: /auth.html
+
+Sitemap: https://mitempo.app/sitemap.xml
