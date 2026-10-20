@@ -741,8 +741,8 @@ async function solicitarCodigo(resend) {
       showLoginError('Número no encontrado. Verificá que sea el mismo número que usás en MiTempo.');
       return;
     }
-    if (json.error) {
-      showLoginError(json.message || 'No pudimos mandarte el código. Intentá de nuevo.');
+    if (json.error || !res.ok || !json.success) {
+      showLoginError((json.error && json.message) || 'No pudimos mandarte el código. Intentá de nuevo en unos minutos.');
       return;
     }
     _pendingPhone = phone;
