@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="/Logo%20con%20blanco.png">
-    <link rel="shortcut icon" href="/Logo%20con%20blanco.png">
-    <link rel="apple-touch-icon" href="/Logo%20con%20blanco.png">
+    <link rel="icon" type="image/png" href="/favicon-48.png">
+    <link rel="shortcut icon" type="image/png" href="/favicon-48.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <title>Términos y Condiciones de Luca - MiTempo.app</title>
 <link rel="canonical" href="https://mitempo.app/terminos.html">
 <meta name="description" content="Términos y condiciones de uso de Luca, el asistente de control de gastos por WhatsApp de MiTempo.">
     
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -57,6 +56,38 @@
         .prose ol {
             list-style-type: decimal;
         }
+    
+        /* Estilos propios (reemplazan al CDN de Tailwind, que bloqueaba la carga) */
+        *,::before,::after{box-sizing:border-box}
+        body{margin:0;line-height:1.5;color:#1f2937}
+        h1,h2,h3,p,ul,ol{margin:0}
+        a{color:inherit;text-decoration:inherit}
+        .container{width:100%}
+        @media(min-width:640px){.container{max-width:640px}}
+        @media(min-width:768px){.container{max-width:768px}}
+        @media(min-width:1024px){.container{max-width:1024px}}
+        @media(min-width:1280px){.container{max-width:1280px}}
+        .mx-auto{margin-left:auto;margin-right:auto}
+        .px-6{padding-left:1.5rem;padding-right:1.5rem}
+        .py-3{padding-top:.75rem;padding-bottom:.75rem}
+        .py-4{padding-top:1rem;padding-bottom:1rem}
+        .py-8{padding-top:2rem;padding-bottom:2rem}
+        .py-16{padding-top:4rem;padding-bottom:4rem}
+        .p-8{padding:2rem}
+        @media(min-width:768px){.md\:p-12{padding:3rem}.md\:text-4xl{font-size:2.25rem;line-height:2.5rem}}
+        .flex{display:flex}.justify-between{justify-content:space-between}.items-center{align-items:center}
+        .text-center{text-align:center}
+        .text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}
+        .font-bold{font-weight:700}.font-extrabold{font-weight:800}
+        .text-gray-500{color:#6b7280}.text-gray-600{color:#4b5563}.text-gray-800{color:#1f2937}.text-gray-900{color:#111827}
+        .bg-white{background-color:#fff}.bg-gray-100{background-color:#f3f4f6}
+        .border-b{border-bottom:1px solid #e5e7eb}.border-gray-200{border-color:#e5e7eb}
+        .rounded-lg{border-radius:.5rem}
+        .shadow-md{box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1)}
+        .max-w-4xl{max-width:56rem}.max-w-none{max-width:none}
+        .prose p{margin-bottom:1em}
+        .prose li{margin-bottom:.35em}
+        .prose h1{margin-bottom:.5em}
     </style>
 </head>
 <body class="text-gray-800">
@@ -64,7 +95,7 @@
     <!-- Header Sencillo -->
     <header class="bg-white border-b border-gray-200">
         <div class="container mx-auto px-6 py-3 flex justify-between items-center">
-            <a href="./index.html" aria-label="Página de inicio de MiTempo.app" class="text-2xl font-bold text-gray-800">MiTempo<span style="color: #10B981;">.</span>app</a>
+            <a href="/" aria-label="Página de inicio de MiTempo.app" class="text-2xl font-bold text-gray-800">MiTempo<span style="color: #10B981;">.</span>app</a>
         </div>
     </header>
 
