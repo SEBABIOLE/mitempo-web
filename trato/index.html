@@ -32,6 +32,12 @@
 
 .how-grid-4{grid-template-columns:repeat(4,1fr)}
 
+.integ-logo{display:block;width:40px;height:40px;border-radius:10px;margin-bottom:12px;background:#fff}
+#integraciones .feature{padding:20px 20px}
+.integ-grid{grid-template-columns:repeat(2,1fr)}
+@media(max-width:960px){.integ-grid{grid-template-columns:1fr}}
+.integ-nota{font-size:13px;color:var(--text-mute);line-height:1.6;margin:18px 0 0;max-width:760px}
+
 .planes{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 .planes-3{grid-template-columns:repeat(3,1fr)}
 .plan{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:26px 22px;display:flex;flex-direction:column;position:relative;transition:border-color .18s,transform .18s}
@@ -84,6 +90,7 @@
 <nav class="nav-links">
 <a href="/">← MiTempo</a>
 <a href="#funciones">Funciones</a>
+<a href="#integraciones">Tu tienda online</a>
 <a href="#como-funciona">Cómo funciona</a>
 <a href="/trato/ayuda/">Ayuda</a>
 <a href="https://trato.mitempo.app/login">Ingresar</a>
@@ -201,6 +208,29 @@
 </div>
 </section>
 
+<section id="integraciones" class="reveal">
+<div class="container">
+<div class="section-head">
+<div class="kicker">Tu tienda online</div>
+<h2 class="section-title">Vendés online. Trato factura.</h2>
+<p class="section-sub">Conectás tu tienda y cada venta pagada llega a Trato, lista para facturar con un botón o de forma automática. Sin copiar datos a mano.</p>
+</div>
+<div class="features integ-grid">
+<div class="feature reveal">
+<img class="integ-logo" src="/trato/integraciones/tiendanube.png" alt="Logo de Tienda Nube" width="40" height="40" loading="lazy">
+<h3>Tienda Nube</h3>
+<p>Los pedidos pagados de tu tienda aparecen en Trato con los datos del comprador. Si se cancelan, te avisamos para que hagas la nota de crédito.</p>
+</div>
+<div class="feature reveal">
+<img class="integ-logo" src="/trato/integraciones/mercadolibre.png" alt="Logo de Mercado Libre" width="40" height="40" loading="lazy">
+<h3>Mercado Libre</h3>
+<p>Tus ventas pagadas llegan solas. Se factura el valor de los productos, sin el costo de envío que paga el comprador.</p>
+</div>
+</div>
+<p class="integ-nota">Elegís por cada tienda si facturás a mano o en automático (arranca apagado). Si falta algún dato o la venta es de $10.000.000 o más, Trato no factura sola: te avisa para que la hagas con los datos completos. Disponible en el plan Total y durante la prueba gratis.</p>
+</div>
+</section>
+
 <section id="como-funciona" class="how reveal">
 <div class="container">
 <div class="section-head">
@@ -259,7 +289,7 @@
 <div class="section-head centered">
 <div class="kicker">Precios</div>
 <h2 class="section-title">Un plan para cada nivel de facturación.</h2>
-<p class="section-sub">15 días de prueba gratis, sin tarjeta, una por negocio, con todo lo del plan Avanzado y hasta 5 presupuestos por mes. Cancelás cuando quieras.</p>
+<p class="section-sub">15 días de prueba gratis, sin tarjeta, una por negocio, con todo lo del plan Avanzado, tu tienda online incluida, y hasta 5 presupuestos por mes. Cancelás cuando quieras.</p>
 </div>
 <div class="planes planes-3">
 <div class="plan">
@@ -298,6 +328,7 @@
 <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Multi-usuario con permisos por sección</li>
 <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Facturación masiva a varios clientes</li>
 <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Importación de clientes y productos desde Excel</li>
+<li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Conectá tu tienda online: Tienda Nube y Mercado Libre</li>
 <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Hasta 200 mensajes de WhatsApp por mes</li>
 </ul>
 <div class="plan-price">$29.990</div><div class="plan-price-sub">por mes</div>
