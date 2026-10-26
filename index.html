@@ -36,8 +36,12 @@
 .product-icon img{width:100%;height:100%;object-fit:cover;display:block}
 .product-card h3{font-size:19px;font-weight:700;margin:0 0 8px;color:#fff}
 .product-card p{color:var(--text-mute);font-size:14px;line-height:1.6;margin:0 0 20px;flex-grow:1}
-.product-link{font-size:13.5px;font-weight:700;text-decoration:none;color:var(--accent-2)}
-.product-link:hover{text-decoration:underline}
+.product-trial{font-size:12.5px;font-weight:600;color:var(--text-faint);margin:-6px 0 14px}
+.product-link{display:block;text-align:center;font-size:14.5px;font-weight:700;text-decoration:none;color:var(--accent-2);border:1.5px solid currentColor;border-radius:10px;padding:12px 16px;transition:background .18s}
+@supports (background:color-mix(in srgb,red 10%,transparent)){.product-link{background:color-mix(in srgb,currentColor 12%,transparent)}.product-card:hover .product-link{background:color-mix(in srgb,currentColor 26%,transparent)}}
+.product-link::after{content:"";position:absolute;inset:0;border-radius:14px}
+.product-link:focus-visible{outline:none}.product-link:focus-visible::after{outline:2px solid currentColor;outline-offset:3px}
+.product-card{cursor:pointer}
 .product-tagline{font-size:13px;font-weight:700;color:var(--text-mute);margin-bottom:10px}
 
 .faq-wrap{max-width:700px;margin:0 auto}
@@ -120,7 +124,8 @@
 <h3>Control de Gastos</h3>
 <div class="product-tagline">Tu dinero, bajo control.</div>
 <p>Registrás gastos por WhatsApp y tenés un dashboard con presupuestos, gráficos y reportes automáticos.</p>
-<a href="/control-de-gastos/" class="product-link" style="color:#34d399">Ver producto →</a>
+<div class="product-trial">14 días gratis, sin tarjeta</div>
+<a href="/control-de-gastos/" class="product-link" style="color:#34d399" aria-label="Conocer Luca, control de gastos">Conocer Luca →</a>
 </div>
 <div class="product-card reveal">
 <span class="product-badge">Disponible</span>
@@ -129,7 +134,8 @@
 <h3>Gestión de Negocio</h3>
 <div class="product-tagline">Clientes organizados.</div>
 <p>Agenda, clientes y reportes por WhatsApp. Un CRM simple para pequeños negocios, sin curva de aprendizaje.</p>
-<a href="/gestion-de-negocio/" class="product-link" style="color:#7fa8ff">Ver producto →</a>
+<div class="product-trial">Se arma a medida de tu negocio</div>
+<a href="/gestion-de-negocio/" class="product-link" style="color:#7fa8ff" aria-label="Conocer Boss, gestión de negocio">Conocer Boss →</a>
 </div>
 <div class="product-card reveal">
 <span class="product-badge">Disponible</span>
@@ -138,7 +144,8 @@
 <h3>Trato</h3>
 <div class="product-tagline">Presupuestos en segundos.</div>
 <p>Presupuestos y facturas por WhatsApp con IA: factura electrónica con CAE de ARCA y aceptación online del presupuesto por parte del cliente.</p>
-<a href="/trato/" class="product-link" style="color:#d69aa6">Ver producto →</a>
+<div class="product-trial">15 días gratis, sin tarjeta</div>
+<a href="/trato/" class="product-link" style="color:#d69aa6" aria-label="Conocer Trato, presupuestos y facturas">Conocer Trato →</a>
 </div>
 <div class="product-card reveal">
 <span class="product-badge">Disponible</span>
@@ -147,7 +154,8 @@
 <h3>CobroSolo</h3>
 <div class="product-tagline">Que te paguen, sin insistir.</div>
 <p>Recordatorios automáticos por WhatsApp hasta que te paguen, con o sin Mercado Pago de por medio.</p>
-<a href="https://cobrosolo.mitempo.app" class="product-link" style="color:#5fd6a0">Ver producto →</a>
+<div class="product-trial">30 días de piloto gratis, sin tarjeta</div>
+<a href="https://cobrosolo.mitempo.app" class="product-link" style="color:#5fd6a0" aria-label="Conocer CobroSolo, cobranza automática">Conocer CobroSolo →</a>
 </div>
 </div>
 </div>
